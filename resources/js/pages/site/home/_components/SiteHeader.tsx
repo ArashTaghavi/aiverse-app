@@ -1,11 +1,13 @@
-import { Link, usePage } from '@inertiajs/react';
-import { home, portfolio } from '@/routes';
-import { LogIn, Sparkles } from 'lucide-react';
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { Link, usePage } from "@inertiajs/react";
+import { home, portfolio, auth } from "@/routes";
+import { LogIn, Sparkles } from "lucide-react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
+import { router } from "@inertiajs/react";
+import { destroy as logout } from "@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController";
 
 function subscribeToScroll(onChange: () => void) {
-    window.addEventListener('scroll', onChange, { passive: true });
-    return () => window.removeEventListener('scroll', onChange);
+    window.addEventListener("scroll", onChange, { passive: true });
+    return () => window.removeEventListener("scroll", onChange);
 }
 
 function getScrolled() {
@@ -17,6 +19,9 @@ function getServerScrolled() {
 }
 
 export default function SiteHeader() {
+    const page = usePage();
+    const user = page.props.auth.user;
+
     const pathname = usePage().url.split(/[?#]/)[0];
     const headerRef = useRef<HTMLElement>(null);
     const scrolled = useSyncExternalStore(
@@ -30,7 +35,7 @@ export default function SiteHeader() {
         if (!header || !page) return;
         const updateHeight = () => {
             page.style.setProperty(
-                '--site-header-height',
+                "--site-header-height",
                 `${header.getBoundingClientRect().height}px`,
             );
         };
@@ -45,8 +50,8 @@ export default function SiteHeader() {
             ref={headerRef}
             className={`sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 motion-reduce:transition-none ${
                 scrolled
-                    ? 'border-violet-300/15 bg-[#09090e]/85 shadow-[0_8px_32px_-12px_#000000b3] backdrop-blur-xl'
-                    : 'border-white/5 bg-transparent'
+                    ? "border-violet-300/15 bg-[#09090e]/85 shadow-[0_8px_32px_-12px_#000000b3] backdrop-blur-xl"
+                    : "border-white/5 bg-transparent"
             }`}
         >
             <div className="grid w-full grid-cols-[1fr_auto] items-center gap-4 px-5 py-5 sm:grid-cols-[1fr_auto_1fr] sm:px-10 lg:px-16 xl:px-24">
@@ -66,11 +71,11 @@ export default function SiteHeader() {
                 >
                     <Link
                         href={home()}
-                        aria-current={pathname === '/' ? 'page' : undefined}
+                        aria-current={pathname === "/" ? "page" : undefined}
                         className={
-                            pathname === '/'
-                                ? 'text-violet-300 hover:text-violet-200'
-                                : 'transition-colors hover:text-white'
+                            pathname === "/"
+                                ? "text-violet-300 hover:text-violet-200"
+                                : "transition-colors hover:text-white"
                         }
                     >
                         Home
@@ -78,27 +83,30 @@ export default function SiteHeader() {
                     <Link
                         href={portfolio()}
                         aria-current={
-                            pathname === '/portfolio' ? 'page' : undefined
+                            pathname === "/portfolio" ? "page" : undefined
                         }
                         className={
-                            pathname === '/portfolio'
-                                ? 'text-violet-300 hover:text-violet-200'
-                                : 'transition-colors hover:text-white'
+                            pathname === "/portfolio"
+                                ? "text-violet-300 hover:text-violet-200"
+                                : "transition-colors hover:text-white"
                         }
                     >
                         Portfolio
                     </Link>
                 </nav>
-                <button
-                    type="button"
-                    disabled
-                    title="Account access is not available yet"
+                <Link
+                    href={auth()}
                     className="order-2 inline-flex items-center gap-2 justify-self-end rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm font-medium whitespace-nowrap text-zinc-100 shadow-[inset_0_1px_0_#ffffff1a,0_4px_16px_#00000020] backdrop-blur-xl transition-colors hover:border-sky-200/40 hover:bg-white/10 hover:text-sky-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-200 sm:order-3"
                 >
-                    Get started
+                    {user ? user.username : "Get started"}
                     <LogIn size={15} aria-hidden="true" />
-                </button>
+                </Link>
             </div>
+            {user && (
+                <button type="button" onClick={() => router.post(logout().url)}>
+                    Logout
+                </button>
+            )}
         </header>
     );
 }

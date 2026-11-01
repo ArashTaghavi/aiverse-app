@@ -1,3 +1,30 @@
+@font-face {
+    font-family: Geist;
+    src: url('../assets/fonts/Geist.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Vazirmatn;
+    src: url('../assets/fonts/Vazirmatn.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    unicode-range:
+        U+0600-06FF, U+0750-077F, U+0870-089F, U+08A0-08FF, U+200C-200F,
+        U+202A-202E, U+2066-2069, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+    font-family: 'Geist Mono';
+    src: url('../assets/fonts/GeistMono.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+}
+
 @keyframes ai-core-morph {
     0%,
     100% {
@@ -75,9 +102,10 @@
     --color-ui-border: var(--ui-border-default);
     --color-ui-border-strong: var(--ui-border-strong);
     --color-ui-border-heavy: var(--ui-border-heavy);
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: Vazirmatn, Geist, ui-sans-serif, system-ui, sans-serif;
     --font-mono:
-        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        Vazirmatn, 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
+        Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {

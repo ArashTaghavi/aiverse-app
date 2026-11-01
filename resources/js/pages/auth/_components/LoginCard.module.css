@@ -1,0 +1,91 @@
+.card {
+    animation: card-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.edgeShine::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 35%;
+    background: linear-gradient(90deg, transparent, #ede9fe, transparent);
+    opacity: 0;
+    animation: edge-shine 1800ms ease-in-out 450ms both;
+}
+
+.lock {
+    transition:
+        background-color 500ms ease,
+        border-color 500ms ease,
+        color 500ms ease,
+        box-shadow 500ms ease;
+}
+
+.shackle {
+    transform-origin: 17px 11px;
+    transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.unlocked .shackle {
+    transform: translate(1px, -1px) rotate(28deg);
+}
+
+.check {
+    stroke-dasharray: 12;
+    stroke-dashoffset: 12;
+    animation: check-draw 350ms ease-out 350ms forwards;
+}
+
+@keyframes card-enter {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes edge-shine {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    20%,
+    70% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(390%);
+    }
+}
+
+@keyframes check-draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .edgeShine::after,
+    .check {
+        animation: none;
+    }
+    .lock,
+    .shackle {
+        transition: none;
+    }
+    .check {
+        stroke-dashoffset: 0;
+    }
+}
+
+.lock.confirmed {
+    border-color: rgb(52 211 153 / 0.4);
+    background-color: rgb(52 211 153 / 0.12);
+    color: #6ee7b7;
+    box-shadow: 0 0 30px -12px #34d399;
+}
