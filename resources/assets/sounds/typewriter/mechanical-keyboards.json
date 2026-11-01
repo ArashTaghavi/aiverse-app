@@ -1,0 +1,51 @@
+{
+    "downloaded": "2026-10-27",
+    "format": "Unmodified high-quality MP3 previews",
+    "recordings": [
+        {
+            "file": "cherry-mx-brown-press.mp3",
+            "author": "Foxfire-",
+            "page": "https://freesound.org/people/Foxfire-/sounds/570754/",
+            "download": "https://cdn.freesound.org/previews/570/570754_12873144-hq.mp3",
+            "license": "CC0-1.0",
+            "bytes": 10854,
+            "sha256": "f13c0253b3c90aba3560fe4cbe55646e02d46b4e396ba2406c4e2be03b24c29e"
+        },
+        {
+            "file": "cherry-mx-brown-release.mp3",
+            "author": "Foxfire-",
+            "page": "https://freesound.org/people/Foxfire-/sounds/570755/",
+            "download": "https://cdn.freesound.org/previews/570/570755_12873144-hq.mp3",
+            "license": "CC0-1.0",
+            "bytes": 10855,
+            "sha256": "a66a6563a1f8393e4dbd0cad3cccc14e646839bb1c8074d7685ee1592ee583af"
+        },
+        {
+            "file": "whitefox-hako-violet-typing.mp3",
+            "author": "grcekh",
+            "page": "https://freesound.org/people/grcekh/sounds/546167/",
+            "download": "https://cdn.freesound.org/previews/546/546167_12206738-hq.mp3",
+            "license": "CC0-1.0",
+            "bytes": 3390649,
+            "sha256": "c72aea6e089a572e3a466305523b3ad4ab96be437c42c1e51ac1c4254943e1b3"
+        },
+        {
+            "file": "cherry-mx-blue-typing.mp3",
+            "author": "EricsSoundschmiede",
+            "page": "https://freesound.org/people/EricsSoundschmiede/sounds/382057/",
+            "download": "https://cdn.freesound.org/previews/382/382057_1106446-hq.mp3",
+            "license": "CC0-1.0",
+            "bytes": 2750892,
+            "sha256": "6eca964304efd04cc7a6c4e75cfcfde86f7a2435240b8d5d3a84e77a7380f8d9"
+        },
+        {
+            "file": "cherry-mx-brown-typing.mp3",
+            "author": "majod",
+            "page": "https://freesound.org/people/majod/sounds/400167/",
+            "download": "https://cdn.freesound.org/previews/400/400167_7690632-hq.mp3",
+            "license": "CC0-1.0",
+            "bytes": 1711056,
+            "sha256": "a175c98b1d4561d5b8ac8439269bf79443c9b48770ad9ded371f0d23234b8521"
+        }
+    ]
+}

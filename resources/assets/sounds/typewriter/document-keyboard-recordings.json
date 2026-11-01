@@ -1,0 +1,38 @@
+[
+    {
+        "file": "blue-switch-key-w.mp3",
+        "source": "https://freesound.org/people/UberBosser/sounds/421581/",
+        "download": "https://cdn.freesound.org/previews/421/421581_8368754-hq.mp3",
+        "author": "UberBosser",
+        "license": "CC0-1.0",
+        "processing": "Mono; peak normalized to -2.85 dBFS; 2 ms edge fades; original pitch/speed; MP3 192 kbps",
+        "gain_db": 17.39
+    },
+    {
+        "file": "blue-switch-key-q.mp3",
+        "source": "https://freesound.org/people/UberBosser/sounds/421583/",
+        "download": "https://cdn.freesound.org/previews/421/421583_8368754-hq.mp3",
+        "author": "UberBosser",
+        "license": "CC0-1.0",
+        "processing": "Mono; peak normalized to -2.85 dBFS; 2 ms edge fades; original pitch/speed; MP3 192 kbps",
+        "gain_db": 14.54
+    },
+    {
+        "file": "blue-switch-modifier.mp3",
+        "source": "https://freesound.org/people/UberBosser/sounds/421584/",
+        "download": "https://cdn.freesound.org/previews/421/421584_8368754-hq.mp3",
+        "author": "UberBosser",
+        "license": "CC0-1.0",
+        "processing": "Mono; peak normalized to -2.85 dBFS; 2 ms edge fades; original pitch/speed; MP3 192 kbps",
+        "gain_db": 15.33
+    },
+    {
+        "file": "blue-switch-spacebar-balanced.mp3",
+        "source": "https://freesound.org/people/UberBosser/sounds/421582/",
+        "download": "https://cdn.freesound.org/previews/421/421582_8368754-hq.mp3",
+        "author": "UberBosser",
+        "license": "CC0-1.0",
+        "processing": "Mono; peak normalized to -2.85 dBFS; 2 ms edge fades; original pitch/speed; MP3 192 kbps",
+        "gain_db": 18.44
+    }
+]

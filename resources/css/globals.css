@@ -1,0 +1,102 @@
+@keyframes ai-core-morph {
+    0%,
+    100% {
+        border-radius: 45% 55% 60% 40% / 50% 40% 60% 50%;
+        transform: translate(0, 0) rotate(0deg) scale(1);
+        opacity: 0.75;
+    }
+    35% {
+        border-radius: 65% 35% 45% 55% / 40% 60% 35% 65%;
+        transform: translate(9px, -12px) rotate(30deg) scale(1.08, 0.94);
+        opacity: 1;
+    }
+    70% {
+        border-radius: 35% 65% 55% 45% / 60% 35% 65% 40%;
+        transform: translate(-8px, 8px) rotate(-15deg) scale(0.96, 1.06);
+        opacity: 0.85;
+    }
+}
+
+@keyframes ai-network-drift {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    35% {
+        transform: translate(12px, -16px);
+    }
+    70% {
+        transform: translate(-8px, 10px);
+    }
+}
+
+:root {
+    --background: #ffffff;
+    --foreground: #171717;
+    --ui-text-soft: #d4d4d8;
+    --ui-text-secondary: #a1a1aa;
+    --ui-text-muted: #71717a;
+    --ui-text-subtle: #52525b;
+    --ui-text-dim: #3f3f46;
+    --ui-border-faint: rgb(255 255 255 / 0.05);
+    --ui-border-subtle: rgb(255 255 255 / 0.06);
+    --ui-border-muted: rgb(255 255 255 / 0.08);
+    --ui-border-default: rgb(255 255 255 / 0.1);
+    --ui-border-strong: rgb(255 255 255 / 0.15);
+    --ui-border-heavy: rgb(255 255 255 / 0.2);
+}
+
+/* Apply the admin palette to shared components and menus portaled to body. */
+:root:has(.admin-theme) {
+    --ui-text-soft: #e0e0e5;
+    --ui-text-secondary: #c4c4cc;
+    --ui-text-muted: #a1a1ae;
+    --ui-text-subtle: #8b8b98;
+    --ui-text-dim: #71717e;
+    --ui-border-faint: rgb(255 255 255 / 0.1);
+    --ui-border-subtle: rgb(255 255 255 / 0.12);
+    --ui-border-muted: rgb(255 255 255 / 0.15);
+    --ui-border-default: rgb(255 255 255 / 0.18);
+    --ui-border-strong: rgb(255 255 255 / 0.24);
+    --ui-border-heavy: rgb(255 255 255 / 0.3);
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-ui-soft: var(--ui-text-soft);
+    --color-ui-secondary: var(--ui-text-secondary);
+    --color-ui-muted: var(--ui-text-muted);
+    --color-ui-subtle: var(--ui-text-subtle);
+    --color-ui-dim: var(--ui-text-dim);
+    --color-ui-border-faint: var(--ui-border-faint);
+    --color-ui-border-subtle: var(--ui-border-subtle);
+    --color-ui-border-muted: var(--ui-border-muted);
+    --color-ui-border: var(--ui-border-default);
+    --color-ui-border-strong: var(--ui-border-strong);
+    --color-ui-border-heavy: var(--ui-border-heavy);
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-mono:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
+}
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+}
+
+/* Chat routes scroll inside their message lists, never on the document. */
+html:has([data-chat-viewport='true']),
+body:has([data-chat-viewport='true']) {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}

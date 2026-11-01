@@ -1,0 +1,74 @@
+[
+    {
+        "file": "cherry-mx-blue-key-1.mp3",
+        "source": "cherry-mx-blue-typing.mp3",
+        "freesound_id": 382057,
+        "start_seconds": 133.53147,
+        "duration_seconds": 0.18,
+        "processing": "Mono, original pitch, peak -2.5 dBFS, 1 ms attack and 8 ms fade-out; MP3 128 kbps",
+        "license": "CC0-1.0"
+    },
+    {
+        "file": "cherry-mx-blue-key-2.mp3",
+        "source": "cherry-mx-blue-typing.mp3",
+        "freesound_id": 382057,
+        "start_seconds": 134.11515,
+        "duration_seconds": 0.18,
+        "processing": "Mono, original pitch, peak -2.5 dBFS, 1 ms attack and 8 ms fade-out; MP3 128 kbps",
+        "license": "CC0-1.0"
+    },
+    {
+        "file": "cherry-mx-blue-key-3.mp3",
+        "source": "cherry-mx-blue-typing.mp3",
+        "freesound_id": 382057,
+        "start_seconds": 135.12785,
+        "duration_seconds": 0.18,
+        "processing": "Mono, original pitch, peak -2.5 dBFS, 1 ms attack and 8 ms fade-out; MP3 128 kbps",
+        "license": "CC0-1.0"
+    },
+    {
+        "file": "cherry-mx-blue-key-4.mp3",
+        "source": "cherry-mx-blue-typing.mp3",
+        "freesound_id": 382057,
+        "start_seconds": 135.79134,
+        "duration_seconds": 0.18,
+        "processing": "Mono, original pitch, peak -2.5 dBFS, 1 ms attack and 8 ms fade-out; MP3 128 kbps",
+        "license": "CC0-1.0"
+    },
+    {
+        "file": "whitefox-hako-violet-key-1.mp3",
+        "source": "whitefox-hako-violet-typing.mp3",
+        "freesound_id": 546167,
+        "start_seconds": 153.4961,
+        "duration_seconds": 0.18,
+        "processing": "Mono, original pitch, peak -2.5 dBFS, 1 ms attack and 8 ms fade-out; MP3 128 kbps",
+        "license": "CC0-1.0"
+    },
+    {
+        "file": "whitefox-hako-violet-key-2.mp3",
+        "source": "whitefox-hako-violet-typing.mp3",
+        "freesound_id": 546167,
+        "start_seconds": 154.40902,
+        "duration_seconds": 0.18,
+        "processing": "Mono, original pitch, peak -2.5 dBFS, 1 ms attack and 8 ms fade-out; MP3 128 kbps",
+        "license": "CC0-1.0"
+    },
+    {
+        "file": "whitefox-hako-violet-key-3.mp3",
+        "source": "whitefox-hako-violet-typing.mp3",
+        "freesound_id": 546167,
+        "start_seconds": 156.47433,
+        "duration_seconds": 0.18,
+        "processing": "Mono, original pitch, peak -2.5 dBFS, 1 ms attack and 8 ms fade-out; MP3 128 kbps",
+        "license": "CC0-1.0"
+    },
+    {
+        "file": "whitefox-hako-violet-key-4.mp3",
+        "source": "whitefox-hako-violet-typing.mp3",
+        "freesound_id": 546167,
+        "start_seconds": 157.03805,
+        "duration_seconds": 0.18,
+        "processing": "Mono, original pitch, peak -2.5 dBFS, 1 ms attack and 8 ms fade-out; MP3 128 kbps",
+        "license": "CC0-1.0"
+    }
+]

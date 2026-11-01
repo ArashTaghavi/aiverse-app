@@ -1,0 +1,149 @@
+.page {
+    --portfolio-line: rgb(255 255 255 / 10%);
+}
+
+.heroTitle {
+    font-size: clamp(3rem, 6.2vw, 7rem);
+    line-height: 1.02;
+    letter-spacing: -0.065em;
+    font-weight: 500;
+}
+
+.intro {
+    animation: intro-arrive 850ms ease-out both;
+}
+
+.introGreeting {
+    transform-origin: center;
+    animation: name-settle 1300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.typingCaret {
+    display: inline-block;
+    width: 2px;
+    height: 0.95em;
+    margin-left: 3px;
+    background: #bae6fd;
+    vertical-align: -0.08em;
+    animation: caret-blink 800ms steps(1) infinite;
+}
+
+.storyComplete {
+    color: transparent;
+    background: linear-gradient(
+        110deg,
+        #e4e4e7 0%,
+        #e4e4e7 40%,
+        #ffffff 47%,
+        #bae6fd 50%,
+        #ffffff 53%,
+        #e4e4e7 60%,
+        #e4e4e7 100%
+    );
+    background-size: 250% 100%;
+    background-clip: text;
+    animation: story-sheen 1800ms ease-in-out both;
+}
+
+@keyframes story-sheen {
+    from {
+        background-position: 150% 50%;
+    }
+    to {
+        background-position: -150% 50%;
+    }
+}
+
+@keyframes caret-blink {
+    0%,
+    49% {
+        opacity: 1;
+    }
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes name-settle {
+    0% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.07);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.codeLine {
+    display: flex;
+    min-height: 1.5rem;
+    animation: code-reveal 650ms ease-out both;
+}
+
+@keyframes intro-arrive {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes code-reveal {
+    from {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+    }
+    to {
+        opacity: 1;
+        clip-path: inset(0);
+    }
+}
+
+.project {
+    transition:
+        transform 250ms ease,
+        border-color 250ms ease;
+}
+
+.project:hover {
+    transform: translateY(-5px);
+    border-color: #c4b5fd45;
+}
+
+.details summary {
+    list-style: none;
+}
+
+.details summary::-webkit-details-marker {
+    display: none;
+}
+
+.details[open] summary svg {
+    transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .storyComplete {
+        animation: none;
+        background: none;
+        color: #e4e4e7;
+    }
+    .intro,
+    .introGreeting,
+    .typingCaret,
+    .codeLine {
+        animation: none;
+    }
+    .project {
+        transition: none;
+    }
+    .project:hover {
+        transform: none;
+    }
+}

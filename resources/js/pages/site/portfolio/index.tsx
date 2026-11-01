@@ -1,0 +1,34 @@
+﻿import { Head } from '@inertiajs/react';
+import SiteLayout from '../layout';
+import ProfileIntro from './_components/ProfileIntro';
+import ContactLinks from './_components/ContactLinks';
+import SkillsSection from './_components/SkillsSection';
+import { profile } from './_data/portfolio';
+
+export default function PortfolioPage() {
+    return (
+        <>
+            <Head title={`${profile.name} | Software Developer`}>
+                <meta
+                    name="description"
+                    content="Self-taught software developer exploring artificial intelligence, intelligent applications, and 3D graphics. Get in touch with Arash Taghavi."
+                />
+            </Head>
+            <main className="mx-auto w-full max-w-[1440px] flex-1 px-5 sm:px-8">
+                <h1 className="sr-only">
+                    {profile.name} — Self-taught software developer
+                </h1>
+                <div className="mx-auto w-full max-w-3xl">
+                    <ProfileIntro />
+                </div>
+                <SkillsSection />
+                <ContactLinks />
+            </main>
+        </>
+    );
+}
+
+PortfolioPage.layout = [
+    SiteLayout,
+    { className: 'bg-black selection:bg-sky-300/25' },
+] satisfies [typeof SiteLayout, { className: string }];

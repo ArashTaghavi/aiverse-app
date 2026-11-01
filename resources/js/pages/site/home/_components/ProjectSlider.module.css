@@ -1,0 +1,114 @@
+.slide {
+    box-shadow: none;
+}
+
+.preview {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview > figure {
+    position: relative;
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    margin-top: 0;
+    flex-direction: column;
+}
+
+.preview > figure > * {
+    flex-shrink: 0;
+}
+
+.preview [class~='h-72'] {
+    height: auto;
+    min-height: 0;
+    flex: 1 1 0%;
+}
+
+/* The database preview has a single content panel instead of a transcript. */
+.preview > figure > [class~='space-y-2'][class~='p-3'] {
+    display: grid;
+    grid-template-rows: auto auto minmax(min-content, 1fr) auto;
+    gap: 0.75rem;
+    min-height: 0;
+    flex: 1 1 0%;
+    overflow-y: auto;
+}
+
+.preview
+    > figure
+    > [class~='space-y-2'][class~='p-3']
+    > [class~='overflow-hidden'] {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+}
+
+.preview [class~='h-28'] {
+    height: auto;
+    min-height: 0;
+    flex: none;
+    overflow: visible;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* Keep the larger landing-page previews readable without changing admin styles. */
+.preview
+    :is(
+        [class~='text-zinc-500'],
+        [class~='text-zinc-600'],
+        [class~='text-zinc-700']
+    ) {
+    color: #a1a1aa;
+}
+
+.preview [class~='text-zinc-400'] {
+    color: #c4c4cc;
+}
+
+.preview [class~='text-zinc-300'] {
+    color: #e4e4e7;
+}
+
+.preview :is([class~='text-[8px]'], [class~='text-[9px]']) {
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.preview [class~='text-[10px]'] {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.preview [class~='text-[11px]'] {
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.preview [class*='text-violet-'] {
+    color: #c4b5fd;
+}
+.preview [class*='text-emerald-'] {
+    color: #6ee7b7;
+}
+.preview [class*='text-cyan-'] {
+    color: #67e8f9;
+}
+.preview [class*='text-blue-'] {
+    color: #93c5fd;
+}
+.preview [class*='text-sky-'] {
+    color: #7dd3fc;
+}
+.preview [class*='text-orange-'] {
+    color: #fdba74;
+}
+.preview [class*='text-rose-'] {
+    color: #fda4af;
+}
+.preview [class*='text-amber-'] {
+    color: #fcd34d;
+}
