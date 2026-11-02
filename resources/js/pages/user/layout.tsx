@@ -17,9 +17,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
             </a>
             <Aside />
 
-            <div
-                className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden lg:pl-64 [&>header]:shrink-0"
-            >
+            <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden lg:pl-64 [&>header]:shrink-0">
                 <Header />
                 <Main viewport>{children}</Main>
             </div>

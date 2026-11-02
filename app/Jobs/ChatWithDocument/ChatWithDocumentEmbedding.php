@@ -2,7 +2,7 @@
 
 namespace App\Jobs\ChatWithDocument;
 
-use App\Enums\DocumentEmbeddingEnum;
+use App\Enums\ChatWithDocument\DocumentEmbeddingStatusEnum;
 use App\Events\ChatWithDocument\ChatWithDocumentEmbeddingCompleted;
 use App\Models\ChatWithDocument\Document;
 use App\Services\AI\AIClient;
@@ -36,13 +36,13 @@ class ChatWithDocumentEmbedding implements ShouldQueue
         );
 
         $this->document->update([
-            'embedding_status' => DocumentEmbeddingEnum::Processing,
+            'embedding_status' => DocumentEmbeddingStatusEnum::Processing,
         ]);
 
         $client->post(ChatWithDocumentRoutes::INGEST, $data->toArray());
 
         $this->document->update([
-            'embedding_status' => DocumentEmbeddingEnum::Completed,
+            'embedding_status' => DocumentEmbeddingStatusEnum::Completed,
         ]);
 
         ChatWithDocumentEmbeddingCompleted::dispatch($this->document);
@@ -51,7 +51,7 @@ class ChatWithDocumentEmbedding implements ShouldQueue
     public function failed(?Throwable $exception): void
     {
         $this->document->update([
-            'embedding_status' => DocumentEmbeddingEnum::Failed,
+            'embedding_status' => DocumentEmbeddingStatusEnum::Failed,
             'embedding_error' => $exception?->getMessage(),
         ]);
     }

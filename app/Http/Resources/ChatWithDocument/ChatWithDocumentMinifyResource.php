@@ -16,6 +16,7 @@ class ChatWithDocumentMinifyResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'title' => $this->title,
             'original_name' => $this->original_name,
             'size' => $this->human_size,
             'last_message' => $this->last_message,

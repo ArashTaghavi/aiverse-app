@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\User\ChatWithDocumentController;
 use App\Http\Controllers\User\UserPanelController;
+use App\Services\AI\AIClient;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
@@ -23,8 +24,16 @@ Route::middleware('auth')
             ->controller(ChatWithDocumentController::class)
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+                Route::get('/documents', 'documents')->name('documents');
 
                 Route::post('/upload', 'upload')->name('upload');
+                Route::post('/ask', 'ask')->name('ask');
             });
 
     });
+Route::get('/xx', function () {
+    $client = new AIClient;
+
+    return $client->post('chat-with-document/ask', ['document_id' => 3, 'owner_id' => 1, 'question' => 'سلام']);
+
+});

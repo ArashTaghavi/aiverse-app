@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Enums;
+namespace App\Enums\ChatWithDocument;
 
-enum DocumentEmbeddingEnum: string
+enum AnswerStatusEnum: string
 {
     case Pending = 'PENDING';
     case Processing = 'PROCESSING';

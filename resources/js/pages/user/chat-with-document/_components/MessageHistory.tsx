@@ -66,7 +66,10 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                             dir="auto"
                             className="text-sm leading-7 break-words whitespace-pre-wrap text-zinc-200"
                         >
-                            {turn.answer}
+                            {turn.answer ??
+                                (turn.answer_status === 'FAILED'
+                                    ? 'Could not prepare an answer. Please try again.'
+                                    : 'Preparing an answer…')}
                         </p>
                         <MessageTime timestamp={turn.created_at} />
                     </div>

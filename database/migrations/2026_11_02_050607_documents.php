@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\DocumentEmbeddingEnum;
+use App\Enums\ChatWithDocument\DocumentEmbeddingStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('extension');
             $table->unsignedBigInteger('size');
             $table->text('last_message')->nullable();
-            $table->enum('embedding_status', array_column(DocumentEmbeddingEnum::cases(), 'value'))->default(DocumentEmbeddingEnum::Pending->value);
+            $table->enum('embedding_status', array_column(DocumentEmbeddingStatusEnum::cases(), 'value'))->default(DocumentEmbeddingStatusEnum::Pending->value);
             $table->text('embedding_error')->nullable();
             $table->softDeletes();
             $table->timestamps();

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, router, usePage } from "@inertiajs/react";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useRef, useState } from 'react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
     ArrowLeft,
     FileText,
@@ -9,29 +9,31 @@ import {
     Plus,
     Send,
     Upload,
-} from "lucide-react";
-import { FileInput, Form, Input } from "@/components/form";
-import { Button } from "@/components/ui";
-import { upload } from "@/actions/App/Http/Controllers/User/ChatWithDocumentController";
-import { index as chatWithDocument } from "@/actions/App/Http/Controllers/User/ChatWithDocumentController";
+} from 'lucide-react';
+import { FileInput, Form, Input } from '@/components/form';
+import { Button } from '@/components/ui';
+import {
+    ask,
+    upload,
+} from '@/actions/App/Http/Controllers/User/ChatWithDocumentController';
+import { index as chatWithDocument } from '@/actions/App/Http/Controllers/User/ChatWithDocumentController';
 import type {
     DocumentChatProps,
     NewChatFormValues,
-    QuestionValues,
+    DocumentQuestionValues,
     EmbeddingStatus,
-} from "@/types";
-import DocumentEmbeddingListener from "./DocumentEmbeddingListener";
-import MessageHistory from "./MessageHistory";
-import { messageDate } from "../_lib/message-dates";
-import { questionSchema } from "../../_schemas/question.schema";
-import { newChatSchema } from "../_schemas/new-chat.schema";
+} from '@/types';
+import DocumentEmbeddingListener from './DocumentEmbeddingListener';
+import MessageHistory from './MessageHistory';
+import { messageDate } from '../_lib/message-dates';
+import { documentQuestionSchema } from '../_schemas/question.schema';
+import { newChatSchema } from '../_schemas/new-chat.schema';
 
 export default function DocumentChat({
     documentId = null,
     documents = [],
     selectedDocument = null,
     history: turns = [],
-    askAction,
 }: DocumentChatProps) {
     const { auth, errors } = usePage().props;
     const activeId = documentId;
@@ -44,21 +46,21 @@ export default function DocumentChat({
     const embeddingStatus = selected
         ? (embeddingStatuses[selected.id] ?? selected.embedding_status)
         : undefined;
-    const isDocumentReady = embeddingStatus === "COMPLETED";
+    const isDocumentReady = embeddingStatus === 'COMPLETED';
     const active = selected
-        ? { id: selected.id, title: selected.name }
+        ? { id: selected.id, title: selected.title }
         : undefined;
     const document = selected
         ? {
               document_id: selected.id,
-              original_filename: selected.original_file_name,
+              original_filename: selected.original_name,
           }
         : null;
     const conversations = documents.map((item) => ({
         id: String(item.id),
-        title: item.name,
-        preview: item.last_message_preview,
-        timestamp: item.last_message_at,
+        title: item.title,
+        preview: item.last_message,
+        timestamp: item.created_at,
     }));
     const [showList, setShowList] = useState(false);
     const [uploadFormKey, setUploadFormKey] = useState(0);
@@ -68,11 +70,11 @@ export default function DocumentChat({
     const messagesRef = useRef<HTMLDivElement>(null);
     const uploadForm = useForm<NewChatFormValues>({
         resolver: zodResolver(newChatSchema),
-        defaultValues: { file: null, title: "" },
+        defaultValues: { file: null, title: '' },
     });
-    const questionForm = useForm<QuestionValues>({
-        resolver: zodResolver(questionSchema),
-        defaultValues: { query: "" },
+    const questionForm = useForm<DocumentQuestionValues>({
+        resolver: zodResolver(documentQuestionSchema),
+        defaultValues: { question: '' },
     });
 
     useEffect(() => {
@@ -101,15 +103,18 @@ export default function DocumentChat({
         });
     };
 
-    const sendQuestion: SubmitHandler<QuestionValues> = (data) => {
-        if (!document || !isDocumentReady || uploading || asking || !askAction)
-            return;
-        router.post(askAction(document.document_id).url, data, {
-            preserveScroll: true,
-            onStart: () => setAsking(true),
-            onFinish: () => setAsking(false),
-            onSuccess: () => questionForm.reset(),
-        });
+    const sendQuestion: SubmitHandler<DocumentQuestionValues> = (data) => {
+        if (!document || !isDocumentReady || uploading || asking) return;
+        router.post(
+            ask().url,
+            { document_id: document.document_id, ...data },
+            {
+                preserveScroll: true,
+                onStart: () => setAsking(true),
+                onFinish: () => setAsking(false),
+                onSuccess: () => questionForm.reset(),
+            },
+        );
     };
 
     return (
@@ -127,11 +132,11 @@ export default function DocumentChat({
             )}
             <aside
                 aria-label="Conversations"
-                className={`${showList ? "flex" : "hidden md:flex"} h-full min-h-0 w-full shrink-0 flex-col border-r border-ui-border bg-[#101016] md:w-64 xl:w-80`}
+                className={`${showList ? 'flex' : 'hidden md:flex'} h-full min-h-0 w-full shrink-0 flex-col border-r border-ui-border bg-[#101016] md:w-64 xl:w-80`}
             >
                 <div className="shrink-0 space-y-4 border-b border-ui-border p-5">
                     <h1 className="flex items-center gap-2 font-semibold">
-                        <MessageSquare size={20} className="text-violet-300" />{" "}
+                        <MessageSquare size={20} className="text-violet-300" />{' '}
                         Document chats
                     </h1>
                     <Button
@@ -171,9 +176,9 @@ export default function DocumentChat({
                                 setShowList(false);
                             }}
                             aria-current={
-                                activeId === chat.id ? "page" : undefined
+                                activeId === chat.id ? 'page' : undefined
                             }
-                            className={`flex w-full gap-3 rounded-xl p-3 text-left transition focus-visible:outline-2 focus-visible:outline-violet-400 disabled:opacity-60 ${activeId === chat.id ? "bg-violet-500/15 ring-1 ring-violet-400/20" : "hover:bg-white/5"}`}
+                            className={`flex w-full gap-3 rounded-xl p-3 text-left transition focus-visible:outline-2 focus-visible:outline-violet-400 disabled:opacity-60 ${activeId === chat.id ? 'bg-violet-500/15 ring-1 ring-violet-400/20' : 'hover:bg-white/5'}`}
                         >
                             <FileText
                                 size={18}
@@ -184,14 +189,12 @@ export default function DocumentChat({
                                 <span className="block truncate text-sm text-zinc-200">
                                     {chat.title}
                                 </span>
-                                {chat.preview && (
-                                    <span
-                                        dir="auto"
-                                        className="mt-1 block truncate text-xs text-ui-secondary"
-                                    >
-                                        {chat.preview}
-                                    </span>
-                                )}
+                                <span
+                                    dir="auto"
+                                    className="mt-1 block truncate text-xs text-ui-secondary"
+                                >
+                                    {chat.preview || 'No messages yet'}
+                                </span>
                                 {chat.timestamp && (
                                     <time
                                         dateTime={chat.timestamp}
@@ -207,7 +210,7 @@ export default function DocumentChat({
                 </nav>
             </aside>
             <div
-                className={`${showList ? "hidden md:flex" : "flex"} h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
+                className={`${showList ? 'hidden md:flex' : 'flex'} h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
             >
                 <header className="flex shrink-0 items-center gap-3 border-b border-white/10 bg-[#191923]/95 px-4 py-3 shadow-sm shadow-black/20 sm:px-6">
                     <Button
@@ -224,12 +227,12 @@ export default function DocumentChat({
                             className="truncate text-sm font-medium"
                             title={active?.title}
                         >
-                            {active?.title ?? "New conversation"}
+                            {active?.title ?? 'New conversation'}
                         </h2>
                         <p className="mt-1 text-xs text-ui-muted">
                             {document
-                                ? "Document ready · One document per chat"
-                                : "Upload a Word document to begin"}
+                                ? 'Document ready · One document per chat'
+                                : 'Upload a Word document to begin'}
                         </p>
                     </div>
                 </header>
@@ -320,10 +323,10 @@ export default function DocumentChat({
                             {turns.length === 0 && (
                                 <p className="py-12 text-center text-sm text-ui-muted">
                                     {isDocumentReady
-                                        ? "Your document is ready. Ask your first question below."
-                                        : embeddingStatus === "FAILED"
-                                          ? "We could not prepare this document."
-                                          : "Processing your document?"}
+                                        ? 'Your document is ready. Ask your first question below.'
+                                        : embeddingStatus === 'FAILED'
+                                          ? 'We could not prepare this document.'
+                                          : 'Processing your document?'}
                                 </p>
                             )}
                             <MessageHistory turns={turns ?? []} />
@@ -343,13 +346,11 @@ export default function DocumentChat({
                             isPending={asking}
                             className="flex shrink-0 items-end gap-3 border-t border-white/10 bg-[#191923]/95 px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-16px_rgba(0,0,0,0.7)] sm:px-6 [&>div]:min-w-0 [&>div]:flex-1"
                         >
-                            <Input<QuestionValues>
-                                name="query"
+                            <Input<DocumentQuestionValues>
+                                name="question"
                                 label="Your question"
                                 placeholder="Ask something about your document…"
-                                disabled={
-                                    !askAction || !isDocumentReady || asking
-                                }
+                                disabled={!isDocumentReady || asking}
                                 autoComplete="off"
                                 dir="auto"
                             />
@@ -359,7 +360,7 @@ export default function DocumentChat({
                                 className="mb-1.5"
                                 aria-label="Send question"
                                 loading={asking}
-                                disabled={!askAction || !isDocumentReady}
+                                disabled={!isDocumentReady}
                                 startIcon={<Send size={16} />}
                             ></Button>
                         </Form>
