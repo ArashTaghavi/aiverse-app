@@ -74,7 +74,7 @@
 }
 
 /* Apply the admin palette to shared components and menus portaled to body. */
-:root:has(.admin-theme) {
+:root:has(.admin-theme, .user-theme) {
     --ui-text-soft: #e0e0e5;
     --ui-text-secondary: #c4c4cc;
     --ui-text-muted: #a1a1ae;

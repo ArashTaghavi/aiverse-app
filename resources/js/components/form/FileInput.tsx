@@ -1,4 +1,5 @@
 import { useId, type InputHTMLAttributes } from 'react';
+import { usePage } from '@inertiajs/react';
 import {
     useController,
     useFormContext,
@@ -25,10 +26,12 @@ export default function FileInput<T extends FieldValues>({
     ...props
 }: FileInputProps<T>) {
     const { control } = useFormContext<T>();
+    const { errors } = usePage().props;
     const {
         field: { name: fieldName, ref, onBlur, onChange },
-        fieldState: { error },
+        fieldState: { error: validationError },
     } = useController({ name, control });
+    const error = validationError?.message ?? errors[name];
     const generatedId = useId();
     const inputId = id ?? generatedId;
 
@@ -45,7 +48,7 @@ export default function FileInput<T extends FieldValues>({
                         role="alert"
                         className="mx-2 text-xs text-red-300"
                     >
-                        {error.message}
+                        {error}
                     </span>
                 )}
             </label>

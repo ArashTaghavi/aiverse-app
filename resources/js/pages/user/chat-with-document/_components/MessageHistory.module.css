@@ -1,0 +1,27 @@
+.bubble {
+    border: 1px solid;
+    box-shadow:
+        0 8px 24px -12px rgb(0 0 0 / 65%),
+        inset 0 1px 0 rgb(255 255 255 / 7%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    overflow-wrap: anywhere;
+}
+
+.user {
+    border-color: rgb(167 139 250 / 32%);
+    background: linear-gradient(
+        135deg,
+        rgb(92 62 155 / 62%),
+        rgb(47 36 77 / 88%)
+    );
+}
+
+.assistant {
+    border-color: rgb(186 210 245 / 19%);
+    background: linear-gradient(
+        135deg,
+        rgb(47 53 70 / 90%),
+        rgb(29 32 45 / 92%)
+    );
+}

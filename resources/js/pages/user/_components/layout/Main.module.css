@@ -1,0 +1,39 @@
+.edgeShine::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 35%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #a78bfa,
+        #ede9fe,
+        #67e8f9,
+        transparent
+    );
+    opacity: 0;
+    animation: edge-shine 6s ease-in-out infinite;
+}
+
+@keyframes edge-shine {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    15%,
+    55% {
+        opacity: 0.9;
+    }
+    75%,
+    100% {
+        opacity: 0;
+        transform: translateX(390%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .edgeShine::after {
+        animation: none;
+    }
+}
