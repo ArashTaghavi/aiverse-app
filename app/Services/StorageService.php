@@ -8,11 +8,29 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class StorageService
 {
-    public function __construct(private string $disk = 'public') {}
+    public function __construct(
+        private string $disk = 'public',
+        public string $basePath = 'uploads'
+    ) {}
 
-    public function upload(UploadedFile $file, string $path = 'uploads'): array
+    public function setDisk(string $disk): self
     {
-        $storagePath = $file->store($path, $this->disk);
+        $this->disk = $disk;
+
+        return $this;
+
+    }
+
+    public function setBasePath(string $basePath): self
+    {
+        $this->basePath = $basePath;
+
+        return $this;
+    }
+
+    public function upload(UploadedFile $file): array
+    {
+        $storagePath = $file->store($this->basePath, $this->disk);
 
         return [
             'original_name' => $file->getClientOriginalName(),

@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SiteController;
-use App\Http\Controllers\User\ChatWithDocumentController;
 use App\Http\Controllers\User\UserPanelController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,14 +17,5 @@ Route::middleware('auth')
     ->group(function () {
         Route::get('/', [UserPanelController::class, 'index'])->name('user.index');
 
-        Route::prefix('/chat-with-document')
-            ->name('chat-with-document.')
-            ->controller(ChatWithDocumentController::class)
-            ->group(function () {
-                Route::get('/', 'index')->name('index');
-                Route::get('/documents', 'documents')->name('documents');
-
-                Route::post('/upload', 'upload')->name('upload');
-                Route::post('/ask/{relatedDocument}', 'ask')->name('ask');
-            });
+        require app_path('Modules/ChatWithDocument/routes.php');
     });

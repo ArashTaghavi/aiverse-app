@@ -21,9 +21,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Route::bind('relatedDocument', function (int $value) {
-            return Document::where('owner_id', auth()->id())
-                ->whereKey($value)
+        Route::bind('relatedDocument', function (string $value) {
+            return Document::where('uuid', $value)
+                ->where('owner_id', auth()->id())
                 ->firstOrFail();
         });
     }
