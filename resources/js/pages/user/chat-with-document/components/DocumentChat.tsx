@@ -1,17 +1,17 @@
-import { usePage } from "@inertiajs/react";
-import { useMemo } from "react";
-import type { DocumentChatProps } from "@/types";
-import DocumentEmbeddingListener from "./DocumentEmbeddingListener";
-import DocumentChatSidebar from "./DocumentChatSidebar";
-import DocumentChatHeader from "./DocumentChatHeader";
-import DocumentUploadPanel from "./DocumentUploadPanel";
-import DocumentConversation from "./DocumentConversation";
-import useAutoScroll from "../hooks/useAutoScroll";
-import useChatNavigation from "../hooks/useChatNavigation";
-import useDocumentEmbedding from "../hooks/useDocumentEmbedding";
-import useDocumentQuestion from "../hooks/useDocumentQuestion";
-import useDocumentUpload from "../hooks/useDocumentUpload";
-import DocumentAnswerListener from "./DocumentAnswerListener";
+import { usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
+import type { DocumentChatProps } from '@/types';
+import DocumentEmbeddingListener from './DocumentEmbeddingListener';
+import DocumentChatSidebar from './DocumentChatSidebar';
+import DocumentChatHeader from './DocumentChatHeader';
+import DocumentUploadPanel from './DocumentUploadPanel';
+import DocumentConversation from './DocumentConversation';
+import useAutoScroll from '../hooks/useAutoScroll';
+import useChatNavigation from '../hooks/useChatNavigation';
+import useDocumentEmbedding from '../hooks/useDocumentEmbedding';
+import useDocumentQuestion from '../hooks/useDocumentQuestion';
+import useDocumentUpload from '../hooks/useDocumentUpload';
+import DocumentAnswerListener from './DocumentAnswerListener';
 
 export default function DocumentChat({
     documentId = null,
@@ -78,7 +78,7 @@ export default function DocumentChat({
                 selectChat={selectChat}
             />
             <div
-                className={`${showList ? "hidden md:flex" : "flex"} h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
+                className={`${showList ? 'hidden md:flex' : 'flex'} h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
             >
                 <DocumentChatHeader
                     title={selected?.title}

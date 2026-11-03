@@ -1,18 +1,18 @@
-import { index as chatWithDocument } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import { Link } from "@inertiajs/react";
-import { usePage } from "@inertiajs/react";
-import type { UserNavigationProps } from "@/types";
-import { ChevronRight, Database, FileText } from "lucide-react";
+import { index as chatWithDocument } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
+import { Link } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
+import type { UserNavigationProps } from '@/types';
+import { ChevronRight, Database, FileText } from 'lucide-react';
 
 const items = [
     {
-        label: "Chat with document",
+        label: 'Chat with document',
         href: chatWithDocument().url,
         icon: FileText,
     },
     {
-        label: "Database analyst",
-        href: "",
+        label: 'Database analyst',
+        href: '',
         icon: Database,
     },
 ];
@@ -25,17 +25,27 @@ export default function Navigation({ onNavigate }: UserNavigationProps) {
                 Workspace
             </p>
             {items.map(({ label, href, icon: Icon }) => {
-                const active = pathname === href || pathname.startsWith(`${href}/`);
+                const active =
+                    pathname === href || pathname.startsWith(`${href}/`);
                 return (
                     <Link
                         key={href}
                         href={href}
                         onClick={onNavigate}
-                        aria-current={active ? "page" : undefined}
-                        className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-violet-400 ${active ? "bg-violet-400/10 text-violet-300 ring-1 ring-violet-400/15" : "text-ui-secondary hover:bg-white/5 hover:text-white"}`}
+                        aria-current={active ? 'page' : undefined}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-violet-400 ${active ? 'bg-violet-400/10 text-violet-300 ring-1 ring-violet-400/15' : 'text-ui-secondary hover:bg-white/5 hover:text-white'}`}
                     >
-                        <Icon size={18} className="shrink-0" aria-hidden="true" /> {label}
-                        <ChevronRight size={14} className="ml-auto" aria-hidden="true" />
+                        <Icon
+                            size={18}
+                            className="shrink-0"
+                            aria-hidden="true"
+                        />{' '}
+                        {label}
+                        <ChevronRight
+                            size={14}
+                            className="ml-auto"
+                            aria-hidden="true"
+                        />
                     </Link>
                 );
             })}

@@ -1,8 +1,11 @@
-import { useState, type MouseEvent } from "react";
-import { router } from "@inertiajs/react";
-import { index } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import { useState, type MouseEvent } from 'react';
+import { router } from '@inertiajs/react';
+import { index } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
 
-export default function useChatNavigation(busy: boolean, resetForms: () => void) {
+export default function useChatNavigation(
+    busy: boolean,
+    resetForms: () => void,
+) {
     const [showList, setShowList] = useState(false);
 
     function newChat() {

@@ -1,7 +1,7 @@
-import type { UserLayoutProps } from "@/types";
-import Header from "./_components/layout/Header";
-import Aside from "./_components/layout/Aside";
-import Main from "./_components/layout/Main";
+import type { UserLayoutProps } from '@/types';
+import Header from './_components/layout/Header';
+import Aside from './_components/layout/Aside';
+import Main from './_components/layout/Main';
 
 export default function UserLayout({ children }: UserLayoutProps) {
     return (

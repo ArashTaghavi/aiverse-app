@@ -1,7 +1,7 @@
-import { Link } from "@inertiajs/react";
-import { ArrowLeft } from "lucide-react";
-import { home } from "@/routes";
-import type { ReactNode } from "react";
+import { Link } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
+import { home } from '@/routes';
+import type { ReactNode } from 'react';
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
     return (

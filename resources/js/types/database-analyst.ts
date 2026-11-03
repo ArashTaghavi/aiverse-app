@@ -1,4 +1,4 @@
-import type { RouteDefinition } from "@/wayfinder";
+import type { RouteDefinition } from '@/wayfinder';
 
 export type DatabaseAnswer = {
     initial_sql: string;
@@ -16,9 +16,9 @@ export type AnalysisProgressProps = {
     failed: boolean;
 };
 export type AnalysisEvent =
-    | { request_id: string; type: "progress"; data: DatabaseProgress }
-    | { request_id: string; type: "result"; data: DatabaseAnswer }
-    | { request_id: string; type: "error"; data: { message: string } };
+    | { request_id: string; type: 'progress'; data: DatabaseProgress }
+    | { request_id: string; type: 'result'; data: DatabaseAnswer }
+    | { request_id: string; type: 'error'; data: { message: string } };
 
 export type DatabaseTurn = {
     id: string;
@@ -42,7 +42,7 @@ export type DatabaseAnalysisRequest = {
 };
 export type DatabaseChatProps = {
     initialConversations?: DatabaseConversation[];
-    askAction?: () => RouteDefinition<"post">;
+    askAction?: () => RouteDefinition<'post'>;
 };
 export type AnalysisListenerProps = {
     userId: number;

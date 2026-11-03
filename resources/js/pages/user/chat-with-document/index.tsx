@@ -1,7 +1,7 @@
-import { Head } from "@inertiajs/react";
-import UserLayout from "../layout";
-import DocumentChat from "./components/DocumentChat";
-import type { DocumentChatProps } from "@/types";
+import { Head } from '@inertiajs/react';
+import UserLayout from '../layout';
+import DocumentChat from './components/DocumentChat';
+import type { DocumentChatProps } from '@/types';
 
 export default function DocumentChatPage(props: DocumentChatProps) {
     return (

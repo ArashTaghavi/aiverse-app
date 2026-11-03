@@ -1,9 +1,9 @@
-import { FileText, Upload } from "lucide-react";
-import { FileInput, Form, Input } from "@/components/form";
-import { Button } from "@/components/ui";
-import type { NewChatFormValues } from "@/types";
-import type useDocumentUpload from "../hooks/useDocumentUpload";
-import PreparingUpload from "./PreparingUpload";
+import { FileText, Upload } from 'lucide-react';
+import { FileInput, Form, Input } from '@/components/form';
+import { Button } from '@/components/ui';
+import type { NewChatFormValues } from '@/types';
+import type useDocumentUpload from '../hooks/useDocumentUpload';
+import PreparingUpload from './PreparingUpload';
 
 type Props = {
     userId?: number;
@@ -26,11 +26,17 @@ export default function DocumentUploadPanel({ userId, uploadState }: Props) {
                 methods={uploadForm}
                 onSubmit={uploadDocument}
                 isPending={uploading}
-                className={showUploadProgress ? "hidden" : "m-auto w-full max-w-lg space-y-5 py-6"}
+                className={
+                    showUploadProgress
+                        ? 'hidden'
+                        : 'm-auto w-full max-w-lg space-y-5 py-6'
+                }
             >
                 <div className="space-y-2 text-center">
                     <FileText size={40} className="mx-auto text-violet-300" />
-                    <h2 className="text-xl font-semibold">Chat with your document</h2>
+                    <h2 className="text-xl font-semibold">
+                        Chat with your document
+                    </h2>
                     <p className="text-sm text-ui-secondary">
                         Upload once, then ask questions about its contents.
                     </p>
@@ -50,7 +56,11 @@ export default function DocumentUploadPanel({ userId, uploadState }: Props) {
                     disabled={uploading}
                     hint="One .docx file per conversation. The document cannot be replaced after upload."
                 />
-                <Button type="submit" loading={uploading} startIcon={<Upload size={16} />}>
+                <Button
+                    type="submit"
+                    loading={uploading}
+                    startIcon={<Upload size={16} />}
+                >
                     Upload document
                 </Button>
                 {uploading && (
@@ -60,7 +70,13 @@ export default function DocumentUploadPanel({ userId, uploadState }: Props) {
                 )}
             </Form>
             {userId !== undefined && (
-                <div className={showUploadProgress ? "m-auto w-full max-w-lg py-6" : "hidden"}>
+                <div
+                    className={
+                        showUploadProgress
+                            ? 'm-auto w-full max-w-lg py-6'
+                            : 'hidden'
+                    }
+                >
                     <PreparingUpload
                         userId={userId}
                         uploadAttempt={uploadAttempt}

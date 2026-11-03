@@ -1,9 +1,9 @@
-import type { MessageHistoryProps, MessageTimeProps } from "@/types";
-import { groupMessagesByDay, messageDate } from "../lib/message-dates";
-import { UserRound } from "lucide-react";
-import styles from "./MessageHistory.module.css";
-import TypingIndicator from "./TypingIndicator";
-import AssistantMessage from "./AssistantMessage";
+import type { MessageHistoryProps, MessageTimeProps } from '@/types';
+import { groupMessagesByDay, messageDate } from '../lib/message-dates';
+import { UserRound } from 'lucide-react';
+import styles from './MessageHistory.module.css';
+import TypingIndicator from './TypingIndicator';
+import AssistantMessage from './AssistantMessage';
 
 function MessageTime({ timestamp }: MessageTimeProps) {
     const date = messageDate(timestamp);
@@ -57,8 +57,8 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                     </div>
                     <AssistantMessage>
                         {turn.answer == null &&
-                        (turn.answer_status === "PENDING" ||
-                            turn.answer_status === "PROCESSING") ? (
+                        (turn.answer_status === 'PENDING' ||
+                            turn.answer_status === 'PROCESSING') ? (
                             <TypingIndicator />
                         ) : (
                             <p
@@ -66,14 +66,14 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                                 className="text-sm leading-7 break-words whitespace-pre-wrap text-zinc-200"
                             >
                                 {turn.answer ??
-                                    (turn.answer_status === "FAILED"
-                                        ? "Could not prepare an answer. Please try again."
-                                        : "No answer was returned.")}
+                                    (turn.answer_status === 'FAILED'
+                                        ? 'Could not prepare an answer. Please try again.'
+                                        : 'No answer was returned.')}
                             </p>
                         )}
                         {(turn.answer != null ||
-                            turn.answer_status === "FAILED" ||
-                            turn.answer_status === "COMPLETED") && (
+                            turn.answer_status === 'FAILED' ||
+                            turn.answer_status === 'COMPLETED') && (
                             <MessageTime timestamp={turn.created_at} />
                         )}
                     </AssistantMessage>

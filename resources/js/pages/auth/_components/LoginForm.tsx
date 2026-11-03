@@ -1,19 +1,19 @@
-import { router } from "@inertiajs/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { useState } from "react";
-import { ArrowRight, UserPlus } from "lucide-react";
-import { z } from "zod";
+import { router } from '@inertiajs/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useState } from 'react';
+import { ArrowRight, UserPlus } from 'lucide-react';
+import { z } from 'zod';
 
-import { Form, Input, PasswordInput } from "@/components/form";
-import Button from "@/components/ui/Button";
+import { Form, Input, PasswordInput } from '@/components/form';
+import Button from '@/components/ui/Button';
 
-import { store as login } from "@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController";
-import { store as register } from "@/actions/Laravel/Fortify/Http/Controllers/RegisteredUserController";
+import { store as login } from '@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController';
+import { store as register } from '@/actions/Laravel/Fortify/Http/Controllers/RegisteredUserController';
 
 const authSchema = z.object({
-    username: z.string().trim().min(1, "Enter your username."),
-    password: z.string().min(1, "Enter your password."),
+    username: z.string().trim().min(1, 'Enter your username.'),
+    password: z.string().min(1, 'Enter your password.'),
 });
 
 type AuthValues = z.infer<typeof authSchema>;
@@ -26,8 +26,8 @@ export default function LoginForm({
     const methods = useForm<AuthValues>({
         resolver: zodResolver(authSchema),
         defaultValues: {
-            username: "",
-            password: "",
+            username: '',
+            password: '',
         },
     });
 
@@ -50,7 +50,11 @@ export default function LoginForm({
     };
 
     return (
-        <Form methods={methods} onSubmit={handleLogin} className="mt-9 space-y-6">
+        <Form
+            methods={methods}
+            onSubmit={handleLogin}
+            className="mt-9 space-y-6"
+        >
             <Input<AuthValues>
                 name="username"
                 label="Username"

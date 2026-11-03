@@ -1,8 +1,8 @@
-import type { z } from "zod";
-import type { newChatSchema } from "@/pages/user/chat-with-document/schemas/new-chat.schema";
-import type { documentQuestionSchema } from "@/pages/user/chat-with-document/schemas/question.schema";
+import type { z } from 'zod';
+import type { newChatSchema } from '@/pages/user/chat-with-document/schemas/new-chat.schema';
+import type { documentQuestionSchema } from '@/pages/user/chat-with-document/schemas/question.schema';
 
-export type EmbeddingStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+export type EmbeddingStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
 
 export type DocumentResponse = {
     id: number;
@@ -19,7 +19,7 @@ export type ChatTurnResponse = {
     id: number;
     question: string;
     answer: string | null;
-    answer_status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+    answer_status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
     created_at: string;
 };
 
@@ -41,7 +41,7 @@ export type DocumentNotificationsProps = { userId: number };
 
 export type EmbeddingCompletedPayload = {
     document_id: number;
-    embedding_status: "COMPLETED";
+    embedding_status: 'COMPLETED';
 };
 
 export type DocumentEmbeddingListenerProps = {

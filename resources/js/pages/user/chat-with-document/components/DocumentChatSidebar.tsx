@@ -1,10 +1,10 @@
-import { Link } from "@inertiajs/react";
-import { FileText, MessageSquare, Plus } from "lucide-react";
-import { Button } from "@/components/ui";
-import { index } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import type { DocumentResponse } from "@/types";
-import type useChatNavigation from "../hooks/useChatNavigation";
-import { messageDate } from "../lib/message-dates";
+import { Link } from '@inertiajs/react';
+import { FileText, MessageSquare, Plus } from 'lucide-react';
+import { Button } from '@/components/ui';
+import { index } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
+import type { DocumentResponse } from '@/types';
+import type useChatNavigation from '../hooks/useChatNavigation';
+import { messageDate } from '../lib/message-dates';
 
 type Props = {
     documents: DocumentResponse[];
@@ -12,7 +12,7 @@ type Props = {
     showList: boolean;
     busy: boolean;
     newChat: () => void;
-    selectChat: ReturnType<typeof useChatNavigation>["selectChat"];
+    selectChat: ReturnType<typeof useChatNavigation>['selectChat'];
 };
 
 export default function DocumentChatSidebar({
@@ -32,11 +32,12 @@ export default function DocumentChatSidebar({
     return (
         <aside
             aria-label="Conversations"
-            className={`${showList ? "flex" : "hidden md:flex"} h-full min-h-0 w-full shrink-0 flex-col border-r border-ui-border bg-[#101016] md:w-64 xl:w-80`}
+            className={`${showList ? 'flex' : 'hidden md:flex'} h-full min-h-0 w-full shrink-0 flex-col border-r border-ui-border bg-[#101016] md:w-64 xl:w-80`}
         >
             <div className="shrink-0 space-y-4 border-b border-ui-border p-5">
                 <h1 className="flex items-center gap-2 font-semibold">
-                    <MessageSquare size={20} className="text-violet-300" /> Document chats
+                    <MessageSquare size={20} className="text-violet-300" />{' '}
+                    Document chats
                 </h1>
                 <Button
                     fullWidth
@@ -68,8 +69,8 @@ export default function DocumentChatSidebar({
                         preserveScroll
                         aria-disabled={busy}
                         onClick={selectChat}
-                        aria-current={activeId === chat.id ? "page" : undefined}
-                        className={`flex w-full gap-3 rounded-xl p-3 text-left transition focus-visible:outline-2 focus-visible:outline-violet-400 disabled:opacity-60 ${activeId === chat.id ? "bg-violet-500/15 ring-1 ring-violet-400/20" : "hover:bg-white/5"}`}
+                        aria-current={activeId === chat.id ? 'page' : undefined}
+                        className={`flex w-full gap-3 rounded-xl p-3 text-left transition focus-visible:outline-2 focus-visible:outline-violet-400 disabled:opacity-60 ${activeId === chat.id ? 'bg-violet-500/15 ring-1 ring-violet-400/20' : 'hover:bg-white/5'}`}
                     >
                         <FileText
                             size={18}
@@ -84,7 +85,7 @@ export default function DocumentChatSidebar({
                                 dir="auto"
                                 className="mt-1 block truncate text-xs text-ui-secondary"
                             >
-                                {chat.preview || "No messages yet"}
+                                {chat.preview || 'No messages yet'}
                             </span>
                             {chat.timestamp && (
                                 <time

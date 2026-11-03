@@ -1,8 +1,12 @@
-import type { ReactNode } from "react";
-import { Sparkles } from "lucide-react";
-import styles from "./MessageHistory.module.css";
+import type { ReactNode } from 'react';
+import { Sparkles } from 'lucide-react';
+import styles from './MessageHistory.module.css';
 
-export default function AssistantMessage({ children }: { children: ReactNode }) {
+export default function AssistantMessage({
+    children,
+}: {
+    children: ReactNode;
+}) {
     return (
         <div
             className={`${styles.bubble} ${styles.assistant} mr-auto w-fit max-w-[95%] rounded-3xl rounded-tl-md px-3 py-2.5 sm:max-w-[90%]`}

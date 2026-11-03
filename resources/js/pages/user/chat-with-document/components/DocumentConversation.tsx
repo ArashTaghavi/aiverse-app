@@ -1,9 +1,9 @@
-import type { Ref } from "react";
-import { FileText } from "lucide-react";
-import type { ChatTurnResponse, EmbeddingStatus } from "@/types";
-import type useDocumentQuestion from "../hooks/useDocumentQuestion";
-import MessageHistory from "./MessageHistory";
-import DocumentQuestionForm from "./DocumentQuestionForm";
+import type { Ref } from 'react';
+import { FileText } from 'lucide-react';
+import type { ChatTurnResponse, EmbeddingStatus } from '@/types';
+import type useDocumentQuestion from '../hooks/useDocumentQuestion';
+import MessageHistory from './MessageHistory';
+import DocumentQuestionForm from './DocumentQuestionForm';
 
 type Props = {
     document: { document_id: number; original_filename: string };
@@ -27,9 +27,16 @@ export default function DocumentConversation({
         <>
             {document && (
                 <div className="flex shrink-0 items-center gap-3 border-b border-emerald-400/20 bg-emerald-400/5 px-4 py-2 text-sm">
-                    <FileText size={20} className="shrink-0 text-emerald-300" aria-hidden="true" />
+                    <FileText
+                        size={20}
+                        className="shrink-0 text-emerald-300"
+                        aria-hidden="true"
+                    />
                     <div className="min-w-0">
-                        <p className="truncate text-zinc-100" title={document.original_filename}>
+                        <p
+                            className="truncate text-zinc-100"
+                            title={document.original_filename}
+                        >
                             {document.original_filename}
                         </p>
                         <p className="mt-1 text-xs text-emerald-300">
@@ -49,10 +56,10 @@ export default function DocumentConversation({
                 {turns.length === 0 && (
                     <p className="py-12 text-center text-sm text-ui-muted">
                         {isDocumentReady
-                            ? "Your document is ready. Ask your first question below."
-                            : embeddingStatus === "FAILED"
-                              ? "We could not prepare this document."
-                              : "Processing your document?"}
+                            ? 'Your document is ready. Ask your first question below.'
+                            : embeddingStatus === 'FAILED'
+                              ? 'We could not prepare this document.'
+                              : 'Processing your document?'}
                     </p>
                 )}
                 <MessageHistory turns={turns ?? []} />

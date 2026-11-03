@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
-import PublicSurface from "@/components/ui/background/PublicSurface";
-import { cn } from "@/lib/utils";
-import SiteHeader from "./home/_components/SiteHeader";
+import type { ReactNode } from 'react';
+import PublicSurface from '@/components/ui/background/PublicSurface';
+import { cn } from '@/lib/utils';
+import SiteHeader from './home/_components/SiteHeader';
 
 type SiteLayoutProps = {
     children: ReactNode;
@@ -14,7 +14,7 @@ export default function SiteLayout({ children, className }: SiteLayoutProps) {
             <div
                 id="top"
                 className={cn(
-                    "relative isolate flex min-h-screen w-full flex-col",
+                    'relative isolate flex min-h-screen w-full flex-col',
                     className,
                 )}
             >

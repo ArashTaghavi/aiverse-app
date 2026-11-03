@@ -1,8 +1,12 @@
-import { useState } from "react";
-import type { DocumentResponse, EmbeddingStatus } from "@/types";
+import { useState } from 'react';
+import type { DocumentResponse, EmbeddingStatus } from '@/types';
 
-export default function useDocumentEmbedding(document: DocumentResponse | null | undefined) {
-    const [embeddingStatuses, setEmbeddingStatuses] = useState<Record<number, EmbeddingStatus>>({});
+export default function useDocumentEmbedding(
+    document: DocumentResponse | null | undefined,
+) {
+    const [embeddingStatuses, setEmbeddingStatuses] = useState<
+        Record<number, EmbeddingStatus>
+    >({});
     const embeddingStatus = document
         ? (embeddingStatuses[document.id] ?? document.embedding_status)
         : undefined;
@@ -13,7 +17,7 @@ export default function useDocumentEmbedding(document: DocumentResponse | null |
 
     return {
         embeddingStatus,
-        isDocumentReady: embeddingStatus === "COMPLETED",
+        isDocumentReady: embeddingStatus === 'COMPLETED',
         updateEmbeddingStatus,
     };
 }

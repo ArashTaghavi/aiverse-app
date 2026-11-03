@@ -1,12 +1,12 @@
-import { Send } from "lucide-react";
-import { Form, Input } from "@/components/form";
-import { Button } from "@/components/ui";
-import type { DocumentQuestionValues } from "@/types";
-import type useDocumentQuestion from "../hooks/useDocumentQuestion";
+import { Send } from 'lucide-react';
+import { Form, Input } from '@/components/form';
+import { Button } from '@/components/ui';
+import type { DocumentQuestionValues } from '@/types';
+import type useDocumentQuestion from '../hooks/useDocumentQuestion';
 
 type Props = {
-    questionForm: ReturnType<typeof useDocumentQuestion>["questionForm"];
-    sendQuestion: ReturnType<typeof useDocumentQuestion>["sendQuestion"];
+    questionForm: ReturnType<typeof useDocumentQuestion>['questionForm'];
+    sendQuestion: ReturnType<typeof useDocumentQuestion>['sendQuestion'];
     asking: boolean;
     isDocumentReady: boolean;
 };

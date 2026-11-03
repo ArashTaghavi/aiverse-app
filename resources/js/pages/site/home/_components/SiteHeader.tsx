@@ -1,14 +1,14 @@
-import DocumentEmbeddingNotifications from "@/components/ui/DocumentNotifications";
-import { Link, usePage } from "@inertiajs/react";
-import { home, portfolio, auth } from "@/routes";
-import { LogIn, LogOut, Sparkles, UserRound } from "lucide-react";
-import { useEffect, useRef, useSyncExternalStore } from "react";
-import { router } from "@inertiajs/react";
-import { destroy as logout } from "@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController";
+import DocumentEmbeddingNotifications from '@/components/ui/DocumentNotifications';
+import { Link, usePage } from '@inertiajs/react';
+import { home, portfolio, auth } from '@/routes';
+import { LogIn, LogOut, Sparkles, UserRound } from 'lucide-react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { router } from '@inertiajs/react';
+import { destroy as logout } from '@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController';
 
 function subscribeToScroll(onChange: () => void) {
-    window.addEventListener("scroll", onChange, { passive: true });
-    return () => window.removeEventListener("scroll", onChange);
+    window.addEventListener('scroll', onChange, { passive: true });
+    return () => window.removeEventListener('scroll', onChange);
 }
 
 function getScrolled() {
@@ -26,7 +26,7 @@ export default function SiteHeader() {
     useEffect(() => {
         if (!import.meta.env.DEV) return;
 
-        console.info("[SiteHeader] mounted", { userId: user?.id ?? null });
+        console.info('[SiteHeader] mounted', { userId: user?.id ?? null });
     }, [user?.id]);
 
     const pathname = usePage().url.split(/[?#]/)[0];
@@ -42,7 +42,7 @@ export default function SiteHeader() {
         if (!header || !page) return;
         const updateHeight = () => {
             page.style.setProperty(
-                "--site-header-height",
+                '--site-header-height',
                 `${header.getBoundingClientRect().height}px`,
             );
         };
@@ -57,8 +57,8 @@ export default function SiteHeader() {
             ref={headerRef}
             className={`sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 motion-reduce:transition-none ${
                 scrolled
-                    ? "border-violet-300/15 bg-[#09090e]/85 shadow-[0_8px_32px_-12px_#000000b3] backdrop-blur-xl"
-                    : "border-white/5 bg-transparent"
+                    ? 'border-violet-300/15 bg-[#09090e]/85 shadow-[0_8px_32px_-12px_#000000b3] backdrop-blur-xl'
+                    : 'border-white/5 bg-transparent'
             }`}
         >
             <div className="grid w-full grid-cols-[1fr_auto] items-center gap-4 px-5 py-5 sm:grid-cols-[1fr_auto_1fr] sm:px-10 lg:px-16 xl:px-24">
@@ -78,11 +78,11 @@ export default function SiteHeader() {
                 >
                     <Link
                         href={home()}
-                        aria-current={pathname === "/" ? "page" : undefined}
+                        aria-current={pathname === '/' ? 'page' : undefined}
                         className={
-                            pathname === "/"
-                                ? "text-violet-300 hover:text-violet-200"
-                                : "transition-colors hover:text-white"
+                            pathname === '/'
+                                ? 'text-violet-300 hover:text-violet-200'
+                                : 'transition-colors hover:text-white'
                         }
                     >
                         Home
@@ -90,12 +90,12 @@ export default function SiteHeader() {
                     <Link
                         href={portfolio()}
                         aria-current={
-                            pathname === "/portfolio" ? "page" : undefined
+                            pathname === '/portfolio' ? 'page' : undefined
                         }
                         className={
-                            pathname === "/portfolio"
-                                ? "text-violet-300 hover:text-violet-200"
-                                : "transition-colors hover:text-white"
+                            pathname === '/portfolio'
+                                ? 'text-violet-300 hover:text-violet-200'
+                                : 'transition-colors hover:text-white'
                         }
                     >
                         Portfolio
@@ -111,7 +111,7 @@ export default function SiteHeader() {
                                     aria-hidden="true"
                                 />
                                 <span className="truncate">
-                                    {typeof user.username === "string"
+                                    {typeof user.username === 'string'
                                         ? user.username
                                         : user.name}
                                 </span>

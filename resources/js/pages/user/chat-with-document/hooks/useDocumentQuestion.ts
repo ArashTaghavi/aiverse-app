@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { router } from "@inertiajs/react";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ask } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import type { ChatTurnResponse, DocumentQuestionValues } from "@/types";
-import { documentQuestionSchema } from "../schemas/question.schema";
+import { useState } from 'react';
+import { router } from '@inertiajs/react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ask } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
+import type { ChatTurnResponse, DocumentQuestionValues } from '@/types';
+import { documentQuestionSchema } from '../schemas/question.schema';
 
 export default function useDocumentQuestion(
     documentUuid: string | null,
@@ -14,14 +14,17 @@ export default function useDocumentQuestion(
 ) {
     const [asking, setAsking] = useState(false);
     const [submittedTurnCount, setSubmittedTurnCount] = useState(0);
-    const [pendingTurn, setPendingTurn] = useState<ChatTurnResponse | null>(null);
+    const [pendingTurn, setPendingTurn] = useState<ChatTurnResponse | null>(
+        null,
+    );
     const questionForm = useForm<DocumentQuestionValues>({
         resolver: zodResolver(documentQuestionSchema),
-        defaultValues: { question: "" },
+        defaultValues: { question: '' },
     });
 
     const sendQuestion: SubmitHandler<DocumentQuestionValues> = (data) => {
-        if (documentUuid === null || !isDocumentReady || uploading || asking) return;
+        if (documentUuid === null || !isDocumentReady || uploading || asking)
+            return;
         router.post(ask(documentUuid).url, data, {
             preserveScroll: true,
             onStart: () => {
@@ -30,7 +33,7 @@ export default function useDocumentQuestion(
                     id: -Date.now(),
                     question: data.question,
                     answer: null,
-                    answer_status: "PENDING",
+                    answer_status: 'PENDING',
                     created_at: new Date().toISOString(),
                 });
                 setAsking(true);
@@ -47,6 +50,7 @@ export default function useDocumentQuestion(
         questionForm,
         asking,
         sendQuestion,
-        pendingTurn: asking && turnCount === submittedTurnCount ? pendingTurn : null,
+        pendingTurn:
+            asking && turnCount === submittedTurnCount ? pendingTurn : null,
     };
 }
