@@ -1,7 +1,9 @@
-import type { MessageHistoryProps, MessageTimeProps } from '@/types';
-import { groupMessagesByDay, messageDate } from '../_lib/message-dates';
-import { Sparkles, UserRound } from 'lucide-react';
-import styles from './MessageHistory.module.css';
+import type { MessageHistoryProps, MessageTimeProps } from "@/types";
+import { groupMessagesByDay, messageDate } from "../lib/message-dates";
+import { UserRound } from "lucide-react";
+import styles from "./MessageHistory.module.css";
+import TypingIndicator from "./TypingIndicator";
+import AssistantMessage from "./AssistantMessage";
 
 function MessageTime({ timestamp }: MessageTimeProps) {
     const date = messageDate(timestamp);
@@ -53,26 +55,28 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                         </p>
                         <MessageTime timestamp={turn.created_at} />
                     </div>
-                    <div
-                        className={`${styles.bubble} ${styles.assistant} mr-auto w-fit max-w-[95%] rounded-3xl rounded-tl-md px-3 py-2.5 sm:max-w-[90%]`}
-                    >
-                        <div className="mb-2 flex items-center gap-2 text-xs font-medium text-sky-200">
-                            <span className="flex size-6 items-center justify-center rounded-lg border border-sky-200/20 bg-sky-300/10">
-                                <Sparkles size={13} aria-hidden="true" />
-                            </span>
-                            Assistant
-                        </div>
-                        <p
-                            dir="auto"
-                            className="text-sm leading-7 break-words whitespace-pre-wrap text-zinc-200"
-                        >
-                            {turn.answer ??
-                                (turn.answer_status === 'FAILED'
-                                    ? 'Could not prepare an answer. Please try again.'
-                                    : 'Preparing an answer…')}
-                        </p>
-                        <MessageTime timestamp={turn.created_at} />
-                    </div>
+                    <AssistantMessage>
+                        {turn.answer == null &&
+                        (turn.answer_status === "PENDING" ||
+                            turn.answer_status === "PROCESSING") ? (
+                            <TypingIndicator />
+                        ) : (
+                            <p
+                                dir="auto"
+                                className="text-sm leading-7 break-words whitespace-pre-wrap text-zinc-200"
+                            >
+                                {turn.answer ??
+                                    (turn.answer_status === "FAILED"
+                                        ? "Could not prepare an answer. Please try again."
+                                        : "No answer was returned.")}
+                            </p>
+                        )}
+                        {(turn.answer != null ||
+                            turn.answer_status === "FAILED" ||
+                            turn.answer_status === "COMPLETED") && (
+                            <MessageTime timestamp={turn.created_at} />
+                        )}
+                    </AssistantMessage>
                 </div>
             ))}
         </section>

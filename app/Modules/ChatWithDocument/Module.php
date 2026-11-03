@@ -14,5 +14,5 @@ final class Module
 
     public const ROUTE_PREFIX = self::NAME;
 
-    public const CHANNEL_PREFIX = self::NAME.'users';
+    public const CHANNEL_PREFIX = self::NAME.'.users';
 }

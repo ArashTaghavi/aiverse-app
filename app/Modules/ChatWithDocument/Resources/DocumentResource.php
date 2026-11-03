@@ -16,6 +16,7 @@ class DocumentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'uuid' => $this->uuid,
             'title' => $this->title,
             'original_name' => $this->original_name,
             'size' => $this->human_size,

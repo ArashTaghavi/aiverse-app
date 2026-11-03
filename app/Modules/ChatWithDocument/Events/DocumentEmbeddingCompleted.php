@@ -32,7 +32,7 @@ class DocumentEmbeddingCompleted implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel(Module::ROUTE_PREFIX.".{$this->document->owner_id}"),
+            new PrivateChannel(Module::CHANNEL_PREFIX.".{$this->document->owner_id}"),
         ];
     }
 

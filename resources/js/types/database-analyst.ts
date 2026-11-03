@@ -1,19 +1,24 @@
-import type { z } from 'zod';
-import type {
-    analysisEventSchema,
-    answerSchema,
-    progressSchema,
-} from '@/pages/user/database-analyst/_schemas/analysis.schema';
-import type { RouteDefinition } from '@/wayfinder';
+import type { RouteDefinition } from "@/wayfinder";
 
-export type DatabaseAnswer = z.infer<typeof answerSchema>;
-export type DatabaseProgress = z.infer<typeof progressSchema>;
+export type DatabaseAnswer = {
+    initial_sql: string;
+    sql: string;
+    text: string;
+    result: string;
+    success: boolean;
+    refined: boolean;
+    feedback: string;
+};
+export type DatabaseProgress = { stage: string; message: string };
 export type AnalysisProgressProps = {
     steps: DatabaseProgress[];
     finished: boolean;
     failed: boolean;
 };
-export type AnalysisEvent = z.infer<typeof analysisEventSchema>;
+export type AnalysisEvent =
+    | { request_id: string; type: "progress"; data: DatabaseProgress }
+    | { request_id: string; type: "result"; data: DatabaseAnswer }
+    | { request_id: string; type: "error"; data: { message: string } };
 
 export type DatabaseTurn = {
     id: string;
@@ -37,7 +42,7 @@ export type DatabaseAnalysisRequest = {
 };
 export type DatabaseChatProps = {
     initialConversations?: DatabaseConversation[];
-    askAction?: () => RouteDefinition<'post'>;
+    askAction?: () => RouteDefinition<"post">;
 };
 export type AnalysisListenerProps = {
     userId: number;

@@ -8,11 +8,11 @@ use App\Modules\ChatWithDocument\Module;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class AskCompleted implements ShouldBroadcast
+class AskCompleted implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -32,7 +32,7 @@ class AskCompleted implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel(Module::ROUTE_PREFIX.".{$this->documentChatTurn->document->owner_id}"),
+            new PrivateChannel(Module::CHANNEL_PREFIX.".{$this->documentChatTurn->document->owner_id}"),
         ];
     }
 

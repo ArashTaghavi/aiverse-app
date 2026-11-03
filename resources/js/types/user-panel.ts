@@ -1,8 +1,6 @@
-import type { ReactNode } from 'react';
-import type { z } from 'zod';
-import type { questionSchema } from '@/pages/user/_schemas/question.schema';
+import type { ReactNode } from "react";
 
-export type QuestionValues = z.infer<typeof questionSchema>;
+export type QuestionValues = { question: string };
 
 export type UserPageProps = {
     title: string;

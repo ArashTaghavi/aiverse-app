@@ -10,18 +10,10 @@
 
 .user {
     border-color: rgb(167 139 250 / 32%);
-    background: linear-gradient(
-        135deg,
-        rgb(92 62 155 / 62%),
-        rgb(47 36 77 / 88%)
-    );
+    background: linear-gradient(135deg, rgb(92 62 155 / 62%), rgb(47 36 77 / 88%));
 }
 
 .assistant {
     border-color: rgb(186 210 245 / 19%);
-    background: linear-gradient(
-        135deg,
-        rgb(47 53 70 / 90%),
-        rgb(29 32 45 / 92%)
-    );
+    background: linear-gradient(135deg, rgb(47 53 70 / 90%), rgb(29 32 45 / 92%));
 }

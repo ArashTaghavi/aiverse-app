@@ -2,13 +2,13 @@
 
 namespace App\Modules\ChatWithDocument\Listeners;
 
+use App\Modules\ChatWithDocument\DTOs\IngestDTO;
 use App\Modules\ChatWithDocument\Enums\DocumentEmbeddingStatusEnum;
 use App\Modules\ChatWithDocument\Enums\DocumentUploadProgressEnum;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingRequested;
 use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
 use App\Modules\ChatWithDocument\Models\Document;
-use App\Services\AI\ChatWithDocument\DTOs\IngestDTO;
 use App\Services\AIClient;
 use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Throwable;

@@ -11,7 +11,7 @@ class AIClient
     private function client(): PendingRequest
     {
         return Http::baseUrl(config('ai.url'))
-            ->acceptJson()
+            // ->acceptJson()
             ->connectTimeout(5)
             ->timeout(120);
     }

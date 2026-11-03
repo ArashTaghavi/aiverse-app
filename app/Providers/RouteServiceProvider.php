@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\ChatWithDocument\Document;
+use App\Modules\ChatWithDocument\Models\Document;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 

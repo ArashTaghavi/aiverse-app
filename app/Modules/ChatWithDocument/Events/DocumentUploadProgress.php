@@ -45,6 +45,7 @@ class DocumentUploadProgress implements ShouldBroadcastNow
             'status' => $this->status,
             'document' => [
                 'id' => $this->document->id,
+                'uuid' => $this->document->uuid,
                 'title' => $this->document->title,
                 'original_name' => $this->document->original_name,
                 'human_size' => $this->document->human_size,

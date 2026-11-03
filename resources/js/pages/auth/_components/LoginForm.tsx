@@ -18,7 +18,11 @@ const authSchema = z.object({
 
 type AuthValues = z.infer<typeof authSchema>;
 
-export default function LoginForm() {
+export default function LoginForm({
+    onAuthenticated,
+}: {
+    onAuthenticated?: () => Promise<void> | void;
+}) {
     const methods = useForm<AuthValues>({
         resolver: zodResolver(authSchema),
         defaultValues: {
@@ -31,6 +35,7 @@ export default function LoginForm() {
 
     const handleLogin: SubmitHandler<AuthValues> = (data) => {
         router.post(login().url, data, {
+            onSuccess: () => onAuthenticated?.(),
             onStart: () => setProcessing(true),
             onFinish: () => setProcessing(false),
         });
@@ -38,17 +43,14 @@ export default function LoginForm() {
 
     const handleRegister: SubmitHandler<AuthValues> = (data) => {
         router.post(register().url, data, {
+            onSuccess: () => onAuthenticated?.(),
             onStart: () => setProcessing(true),
             onFinish: () => setProcessing(false),
         });
     };
 
     return (
-        <Form
-            methods={methods}
-            onSubmit={handleLogin}
-            className="mt-9 space-y-6"
-        >
+        <Form methods={methods} onSubmit={handleLogin} className="mt-9 space-y-6">
             <Input<AuthValues>
                 name="username"
                 label="Username"

@@ -54,6 +54,7 @@ class ChatWithDocumentService
 
     public function ask(Document $relatedDocument, string $question): DocumentChatTurn
     {
+        $relatedDocument->update(['last_message' => $question]);
         $documentChatTurn = $relatedDocument->documentChatTurns()->create([
             'question' => $question,
             'answer_status' => AnswerStatusEnum::Pending,

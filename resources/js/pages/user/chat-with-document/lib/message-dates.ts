@@ -1,38 +1,38 @@
-import type { ChatTurnResponse } from '@/types';
+import type { ChatTurnResponse } from "@/types";
 
-const timeZone = 'Asia/Tehran';
-const dayFormatter = new Intl.DateTimeFormat('en-CA', {
+const timeZone = "Asia/Tehran";
+const dayFormatter = new Intl.DateTimeFormat("en-CA", {
     timeZone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
 });
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
     timeZone,
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    year: "numeric",
+    month: "long",
+    day: "numeric",
 });
-const timeFormatter = new Intl.DateTimeFormat('en-US', {
+const timeFormatter = new Intl.DateTimeFormat("en-US", {
     timeZone,
-    hour: '2-digit',
-    minute: '2-digit',
+    hour: "2-digit",
+    minute: "2-digit",
     hour12: false,
 });
-const fullFormatter = new Intl.DateTimeFormat('en-US', {
+const fullFormatter = new Intl.DateTimeFormat("en-US", {
     timeZone,
-    dateStyle: 'full',
-    timeStyle: 'short',
+    dateStyle: "full",
+    timeStyle: "short",
 });
 
 export function messageDate(timestamp: string) {
     const date = new Date(timestamp);
     if (Number.isNaN(date.getTime())) {
         return {
-            day: 'unknown',
-            label: 'Unknown date',
-            time: '',
-            full: '',
+            day: "unknown",
+            label: "Unknown date",
+            time: "",
+            full: "",
             iso: undefined,
         };
     }

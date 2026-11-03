@@ -2,12 +2,12 @@
 
 namespace App\Modules\ChatWithDocument\Jobs;
 
+use App\Modules\ChatWithDocument\DTOs\IngestDTO;
 use App\Modules\ChatWithDocument\Enums\DocumentUploadProgressEnum;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
 use App\Modules\ChatWithDocument\Models\Document;
-use App\Services\AI\AIClient;
-use App\Services\AI\ChatWithDocument\DTOs\IngestDTO;
+use App\Services\AIClient;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Throwable;
