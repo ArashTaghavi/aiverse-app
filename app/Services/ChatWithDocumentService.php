@@ -5,9 +5,9 @@ namespace App\Services;
 use App\Enums\ChatWithDocument\AnswerStatusEnum;
 use App\Enums\ChatWithDocument\DocumentEmbeddingStatusEnum;
 use App\Enums\ChatWithDocument\DocumentUploadProgressEnum;
+use App\Events\ChatWithDocument\ChatWithDocumentEmbeddingRequested;
 use App\Events\ChatWithDocument\ChatWithDocumentUploadProgress;
 use App\Jobs\ChatWithDocument\ChatWithDocumentAsk;
-use App\Jobs\ChatWithDocument\ChatWithDocumentEmbedding;
 use App\Models\ChatWithDocument\Document;
 use App\Models\ChatWithDocument\DocumentChatTurn;
 use App\Models\User;
@@ -39,24 +39,25 @@ class ChatWithDocumentService
             'last_message' => null,
         ]);
 
-        ChatWithDocumentEmbedding::dispatch(document: $document)->afterCommit();
         ChatWithDocumentUploadProgress::dispatch(
             document: $document,
             step: DocumentUploadProgressEnum::Upload->value,
             status: 'completed'
         );
 
+        ChatWithDocumentEmbeddingRequested::dispatch(document: $document);
+
         return $document;
     }
 
-    public function ask(Document $document, string $question): DocumentChatTurn
+    public function ask(Document $relatedDocument, string $question): DocumentChatTurn
     {
-        $documentChatTurn = $document->documentChatTurns()->create([
+        $documentChatTurn = $relatedDocument->documentChatTurns()->create([
             'question' => $question,
             'answer_status' => AnswerStatusEnum::Pending,
         ]);
 
-        ChatWithDocumentAsk::dispatch(documentChatTurn: $documentChatTurn)->afterCommit();
+        ChatWithDocumentAsk::dispatch(documentChatTurn: $documentChatTurn);
 
         return $documentChatTurn;
     }

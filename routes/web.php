@@ -26,6 +26,6 @@ Route::middleware('auth')
                 Route::get('/documents', 'documents')->name('documents');
 
                 Route::post('/upload', 'upload')->name('upload');
-                Route::post('/ask', 'ask')->name('ask');
+                Route::post('/ask/{relatedDocument}', 'ask')->name('ask');
             });
     });

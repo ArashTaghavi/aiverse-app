@@ -3,7 +3,8 @@
 namespace App\Jobs\ChatWithDocument;
 
 use App\Enums\ChatWithDocument\DocumentEmbeddingStatusEnum;
-use App\Events\ChatWithDocument\ChatWithDocumentEmbeddingCompleted;
+use App\Enums\ChatWithDocument\DocumentUploadProgressEnum;
+use App\Events\ChatWithDocument\ChatWithDocumentUploadProgress;
 use App\Models\ChatWithDocument\Document;
 use App\Services\AI\AIClient;
 use App\Services\AI\ChatWithDocument\DTOs\IngestDTO;
@@ -45,7 +46,11 @@ class ChatWithDocumentEmbedding implements ShouldQueue
             'embedding_status' => DocumentEmbeddingStatusEnum::Completed,
         ]);
 
-        ChatWithDocumentEmbeddingCompleted::dispatch($this->document);
+        ChatWithDocumentUploadProgress::dispatch(
+            document: $this->document,
+            step: DocumentUploadProgressEnum::Embedding->value,
+            status: 'completed',
+        );
     }
 
     public function failed(?Throwable $exception): void

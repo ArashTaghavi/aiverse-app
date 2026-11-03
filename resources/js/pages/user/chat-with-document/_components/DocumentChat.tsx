@@ -66,6 +66,8 @@ export default function DocumentChat({
     const [showList, setShowList] = useState(false);
     const [uploadFormKey, setUploadFormKey] = useState(0);
     const [uploading, setUploading] = useState(false);
+    const [uploadAttempt, setUploadAttempt] = useState(0);
+    const [showUploadProgress, setShowUploadProgress] = useState(false);
     const [asking, setAsking] = useState(false);
     const error = errors.form;
     const messagesRef = useRef<HTMLDivElement>(null);
@@ -87,6 +89,7 @@ export default function DocumentChat({
         if (uploading || asking) return;
         router.visit(chatWithDocument().url, { preserveScroll: true });
         setShowList(false);
+        setShowUploadProgress(false);
         uploadForm.reset();
         setUploadFormKey((value) => value + 1);
         questionForm.reset();
@@ -95,8 +98,13 @@ export default function DocumentChat({
     const uploadDocument: SubmitHandler<NewChatFormValues> = (data) => {
         if (uploading || asking || !data.file) return;
         router.post(upload().url, data, {
-            onStart: () => setUploading(true),
+            onStart: () => {
+                setUploadAttempt((attempt) => attempt + 1);
+                setShowUploadProgress(true);
+                setUploading(true);
+            },
             onFinish: () => setUploading(false),
+            onError: () => setShowUploadProgress(false),
             onSuccess: () => {
                 uploadForm.reset();
                 setUploadFormKey((value) => value + 1);
@@ -243,7 +251,7 @@ export default function DocumentChat({
                             methods={uploadForm}
                             onSubmit={uploadDocument}
                             isPending={uploading}
-                            className="m-auto w-full max-w-lg space-y-5 py-6"
+                            className={showUploadProgress ? 'hidden' : 'm-auto w-full max-w-lg space-y-5 py-6'}
                         >
                             <div className="space-y-2 text-center">
                                 <FileText
@@ -280,7 +288,6 @@ export default function DocumentChat({
                             >
                                 Upload document
                             </Button>
-                            <PreparingUpload />
                             {uploading && (
                                 <p
                                     role="status"
@@ -290,6 +297,15 @@ export default function DocumentChat({
                                 </p>
                             )}
                         </Form>
+                        {auth.user && (
+                            <div className={showUploadProgress ? 'm-auto w-full max-w-lg py-6' : 'hidden'}>
+                                <PreparingUpload
+                                    userId={auth.user.id}
+                                    uploadAttempt={uploadAttempt}
+                                    onClose={() => setShowUploadProgress(false)}
+                                />
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <>
