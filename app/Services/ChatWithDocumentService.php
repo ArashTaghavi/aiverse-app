@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Enums\ChatWithDocument\AnswerStatusEnum;
 use App\Enums\ChatWithDocument\DocumentEmbeddingStatusEnum;
+use App\Enums\ChatWithDocument\DocumentUploadProgressEnum;
+use App\Events\ChatWithDocument\ChatWithDocumentUploadProgress;
 use App\Jobs\ChatWithDocument\ChatWithDocumentAsk;
 use App\Jobs\ChatWithDocument\ChatWithDocumentEmbedding;
 use App\Models\ChatWithDocument\Document;
@@ -38,6 +40,11 @@ class ChatWithDocumentService
         ]);
 
         ChatWithDocumentEmbedding::dispatch(document: $document)->afterCommit();
+        ChatWithDocumentUploadProgress::dispatch(
+            document: $document,
+            step: DocumentUploadProgressEnum::Upload->value,
+            status: 'completed'
+        );
 
         return $document;
     }

@@ -4,6 +4,8 @@ namespace App\Services\AI\ChatWithDocument;
 
 final class Events
 {
+    public const UPLOAD_PROGRESS = 'chat-with-document.upload.progress';
+
     public const EMBEDDING_COMPLETED = 'chat-with-document.embedding.completed';
 
     public const EMBEDDING_FAILED = 'chat-with-document.embedding.failed';
