@@ -1,0 +1,35 @@
+<?php
+
+use App\Modules\Base\Enums\AnswerStatusEnum;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('database_chat_turns', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('database_id')->constrained()->cascadeOnDelete();
+
+            $table->text('question');
+            $table->text('answer')->nullable();
+
+            $table->enum('answer_status', array_column(AnswerStatusEnum::cases(), 'value'))->default(AnswerStatusEnum::Pending->value);
+            $table->text('answer_error')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('database_chat_turns');
+    }
+};

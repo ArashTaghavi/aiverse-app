@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Modules\DatabaseAnalyst\Services;
+
+use App\Modules\Base\Enums\EmbeddingStatusEnum;
+use App\Modules\Base\Enums\UploadProgressEnum;
+use App\Modules\DatabaseAnalyst\Events\DatabaseEmbeddingRequested;
+use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
+use App\Modules\DatabaseAnalyst\Models\Database;
+use App\Services\StorageService;
+use Illuminate\Http\UploadedFile;
+
+class DatabaseAnalystService
+{
+    public function __construct(private StorageService $storageService) {}
+
+    public function upload(UploadedFile $file, string $title, int $ownerId): Database
+    {
+        $file = $this->storageService
+            ->setBasePath(basePath: Database::uploadPath())
+            ->upload(file: $file);
+
+        $database = Database::create([
+            'owner_id' => $ownerId,
+            'title' => $title,
+            'original_name' => $file['original_name'],
+            'storage_path' => $file['storage_path'],
+            'mime_type' => $file['mime_type'],
+            'extension' => $file['extension'],
+            'size' => $file['size'],
+            'embedding_status' => EmbeddingStatusEnum::Pending,
+        ]);
+
+        DatabaseUploadProgress::dispatch(
+            database: $database,
+            step: UploadProgressEnum::Upload->value,
+            status: 'completed'
+        );
+
+        DatabaseEmbeddingRequested::dispatch(database: $database);
+
+        return $database;
+
+    }
+}

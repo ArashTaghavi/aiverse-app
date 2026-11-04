@@ -70,7 +70,7 @@ PHP);
             return self::FAILURE;
         }
 
-        foreach (['Controllers', 'Requests', 'Resources', 'Services', 'Models', 'Job', 'Events', 'Listeners', 'Enums'] as $directory) {
+        foreach (['Controllers', 'Requests', 'Resources', 'Services', 'Models', 'Jobs', 'Events', 'Listeners', 'Enums', 'DTOs'] as $directory) {
             $files->makeDirectory("{$path}/{$directory}", 0755, true);
         }
 
