@@ -9,6 +9,7 @@ Route::prefix('/chat-with-document')
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/documents', 'documents')->name('documents');
+        Route::get('/documents/{relatedDocument}', 'status')->name('status');
 
         Route::post('/upload', 'upload')->name('upload');
         Route::post('/ask/{relatedDocument}', 'ask')->name('ask');

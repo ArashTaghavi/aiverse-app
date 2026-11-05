@@ -8,7 +8,10 @@ export default function useDocumentEmbedding(
         Record<number, EmbeddingStatus>
     >({});
     const embeddingStatus = document
-        ? (embeddingStatuses[document.id] ?? document.embedding_status)
+        ? document.embedding_status === 'COMPLETED' ||
+          document.embedding_status === 'FAILED'
+            ? document.embedding_status
+            : (embeddingStatuses[document.id] ?? document.embedding_status)
         : undefined;
 
     function updateEmbeddingStatus(id: number, status: EmbeddingStatus) {

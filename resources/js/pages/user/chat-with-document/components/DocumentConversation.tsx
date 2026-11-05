@@ -40,7 +40,12 @@ export default function DocumentConversation({
                             {document.original_filename}
                         </p>
                         <p className="mt-1 text-xs text-emerald-300">
-                            Document ready · Locked to this conversation
+                            {isDocumentReady
+                                ? 'Document ready'
+                                : embeddingStatus === 'FAILED'
+                                  ? 'Document preparation failed'
+                                  : 'Preparing document'}{' '}
+                            · Locked to this conversation
                         </p>
                     </div>
                 </div>

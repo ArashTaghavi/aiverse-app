@@ -13,6 +13,7 @@ type Props = {
     busy: boolean;
     newChat: () => void;
     selectChat: ReturnType<typeof useChatNavigation>['selectChat'];
+    pagination: { page: number; hasMore: boolean };
 };
 
 export default function DocumentChatSidebar({
@@ -22,6 +23,7 @@ export default function DocumentChatSidebar({
     busy,
     newChat,
     selectChat,
+    pagination,
 }: Props) {
     const conversations = documents.map((item) => ({
         id: String(item.id),
@@ -63,7 +65,10 @@ export default function DocumentChatSidebar({
                         key={chat.id}
                         href={
                             index({
-                                query: { document_id: chat.id },
+                                query: {
+                                    document_id: chat.id,
+                                    documents_page: pagination.page,
+                                },
                             }).url
                         }
                         preserveScroll
@@ -99,6 +104,38 @@ export default function DocumentChatSidebar({
                         </span>
                     </Link>
                 ))}
+                <div className="flex justify-between gap-3 p-3 text-sm">
+                    {pagination.page > 1 && (
+                        <Link
+                            onClick={selectChat}
+                            href={
+                                index({
+                                    query: {
+                                        document_id: activeId,
+                                        documents_page: pagination.page - 1,
+                                    },
+                                }).url
+                            }
+                        >
+                            Previous
+                        </Link>
+                    )}
+                    {pagination.hasMore && (
+                        <Link
+                            onClick={selectChat}
+                            href={
+                                index({
+                                    query: {
+                                        document_id: activeId,
+                                        documents_page: pagination.page + 1,
+                                    },
+                                }).url
+                            }
+                        >
+                            Next
+                        </Link>
+                    )}
+                </div>
             </nav>
         </aside>
     );

@@ -28,6 +28,9 @@ export type DocumentChatProps = {
     documents?: DocumentResponse[];
     selectedDocument?: DocumentResponse | null;
     history?: ChatTurnResponse[];
+    uploadedDocument?: DocumentResponse | null;
+    documentsPagination?: { page: number; hasMore: boolean };
+    historyPagination?: { page: number; hasMore: boolean };
 };
 
 export type NewChatFormValues = z.infer<typeof newChatSchema>;

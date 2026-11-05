@@ -33,6 +33,7 @@ class User extends Authenticatable
         ];
     }
 
+    /** @return HasMany<Document, $this> */
     public function documents(): HasMany
     {
         return $this->hasMany(related: Document::class, foreignKey: 'owner_id');

@@ -2,6 +2,7 @@
 
 namespace App\Modules\ChatWithDocument\Events;
 
+use App\Modules\Base\Enums\EmbeddingStatusEnum;
 use App\Modules\ChatWithDocument\Enums\EventEnum;
 use App\Modules\ChatWithDocument\Models\Document;
 use App\Modules\ChatWithDocument\Module;
@@ -41,6 +42,7 @@ class DocumentEmbeddingCompleted implements ShouldBroadcast
         return EventEnum::EMBEDDING_COMPLETED->value;
     }
 
+    /** @return array{document_id: int, embedding_status: EmbeddingStatusEnum} */
     public function broadcastWith(): array
     {
         return [

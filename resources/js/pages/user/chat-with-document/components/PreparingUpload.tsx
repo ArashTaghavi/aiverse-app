@@ -10,15 +10,18 @@ import {
     type LucideIcon,
 } from 'lucide-react';
 import { useEcho } from '@laravel/echo-react';
-import type { EmbeddingStatus } from '@/types';
+import type { DocumentResponse, EmbeddingStatus } from '@/types';
 import { useEffect, useState } from 'react';
 import { Link } from '@inertiajs/react';
-import { index as chatWithDocument } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
+import {
+    index as chatWithDocument,
+    status as documentStatus,
+} from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
 
 type UploadProgressEvent = {
     step: 'UPLOAD' | 'EMBEDDING' | 'RESULT';
     status: 'processing' | 'completed' | 'failed';
-    document: {
+    data: {
         id: number;
         title: string;
         original_name: string;
@@ -73,17 +76,19 @@ const steps: {
 export default function PreparingUpload({
     userId,
     uploadAttempt,
+    document,
     onClose,
 }: {
     userId: number;
     uploadAttempt: number;
+    document: DocumentResponse | null;
     onClose: () => void;
 }) {
     const [statuses, setStatuses] = useState<
         Partial<Record<UploadStep, StepStatus>>
     >({});
     const [uploadedDocument, setUploadedDocument] = useState<
-        UploadProgressEvent['document'] | null
+        UploadProgressEvent['data'] | null
     >(null);
 
     useEffect(() => {
@@ -93,11 +98,64 @@ export default function PreparingUpload({
         }
     }, [uploadAttempt]);
 
+    useEffect(() => {
+        if (!document) return;
+        const documentUuid = document.uuid;
+        const controller = new AbortController();
+        let timer: ReturnType<typeof setTimeout>;
+
+        function update(snapshot: DocumentResponse) {
+            const terminal =
+                snapshot.embedding_status === 'COMPLETED'
+                    ? 'completed'
+                    : snapshot.embedding_status === 'FAILED'
+                      ? 'failed'
+                      : null;
+            setUploadedDocument({
+                ...snapshot,
+                human_size: snapshot.size,
+                embedding_error: null,
+            });
+            setStatuses({
+                UPLOAD: 'completed',
+                EMBEDDING: terminal ?? 'processing',
+                ...(terminal ? { RESULT: terminal } : {}),
+            });
+            return terminal !== null;
+        }
+
+        async function poll() {
+            try {
+                const response = await fetch(documentStatus(documentUuid).url, {
+                    headers: { Accept: 'application/json' },
+                    signal: controller.signal,
+                });
+                if (response.ok) {
+                    const payload = (await response.json()) as {
+                        data: DocumentResponse;
+                    };
+                    if (controller.signal.aborted) return;
+                    if (update(payload.data)) return;
+                }
+            } catch {
+                if (controller.signal.aborted) return;
+            }
+            if (!controller.signal.aborted) timer = setTimeout(poll, 5000);
+        }
+
+        if (!update(document)) void poll();
+        return () => {
+            controller.abort();
+            clearTimeout(timer);
+        };
+    }, [document]);
+
     useEcho<UploadProgressEvent>(
         `chat-with-document.users.${userId}`,
         '.chat-with-document.upload.progress',
         (event) => {
-            setUploadedDocument(event.document);
+            if (!document || event.data.id !== document.id) return;
+            setUploadedDocument(event.data);
             setStatuses((current) => {
                 const updated = { ...current, [event.step]: event.status };
 
@@ -115,6 +173,7 @@ export default function PreparingUpload({
                 return updated;
             });
         },
+        [document?.id],
     );
 
     return (

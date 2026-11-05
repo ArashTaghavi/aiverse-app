@@ -78,6 +78,7 @@ export default function DocumentUploadPanel({ userId, uploadState }: Props) {
                     }
                 >
                     <PreparingUpload
+                        document={uploadState.uploadedDocument}
                         userId={userId}
                         uploadAttempt={uploadAttempt}
                         onClose={closeUploadProgress}

@@ -11,10 +11,17 @@ use App\Services\AIClient;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Throwable;
+use UnexpectedValueException;
 
 class Ask implements ShouldQueue
 {
     use Queueable;
+
+    public int $timeout = 150;
+
+    public int $tries = 1;
+
+    public bool $failOnTimeout = true;
 
     /**
      * Create a new job instance.
@@ -37,8 +44,13 @@ class Ask implements ShouldQueue
 
         $response = $client->post(RouteEnum::ASK->value, $data->toArray());
 
-        // TODO
-        $answer = $response->json('answer');
+        $answer = str_contains(strtolower($response->header('Content-Type')), 'json')
+            ? $response->json('answer')
+            : $response->body();
+
+        if (! is_string($answer) || trim($answer) === '') {
+            throw new UnexpectedValueException('The AI service returned an invalid answer.');
+        }
 
         $this->documentChatTurn->markAsCompleted(answer: $answer);
         $this->documentChatTurn->document->update(['last_message' => $answer]);

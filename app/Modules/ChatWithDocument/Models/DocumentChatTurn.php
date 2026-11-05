@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/** @property AnswerStatusEnum $answer_status */
 #[Fillable([
     'question',
     'answer',
@@ -23,6 +24,7 @@ class DocumentChatTurn extends Model
         ];
     }
 
+    /** @return BelongsTo<Document, $this> */
     public function document(): BelongsTo
     {
         return $this->belongsTo(related: Document::class);

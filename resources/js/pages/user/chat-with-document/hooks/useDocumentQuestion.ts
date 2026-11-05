@@ -43,6 +43,14 @@ export default function useDocumentQuestion(
                 setPendingTurn(null);
             },
             onSuccess: () => questionForm.reset(),
+            onError: (errors) => {
+                if (errors.question) {
+                    questionForm.setError('question', {
+                        type: 'server',
+                        message: errors.question,
+                    });
+                }
+            },
         });
     };
 

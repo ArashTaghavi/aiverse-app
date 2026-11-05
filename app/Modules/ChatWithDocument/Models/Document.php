@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property EmbeddingStatusEnum $embedding_status
+ * @property-read string $absolute_path
+ * @property-read string $human_size
+ */
 #[Fillable([
     'owner_id',
     'title',
@@ -26,7 +31,7 @@ class Document extends Model
 
     public static function uploadPath(): string
     {
-        return 'database-analysts';
+        return 'chat-with-document';
     }
 
     protected function embeddingStatusEnum(): string
@@ -39,10 +44,11 @@ class Document extends Model
         return [
             'owner_id' => 'integer',
             'size' => 'integer',
-            'embedding_status' => $this->embeddingStatusEnum(),
+            'embedding_status' => EmbeddingStatusEnum::class,
         ];
     }
 
+    /** @return HasMany<DocumentChatTurn, $this> */
     public function documentChatTurns(): HasMany
     {
         return $this->hasMany(related: DocumentChatTurn::class, foreignKey: 'document_id');

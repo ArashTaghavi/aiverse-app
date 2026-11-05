@@ -12,21 +12,25 @@ use App\Modules\ChatWithDocument\Jobs\Ask;
 use App\Modules\ChatWithDocument\Models\Document;
 use App\Modules\ChatWithDocument\Models\DocumentChatTurn;
 use App\Services\StorageService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class ChatWithDocumentService
 {
     public function __construct(private StorageService $storageService) {}
 
-    public function documents(User $user): Collection
+    /** @return Paginator<int, Document> */
+    public function documents(User $user): Paginator
     {
-        return $user->documents()->latest('id')->get();
+        return $user->documents()->latest('id')->simplePaginate(20, ['*'], 'documents_page');
     }
 
     public function upload(UploadedFile $file, string $title, int $ownerId): Document
     {
         $file = $this->storageService
+            ->setDisk('local')
             ->setBasePath(basePath: Document::uploadPath()."/$ownerId")
             ->upload(file: $file);
 
@@ -41,11 +45,15 @@ class ChatWithDocumentService
             'embedding_status' => EmbeddingStatusEnum::Pending,
         ]);
 
-        DocumentUploadProgress::dispatch(
-            model: $document,
-            step: UploadProgressEnum::Upload->value,
-            status: 'completed'
-        );
+        try {
+            DocumentUploadProgress::dispatch(
+                model: $document,
+                step: UploadProgressEnum::Upload->value,
+                status: 'completed'
+            );
+        } catch (Throwable $exception) {
+            report($exception);
+        }
 
         DocumentEmbeddingRequested::dispatch(document: $document);
 
@@ -54,6 +62,12 @@ class ChatWithDocumentService
 
     public function ask(Document $relatedDocument, string $question): DocumentChatTurn
     {
+        if ($relatedDocument->embedding_status !== EmbeddingStatusEnum::Completed) {
+            throw ValidationException::withMessages([
+                'question' => 'This document is not ready for questions yet.',
+            ]);
+        }
+
         $relatedDocument->update(['last_message' => $question]);
         $documentChatTurn = $relatedDocument->documentChatTurns()->create([
             'question' => $question,

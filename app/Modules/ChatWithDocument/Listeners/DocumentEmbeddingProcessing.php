@@ -6,6 +6,8 @@ use App\Modules\Base\Enums\EmbeddingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\ChatWithDocument\DTOs\IngestDTO;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
+use App\Modules\ChatWithDocument\Events\DocumentEmbeddingCompleted;
+use App\Modules\ChatWithDocument\Events\DocumentEmbeddingFailed;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingRequested;
 use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
 use App\Modules\ChatWithDocument\Models\Document;
@@ -15,6 +17,12 @@ use Throwable;
 
 class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
 {
+    public int $timeout = 150;
+
+    public int $tries = 1;
+
+    public bool $failOnTimeout = true;
+
     public function __construct(private AIClient $client) {}
 
     /**
@@ -26,6 +34,7 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
         $document->refresh();
 
         if ($document->embedding_status === EmbeddingStatusEnum::Completed) {
+            $this->broadcastStatus($document);
             $this->broadcastProgress($document, UploadProgressEnum::Embedding, 'completed');
             $this->broadcastProgress($document, UploadProgressEnum::Result, 'completed');
 
@@ -43,6 +52,7 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
 
         $this->client->post(RouteEnum::INGEST->value, $data->toArray());
         $document->markAsCompleted();
+        $this->broadcastStatus($document);
 
         $this->broadcastProgress($document, UploadProgressEnum::Embedding, 'completed');
         $this->broadcastProgress($document, UploadProgressEnum::Result, 'completed');
@@ -58,9 +68,23 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
         }
 
         $document->markAsFailed(error: $exception->getMessage());
+        $this->broadcastStatus($document);
 
         $this->broadcastProgress($document, UploadProgressEnum::Embedding, 'failed');
         $this->broadcastProgress($document, UploadProgressEnum::Result, 'failed');
+    }
+
+    private function broadcastStatus(Document $document): void
+    {
+        try {
+            if ($document->embedding_status === EmbeddingStatusEnum::Completed) {
+                DocumentEmbeddingCompleted::dispatch($document);
+            } else {
+                DocumentEmbeddingFailed::dispatch($document);
+            }
+        } catch (Throwable $exception) {
+            report($exception);
+        }
     }
 
     private function broadcastProgress(Document $document, UploadProgressEnum $step, string $status): void
@@ -68,7 +92,7 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
         // A socket failure must not trigger another embedding request.
         try {
             DocumentUploadProgress::dispatch(
-                document: $document,
+                model: $document,
                 step: $step->value,
                 status: $status,
             );

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class StorageService
 {
     public function __construct(
-        private string $disk = 'public',
+        private string $disk = 'local',
         public string $basePath = 'uploads'
     ) {}
 

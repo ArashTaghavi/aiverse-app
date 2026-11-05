@@ -1,5 +1,6 @@
-import { usePage } from '@inertiajs/react';
-import { useMemo } from 'react';
+import { Link, usePage, usePoll } from '@inertiajs/react';
+import { useEffect, useMemo } from 'react';
+import { index } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
 import type { DocumentChatProps } from '@/types';
 import DocumentEmbeddingListener from './DocumentEmbeddingListener';
 import DocumentChatSidebar from './DocumentChatSidebar';
@@ -18,6 +19,8 @@ export default function DocumentChat({
     documents = [],
     selectedDocument = null,
     history: turns = [],
+    documentsPagination = { page: 1, hasMore: false },
+    historyPagination = { page: 1, hasMore: false },
 }: DocumentChatProps) {
     const { auth, errors } = usePage().props;
     const activeId = documentId === null ? null : String(documentId);
@@ -54,6 +57,37 @@ export default function DocumentChat({
         displayTurns,
         questionState.asking,
     );
+    const { start, stop } = usePoll(
+        5000,
+        {
+            only: [
+                'history',
+                'documents',
+                'selectedDocument',
+                'historyPagination',
+                'documentsPagination',
+            ],
+        },
+        { autoStart: false },
+    );
+    const awaitingUpdate =
+        selected?.embedding_status === 'PENDING' ||
+        selected?.embedding_status === 'PROCESSING' ||
+        documents.some(
+            (document) =>
+                document.embedding_status === 'PENDING' ||
+                document.embedding_status === 'PROCESSING',
+        ) ||
+        turns.some(
+            (turn) =>
+                turn.answer_status === 'PENDING' ||
+                turn.answer_status === 'PROCESSING',
+        );
+    useEffect(() => {
+        if (awaitingUpdate) start();
+        else stop();
+        return stop;
+    }, [awaitingUpdate, start, stop]);
 
     return (
         <div className="flex h-full min-h-0 w-full flex-1 overflow-hidden">
@@ -76,6 +110,7 @@ export default function DocumentChat({
                 busy={uploadState.uploading || questionState.asking}
                 newChat={newChat}
                 selectChat={selectChat}
+                pagination={documentsPagination}
             />
             <div
                 className={`${showList ? 'hidden md:flex' : 'flex'} h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
@@ -91,17 +126,62 @@ export default function DocumentChat({
                         uploadState={uploadState}
                     />
                 ) : (
-                    <DocumentConversation
-                        document={{
-                            document_id: selected.id,
-                            original_filename: selected.original_name,
-                        }}
-                        messagesRef={messagesRef}
-                        turns={displayTurns}
-                        embeddingStatus={embeddingStatus}
-                        isDocumentReady={isDocumentReady}
-                        questionState={questionState}
-                    />
+                    <>
+                        {(historyPagination.page > 1 ||
+                            historyPagination.hasMore) && (
+                            <div className="flex justify-between gap-3 p-3 text-sm">
+                                {historyPagination.hasMore && (
+                                    <Link
+                                        onClick={selectChat}
+                                        href={
+                                            index({
+                                                query: {
+                                                    document_id: selected.id,
+                                                    documents_page:
+                                                        documentsPagination.page,
+                                                    history_page:
+                                                        historyPagination.page +
+                                                        1,
+                                                },
+                                            }).url
+                                        }
+                                    >
+                                        Older messages
+                                    </Link>
+                                )}
+                                {historyPagination.page > 1 && (
+                                    <Link
+                                        onClick={selectChat}
+                                        href={
+                                            index({
+                                                query: {
+                                                    document_id: selected.id,
+                                                    documents_page:
+                                                        documentsPagination.page,
+                                                    history_page:
+                                                        historyPagination.page -
+                                                        1,
+                                                },
+                                            }).url
+                                        }
+                                    >
+                                        Newer messages
+                                    </Link>
+                                )}
+                            </div>
+                        )}
+                        <DocumentConversation
+                            document={{
+                                document_id: selected.id,
+                                original_filename: selected.original_name,
+                            }}
+                            messagesRef={messagesRef}
+                            turns={displayTurns}
+                            embeddingStatus={embeddingStatus}
+                            isDocumentReady={isDocumentReady}
+                            questionState={questionState}
+                        />
+                    </>
                 )}
                 {error && (
                     <p

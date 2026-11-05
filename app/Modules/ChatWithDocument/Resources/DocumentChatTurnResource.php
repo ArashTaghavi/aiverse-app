@@ -2,9 +2,11 @@
 
 namespace App\Modules\ChatWithDocument\Resources;
 
+use App\Modules\ChatWithDocument\Models\DocumentChatTurn;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @mixin DocumentChatTurn */
 class DocumentChatTurnResource extends JsonResource
 {
     /**

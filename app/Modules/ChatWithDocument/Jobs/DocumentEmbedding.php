@@ -2,20 +2,23 @@
 
 namespace App\Modules\ChatWithDocument\Jobs;
 
-use App\Modules\Base\Enums\UploadProgressEnum;
-use App\Modules\ChatWithDocument\DTOs\IngestDTO;
-use App\Modules\ChatWithDocument\Enums\DocumentUploadProgressEnum;
-use App\Modules\ChatWithDocument\Enums\RouteEnum;
-use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
+use App\Modules\ChatWithDocument\Events\DocumentEmbeddingRequested;
+use App\Modules\ChatWithDocument\Listeners\DocumentEmbeddingProcessing;
 use App\Modules\ChatWithDocument\Models\Document;
-use App\Services\AIClient;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use RuntimeException;
 use Throwable;
 
 class DocumentEmbedding implements ShouldQueue
 {
     use Queueable;
+
+    public int $timeout = 150;
+
+    public int $tries = 1;
+
+    public bool $failOnTimeout = true;
 
     /**
      * Create a new job instance.
@@ -28,29 +31,16 @@ class DocumentEmbedding implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(AIClient $client): void
+    public function handle(DocumentEmbeddingProcessing $listener): void
     {
-        $data = new IngestDTO(
-            filePath: $this->document->absolute_path,
-            documentId: $this->document->id,
-            ownerId: $this->document->owner_id
-        );
-
-        $this->document->markAsProcessing();
-
-        $client->post(RouteEnum::INGEST->value, $data->toArray());
-
-        $this->document->markAsCompleted();
-
-        DocumentUploadProgress::dispatch(
-            document: $this->document,
-            step: UploadProgressEnum::Embedding->value,
-            status: 'completed',
-        );
+        $listener->handle(new DocumentEmbeddingRequested($this->document));
     }
 
     public function failed(?Throwable $exception): void
     {
-        $this->document->markAsFailed(error: $exception?->getMessage());
+        app(DocumentEmbeddingProcessing::class)->failed(
+            new DocumentEmbeddingRequested($this->document),
+            $exception ?? new RuntimeException('Document embedding failed.'),
+        );
     }
 }

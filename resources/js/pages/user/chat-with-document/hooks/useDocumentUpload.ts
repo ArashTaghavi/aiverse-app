@@ -3,7 +3,7 @@ import { router } from '@inertiajs/react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { upload } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
-import type { NewChatFormValues } from '@/types';
+import type { DocumentResponse, NewChatFormValues } from '@/types';
 import { newChatSchema } from '../schemas/new-chat.schema';
 
 export default function useDocumentUpload(isAsking: () => boolean) {
@@ -11,6 +11,8 @@ export default function useDocumentUpload(isAsking: () => boolean) {
     const [uploading, setUploading] = useState(false);
     const [uploadAttempt, setUploadAttempt] = useState(0);
     const [showUploadProgress, setShowUploadProgress] = useState(false);
+    const [uploadedDocument, setUploadedDocument] =
+        useState<DocumentResponse | null>(null);
     const uploadForm = useForm<NewChatFormValues>({
         resolver: zodResolver(newChatSchema),
         defaultValues: { file: null, title: '' },
@@ -32,15 +34,32 @@ export default function useDocumentUpload(isAsking: () => boolean) {
                 setUploadAttempt((attempt) => attempt + 1);
                 setShowUploadProgress(true);
                 setUploading(true);
+                setUploadedDocument(null);
             },
             onFinish: () => setUploading(false),
-            onError: closeUploadProgress,
-            onSuccess: resetUploadForm,
+            onError: (errors) => {
+                closeUploadProgress();
+                for (const field of ['title', 'file'] as const) {
+                    if (errors[field]) {
+                        uploadForm.setError(field, {
+                            type: 'server',
+                            message: errors[field],
+                        });
+                    }
+                }
+            },
+            onSuccess: (page) => {
+                setUploadedDocument(
+                    page.props.uploadedDocument as DocumentResponse | null,
+                );
+                resetUploadForm();
+            },
         });
     };
 
     return {
         uploadForm,
+        uploadedDocument,
         uploadFormKey,
         uploading,
         uploadAttempt,

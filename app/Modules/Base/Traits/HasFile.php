@@ -11,7 +11,7 @@ trait HasFile
     {
         // TODO
         return Attribute::get(
-            fn () => Storage::disk('public')->path($this->storage_path)
+            fn () => Storage::disk('local')->path($this->storage_path)
         );
     }
 }

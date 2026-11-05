@@ -11,6 +11,7 @@ use App\Modules\ChatWithDocument\Resources\DocumentResource;
 use App\Modules\ChatWithDocument\Services\ChatWithDocumentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,41 +23,66 @@ class ChatWithDocumentController extends Controller
     {
         $user = $request->user();
 
-        $documentId = $request->validate([
+        $validated = $request->validate([
             'document_id' => ['nullable', 'integer', 'min:1'],
-        ])['document_id'] ?? null;
+            'documents_page' => ['nullable', 'integer', 'min:1'],
+            'history_page' => ['nullable', 'integer', 'min:1'],
+        ]);
+        $documentId = $validated['document_id'] ?? null;
 
         $document = $documentId
-            ? $user->documents()->findOrFail($documentId)
+            ? $user->documents()->whereKey($request->integer('document_id'))->firstOrFail()
             : null;
 
-        $documents = DocumentResource::collection($this->service->documents($user))->resolve($request);
-
-        $history = DocumentChatTurnResource::collection(
-            $document?->documentChatTurns()
-                ->oldest('id')
-                ->get() ?? collect()
-        )->resolve($request);
+        $documents = $this->service->documents($user);
+        $history = $document?->documentChatTurns()->latest('id')
+            ->simplePaginate(30, ['*'], 'history_page');
+        $uploadedDocument = $request->session()->get('uploaded_document_id');
 
         return Inertia::render('user/chat-with-document/index', [
-            'documents' => $documents,
+            'documents' => DocumentResource::collection($documents)->resolve($request),
+            'documentsPagination' => [
+                'page' => $documents->currentPage(),
+                'hasMore' => $documents->hasMorePages(),
+            ],
             'documentId' => $document?->id,
             'selectedDocument' => $document
                 ? (new DocumentResource($document))->resolve($request)
                 : null,
-            'history' => $history,
+            'history' => DocumentChatTurnResource::collection(
+                $history?->getCollection()->reverse()->values() ?? collect()
+            )->resolve($request),
+            'historyPagination' => [
+                'page' => $history?->currentPage() ?? 1,
+                'hasMore' => $history?->hasMorePages() ?? false,
+            ],
+            'uploadedDocument' => $uploadedDocument
+                ? (new DocumentResource($user->documents()->findOrFail($uploadedDocument)))->resolve($request)
+                : null,
         ]);
+    }
+
+    public function documents(Request $request): AnonymousResourceCollection
+    {
+        $request->validate(['documents_page' => ['nullable', 'integer', 'min:1']]);
+
+        return DocumentResource::collection($this->service->documents($request->user()));
+    }
+
+    public function status(Document $relatedDocument): DocumentResource
+    {
+        return new DocumentResource($relatedDocument);
     }
 
     public function upload(UploadRequest $request): RedirectResponse
     {
-        $this->service->upload(
+        $document = $this->service->upload(
             file: $request->file('file'),
             title: $request->input('title'),
-            ownerId: auth()->id()
+            ownerId: $request->user()->id
         );
 
-        return back();
+        return back()->with('uploaded_document_id', $document->id);
     }
 
     public function ask(Document $relatedDocument, RequestsAskRequest $request): RedirectResponse
@@ -66,6 +92,6 @@ class ChatWithDocumentController extends Controller
             question: $request->validated('question')
         );
 
-        return back();
+        return to_route('user.chat-with-document.index', ['document_id' => $relatedDocument->id]);
     }
 }
