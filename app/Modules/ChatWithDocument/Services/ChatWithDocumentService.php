@@ -3,9 +3,9 @@
 namespace App\Modules\ChatWithDocument\Services;
 
 use App\Models\User;
-use App\Modules\ChatWithDocument\Enums\AnswerStatusEnum;
-use App\Modules\ChatWithDocument\Enums\DocumentEmbeddingStatusEnum;
-use App\Modules\ChatWithDocument\Enums\DocumentUploadProgressEnum;
+use App\Modules\Base\Enums\AnswerStatusEnum;
+use App\Modules\Base\Enums\EmbeddingStatusEnum;
+use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingRequested;
 use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
 use App\Modules\ChatWithDocument\Jobs\Ask;
@@ -27,7 +27,7 @@ class ChatWithDocumentService
     public function upload(UploadedFile $file, string $title, int $ownerId): Document
     {
         $file = $this->storageService
-            ->setBasePath(basePath: Document::UPLOAD_PATH."/$ownerId")
+            ->setBasePath(basePath: Document::uploadPath()."/$ownerId")
             ->upload(file: $file);
 
         $document = Document::create([
@@ -38,12 +38,12 @@ class ChatWithDocumentService
             'mime_type' => $file['mime_type'],
             'extension' => $file['extension'],
             'size' => $file['size'],
-            'embedding_status' => DocumentEmbeddingStatusEnum::Pending,
+            'embedding_status' => EmbeddingStatusEnum::Pending,
         ]);
 
         DocumentUploadProgress::dispatch(
-            document: $document,
-            step: DocumentUploadProgressEnum::Upload->value,
+            model: $document,
+            step: UploadProgressEnum::Upload->value,
             status: 'completed'
         );
 

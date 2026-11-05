@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\ChatWithDocument\Listeners;
+namespace App\Modules\DatabaseAnalyst\Listeners;
 
 use App\Modules\Base\Enums\EmbeddingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;

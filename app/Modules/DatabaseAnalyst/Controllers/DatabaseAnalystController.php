@@ -3,7 +3,7 @@
 namespace App\Modules\DatabaseAnalyst\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Base\Requests\UploadRequest;
+use App\Modules\DatabaseAnalyst\Requests\UploadRequest;
 use App\Modules\DatabaseAnalyst\Services\DatabaseAnalystService;
 use Illuminate\Http\RedirectResponse;
 

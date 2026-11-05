@@ -3,6 +3,7 @@
 namespace App\Modules\DatabaseAnalyst\Events;
 
 use App\Modules\DatabaseAnalyst\Enums\EventEnum;
+use App\Modules\DatabaseAnalyst\Models\DatabaseChatTurn;
 use App\Modules\DatabaseAnalyst\Module;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;

@@ -43,6 +43,7 @@ class Database extends Model
         return [
             'owner_id' => 'integer',
             'size' => 'integer',
+            'connection' => 'encrypted:array',
             'embedding_status' => $this->embeddingStatusEnum(),
         ];
     }

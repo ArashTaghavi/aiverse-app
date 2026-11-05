@@ -38,7 +38,7 @@ class Ask implements ShouldQueue
         $response = $client->post(RouteEnum::ASK->value, $data->toArray());
 
         // TODO
-        $answer = json_decode($response->json('answer'));
+        $answer = $response->json('answer');
 
         $this->documentChatTurn->markAsCompleted(answer: $answer);
         $this->documentChatTurn->document->update(['last_message' => $answer]);

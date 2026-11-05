@@ -3,8 +3,8 @@
 namespace App\Modules\ChatWithDocument\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Base\Requests\AskRequest as RequestsAskRequest;
 use App\Modules\ChatWithDocument\Models\Document;
-use App\Modules\ChatWithDocument\Requests\AskRequest;
 use App\Modules\ChatWithDocument\Requests\UploadRequest;
 use App\Modules\ChatWithDocument\Resources\DocumentChatTurnResource;
 use App\Modules\ChatWithDocument\Resources\DocumentResource;
@@ -59,7 +59,7 @@ class ChatWithDocumentController extends Controller
         return back();
     }
 
-    public function ask(Document $relatedDocument, AskRequest $request): RedirectResponse
+    public function ask(Document $relatedDocument, RequestsAskRequest $request): RedirectResponse
     {
         $this->service->ask(
             relatedDocument: $relatedDocument,

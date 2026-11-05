@@ -32,7 +32,7 @@ class DatabaseAnalystService
         ]);
 
         DatabaseUploadProgress::dispatch(
-            database: $database,
+            model: $database,
             step: UploadProgressEnum::Upload->value,
             status: 'completed'
         );

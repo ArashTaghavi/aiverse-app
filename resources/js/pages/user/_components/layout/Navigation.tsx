@@ -12,7 +12,7 @@ const items = [
     },
     {
         label: 'Database analyst',
-        href: '',
+        href: null,
         icon: Database,
     },
 ];
@@ -25,6 +25,19 @@ export default function Navigation({ onNavigate }: UserNavigationProps) {
                 Workspace
             </p>
             {items.map(({ label, href, icon: Icon }) => {
+                if (href === null) {
+                    return (
+                        <span
+                            key={label}
+                            aria-disabled="true"
+                            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-ui-muted"
+                        >
+                            <Icon size={18} className="shrink-0" aria-hidden="true" />
+                            {label}
+                        </span>
+                    );
+                }
+
                 const active =
                     pathname === href || pathname.startsWith(`${href}/`);
                 return (

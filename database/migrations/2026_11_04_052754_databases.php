@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('container_id')->nullable();
             $table->string('container_name')->nullable();
             $table->string('database_name')->nullable();
+            $table->text('connection')->nullable();
 
             // Provisioning
             $table->string('container_provisioning_status')->default('pending');

@@ -4,8 +4,8 @@ namespace App\Modules\Base\Enums;
 
 enum UploadStatusEnum: string
 {
-    case Pending = 'pending';
-    case Processing = 'processing';
-    case Completed = 'completed';
-    case Failed = 'failed';
+    case Pending = 'PENDING';
+    case Processing = 'PROCESSING';
+    case Completed = 'COMPLETED';
+    case Failed = 'FAILED';
 }

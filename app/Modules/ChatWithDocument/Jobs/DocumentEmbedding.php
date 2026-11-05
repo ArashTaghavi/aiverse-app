@@ -2,6 +2,7 @@
 
 namespace App\Modules\ChatWithDocument\Jobs;
 
+use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\ChatWithDocument\DTOs\IngestDTO;
 use App\Modules\ChatWithDocument\Enums\DocumentUploadProgressEnum;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
@@ -43,7 +44,7 @@ class DocumentEmbedding implements ShouldQueue
 
         DocumentUploadProgress::dispatch(
             document: $this->document,
-            step: DocumentUploadProgressEnum::Embedding->value,
+            step: UploadProgressEnum::Embedding->value,
             status: 'completed',
         );
     }

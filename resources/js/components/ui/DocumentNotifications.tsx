@@ -1,9 +1,14 @@
-import type { DocumentNotificationsProps, EmbeddingCompletedPayload } from '@/types';
+import type {
+    DocumentNotificationsProps,
+    EmbeddingCompletedPayload,
+} from "@/types";
 import { useEcho } from "@laravel/echo-react";
 import { Bell, CircleCheck, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export default function DocumentEmbeddingNotifications({ userId }: DocumentNotificationsProps) {
+export default function DocumentEmbeddingNotifications({
+    userId,
+}: DocumentNotificationsProps) {
     const [documentIds, setDocumentIds] = useState<number[]>([]);
     const menuRef = useRef<HTMLDetailsElement>(null);
 
@@ -35,7 +40,6 @@ export default function DocumentEmbeddingNotifications({ userId }: DocumentNotif
         `chat-with-document.users.${userId}`,
         ".chat-with-document.embedding.completed",
         (event) => {
-            console.log("ok", event);
             setDocumentIds((current) =>
                 current.includes(event.document_id)
                     ? current
@@ -143,4 +147,3 @@ export default function DocumentEmbeddingNotifications({ userId }: DocumentNotif
         </details>
     );
 }
-

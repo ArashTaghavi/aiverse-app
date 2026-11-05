@@ -2,7 +2,7 @@
 
 namespace App\Modules\ChatWithDocument\Models;
 
-use App\Modules\ChatWithDocument\Enums\AnswerStatusEnum;
+use App\Modules\Base\Enums\AnswerStatusEnum;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

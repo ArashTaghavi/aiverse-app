@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Base\Requests;
+namespace App\Modules\DatabaseAnalyst\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -32,7 +32,7 @@ class UploadRequest extends FormRequest
                 'required',
                 'file',
                 'max:4096',
-                // 'mimetypes:application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'mimetypes:text/plain,application/sql,application/x-sql,text/x-sql',
             ],
         ];
     }
