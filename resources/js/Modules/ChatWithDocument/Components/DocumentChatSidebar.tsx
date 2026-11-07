@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { FileText, MessageSquare, Plus } from 'lucide-react';
 import { Button } from '@/Modules/Base/Components/UI';
-import { index } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
+import { index, show } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
 import type { DocumentResponse } from '@/Modules/ChatWithDocument/Types';
 import type useChatNavigation from '../Hooks/useChatNavigation';
 import { messageDate } from '../Utils/MessageDates';
@@ -25,8 +25,9 @@ export default function DocumentChatSidebar({
     selectChat,
     pagination,
 }: Props) {
+    const pageUrl = activeId ? show.bind(null, activeId) : index;
     const conversations = documents.map((item) => ({
-        id: String(item.id),
+        id: item.uuid,
         title: item.title,
         preview: item.last_message,
         timestamp: item.created_at,
@@ -64,9 +65,8 @@ export default function DocumentChatSidebar({
                     <Link
                         key={chat.id}
                         href={
-                            index({
+                            show(chat.id, {
                                 query: {
-                                    document_id: chat.id,
                                     documents_page: pagination.page,
                                 },
                             }).url
@@ -109,9 +109,8 @@ export default function DocumentChatSidebar({
                         <Link
                             onClick={selectChat}
                             href={
-                                index({
+                                pageUrl({
                                     query: {
-                                        document_id: activeId,
                                         documents_page: pagination.page - 1,
                                     },
                                 }).url
@@ -124,9 +123,8 @@ export default function DocumentChatSidebar({
                         <Link
                             onClick={selectChat}
                             href={
-                                index({
+                                pageUrl({
                                     query: {
-                                        document_id: activeId,
                                         documents_page: pagination.page + 1,
                                     },
                                 }).url

@@ -9,7 +9,7 @@ export default function DocumentConversationPage(
     return (
         <>
             <Head title="Document conversation" />
-            <DocumentChat key={props.documentId} {...props} />
+            <DocumentChat key={props.selectedDocument.uuid} {...props} />
         </>
     );
 }

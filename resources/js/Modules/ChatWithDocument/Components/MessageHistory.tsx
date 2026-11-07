@@ -1,4 +1,4 @@
-import { AnswerStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
+import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
 import type {
     MessageHistoryProps,
     MessageTimeProps,
@@ -61,9 +61,9 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                     </div>
                     <AssistantMessage>
                         {turn.answer == null &&
-                        (turn.answer_status === AnswerStatusEnum.Pending ||
+                        (turn.answer_status === ProcessingStatusEnum.Pending ||
                             turn.answer_status ===
-                                AnswerStatusEnum.Processing) ? (
+                                ProcessingStatusEnum.Processing) ? (
                             <TypingIndicator />
                         ) : (
                             <p
@@ -72,15 +72,15 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                             >
                                 {turn.answer ??
                                     (turn.answer_status ===
-                                    AnswerStatusEnum.Failed
+                                    ProcessingStatusEnum.Failed
                                         ? "Could not prepare an answer. Please try again."
                                         : "No answer was returned.")}
                             </p>
                         )}
                         {(turn.answer != null ||
-                            turn.answer_status === AnswerStatusEnum.Failed ||
+                            turn.answer_status === ProcessingStatusEnum.Failed ||
                             turn.answer_status ===
-                                AnswerStatusEnum.Completed) && (
+                                ProcessingStatusEnum.Completed) && (
                             <MessageTime timestamp={turn.created_at} />
                         )}
                     </AssistantMessage>

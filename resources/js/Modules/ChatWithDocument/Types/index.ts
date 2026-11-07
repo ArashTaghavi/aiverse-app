@@ -11,9 +11,9 @@ export type DocumentResponse = {
     title: string;
     original_name: string;
     size: string;
-    created_at: string;
     last_message: string | null;
     embedding_status: EmbeddingStatus;
+    created_at: string;
 };
 
 export type ChatTurnResponse = {
@@ -25,19 +25,17 @@ export type ChatTurnResponse = {
 };
 
 export type DocumentChatProps = {
-    documentId?: string | number | null;
-    documents?: DocumentResponse[];
-    selectedDocument?: DocumentResponse | null;
-    history?: ChatTurnResponse[];
+    documents: DocumentResponse[];
     uploadedDocument?: DocumentResponse | null;
-    documentsPagination?: { page: number; hasMore: boolean };
-    historyPagination?: { page: number; hasMore: boolean };
+    documentsPagination: { page: number; hasMore: boolean };
 };
 
 export type NewChatFormValues = z.infer<typeof newChatSchema>;
 export type DocumentQuestionValues = z.infer<typeof questionSchema>;
 export type DocumentConversationPageProps = DocumentChatProps & {
-    documentId: string;
+    selectedDocument: DocumentResponse;
+    history: ChatTurnResponse[];
+    historyPagination: { page: number; hasMore: boolean };
 };
 export type MessageHistoryProps = { turns: ChatTurnResponse[] };
 export type MessageTimeProps = { timestamp: string };

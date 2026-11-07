@@ -14,7 +14,7 @@ import type { DocumentResponse, EmbeddingStatus } from '@/Modules/ChatWithDocume
 import { useEffect, useState } from 'react';
 import { Link } from '@inertiajs/react';
 import {
-    index as chatWithDocument,
+    show as chatWithDocument,
     status as documentStatus,
 } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
 
@@ -23,6 +23,7 @@ type UploadProgressEvent = {
     status: 'processing' | 'completed' | 'failed';
     data: {
         id: number;
+        uuid: string;
         title: string;
         original_name: string;
         human_size: string;
@@ -327,12 +328,7 @@ export default function PreparingUpload({
                                             </p>
                                             <Link
                                                 href={
-                                                    chatWithDocument({
-                                                        query: {
-                                                            document_id:
-                                                                uploadedDocument.id,
-                                                        },
-                                                    }).url
+                                                    chatWithDocument(uploadedDocument.uuid).url
                                                 }
                                                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-300/20 bg-violet-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-violet-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400"
                                             >

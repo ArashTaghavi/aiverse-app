@@ -23,20 +23,11 @@ class ChatWithDocumentController extends Controller
     {
         $user = $request->user();
 
-        $validated = $request->validate([
-            'document_id' => ['nullable', 'integer', 'min:1'],
+        $request->validate([
             'documents_page' => ['nullable', 'integer', 'min:1'],
-            'history_page' => ['nullable', 'integer', 'min:1'],
         ]);
-        $documentId = $validated['document_id'] ?? null;
-
-        $document = $documentId
-            ? $user->documents()->whereKey($request->integer('document_id'))->firstOrFail()
-            : null;
 
         $documents = $this->service->documents($user);
-        $history = $document?->documentChatTurns()->latest('id')
-            ->simplePaginate(30, ['*'], 'history_page');
         $uploadedDocument = $request->session()->get('uploaded_document_id');
 
         return Inertia::render('Modules/ChatWithDocument/Pages/Index', [
@@ -45,20 +36,37 @@ class ChatWithDocumentController extends Controller
                 'page' => $documents->currentPage(),
                 'hasMore' => $documents->hasMorePages(),
             ],
-            'documentId' => $document?->id,
-            'selectedDocument' => $document
-                ? (new DocumentResource($document))->resolve($request)
-                : null,
-            'history' => DocumentChatTurnResource::collection(
-                $history?->getCollection()->reverse()->values() ?? collect()
-            )->resolve($request),
-            'historyPagination' => [
-                'page' => $history?->currentPage() ?? 1,
-                'hasMore' => $history?->hasMorePages() ?? false,
-            ],
             'uploadedDocument' => $uploadedDocument
                 ? (new DocumentResource($user->documents()->findOrFail($uploadedDocument)))->resolve($request)
                 : null,
+        ]);
+    }
+
+    public function show(Request $request, Document $relatedDocument): Response
+    {
+        $request->validate([
+            'documents_page' => ['nullable', 'integer', 'min:1'],
+            'history_page' => ['nullable', 'integer', 'min:1'],
+        ]);
+
+        $documents = $this->service->documents($request->user());
+        $history = $relatedDocument->documentChatTurns()->latest('id')
+            ->simplePaginate(30, ['*'], 'history_page');
+
+        return Inertia::render('Modules/ChatWithDocument/Pages/Show', [
+            'documents' => DocumentResource::collection($documents)->resolve($request),
+            'documentsPagination' => [
+                'page' => $documents->currentPage(),
+                'hasMore' => $documents->hasMorePages(),
+            ],
+            'selectedDocument' => (new DocumentResource($relatedDocument))->resolve($request),
+            'history' => DocumentChatTurnResource::collection(
+                $history->getCollection()->reverse()->values()
+            )->resolve($request),
+            'historyPagination' => [
+                'page' => $history->currentPage(),
+                'hasMore' => $history->hasMorePages(),
+            ],
         ]);
     }
 
@@ -92,6 +100,6 @@ class ChatWithDocumentController extends Controller
             question: $request->validated('question')
         );
 
-        return to_route('user.chat-with-document.index', ['document_id' => $relatedDocument->id]);
+        return to_route('user.chat-with-document.show', ['relatedDocument' => $relatedDocument->uuid]);
     }
 }

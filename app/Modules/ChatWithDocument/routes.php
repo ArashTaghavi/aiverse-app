@@ -13,4 +13,5 @@ Route::prefix('/chat-with-document')
 
         Route::post('/upload', 'upload')->name('upload');
         Route::post('/ask/{relatedDocument}', 'ask')->name('ask');
+        Route::get('/{relatedDocument}', 'show')->name('show');
     });

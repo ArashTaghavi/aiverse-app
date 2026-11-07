@@ -1,16 +1,16 @@
 import { router } from "@inertiajs/react";
 import { useEcho } from "@laravel/echo-react";
-import type { AnswerStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
+import type { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
 
 type Props = {
     userId: number;
-    documentId: number | null;
+    documentId: number;
 };
 
 export default function DocumentAnswerListener({ userId, documentId }: Props) {
     useEcho<{
         document_id: number;
-        answer_status: AnswerStatusEnum;
+        answer_status: ProcessingStatusEnum;
     }>(
         `chat-with-document.users.${userId}`,
         [

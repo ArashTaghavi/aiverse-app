@@ -11,9 +11,8 @@ import type {
 import { questionSchema } from "@/Modules/Base/Schemas/QuestionSchema";
 
 export default function useDocumentQuestion(
-    documentUuid: string | null,
+    documentUuid: string,
     isDocumentReady: boolean,
-    uploading: boolean,
     turnCount: number,
 ) {
     const [asking, setAsking] = useState(false);
@@ -27,7 +26,7 @@ export default function useDocumentQuestion(
     });
 
     const sendQuestion: SubmitHandler<DocumentQuestionValues> = (data) => {
-        if (documentUuid === null || !isDocumentReady || uploading || asking)
+        if (!isDocumentReady || asking)
             return;
         router.post(ask(documentUuid).url, data, {
             preserveScroll: true,
