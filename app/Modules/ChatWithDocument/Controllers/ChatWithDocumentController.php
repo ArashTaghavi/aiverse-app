@@ -9,11 +9,14 @@ use App\Modules\ChatWithDocument\Requests\UploadRequest;
 use App\Modules\ChatWithDocument\Resources\DocumentChatTurnResource;
 use App\Modules\ChatWithDocument\Resources\DocumentResource;
 use App\Modules\ChatWithDocument\Services\ChatWithDocumentService;
+use Generator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Throwable;
 
 class ChatWithDocumentController extends Controller
 {
@@ -93,13 +96,37 @@ class ChatWithDocumentController extends Controller
         return back()->with('uploaded_document_id', $document->id);
     }
 
-    public function ask(Document $relatedDocument, RequestsAskRequest $request): RedirectResponse
+    public function ask(Document $relatedDocument, RequestsAskRequest $request): StreamedResponse
     {
-        $this->service->ask(
+        set_time_limit(300);
+
+        $turn = $this->service->ask(
             relatedDocument: $relatedDocument,
             question: $request->validated('question')
         );
 
-        return to_route('user.chat-with-document.show', ['relatedDocument' => $relatedDocument->uuid]);
+        $chunks = $this->service->streamAnswer($turn);
+
+        try {
+            // Detect upstream failures before committing the streaming headers.
+            $chunks->rewind();
+        } catch (Throwable $exception) {
+            report($exception);
+            abort(502, 'The AI service could not generate an answer.');
+        }
+
+        return response()->stream(function () use ($chunks): Generator {
+            try {
+                yield from $chunks;
+            } catch (Throwable $exception) {
+                // The status is already sent; keep error details out of the answer.
+                report($exception);
+            }
+        }, headers: [
+            'Content-Type' => 'text/plain; charset=utf-8',
+            'Cache-Control' => 'no-cache, no-transform',
+            'X-Accel-Buffering' => 'no',
+            'X-Chat-Turn-Id' => (string) $turn->id,
+        ]);
     }
 }

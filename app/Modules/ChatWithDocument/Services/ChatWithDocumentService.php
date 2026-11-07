@@ -5,20 +5,24 @@ namespace App\Modules\ChatWithDocument\Services;
 use App\Models\User;
 use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
+use App\Modules\ChatWithDocument\DTOs\AskDTO;
+use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingRequested;
 use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
-use App\Modules\ChatWithDocument\Jobs\Ask;
 use App\Modules\ChatWithDocument\Models\Document;
 use App\Modules\ChatWithDocument\Models\DocumentChatTurn;
+use App\Services\AIClient;
 use App\Services\StorageService;
+use Generator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;
 use Throwable;
+use UnexpectedValueException;
 
 class ChatWithDocumentService
 {
-    public function __construct(private StorageService $storageService) {}
+    public function __construct(private StorageService $storageService, private AIClient $aiClient) {}
 
     /** @return Paginator<int, Document> */
     public function documents(User $user): Paginator
@@ -73,8 +77,47 @@ class ChatWithDocumentService
             'answer_status' => ProcessingStatusEnum::Pending,
         ]);
 
-        Ask::dispatch(documentChatTurn: $documentChatTurn);
-
         return $documentChatTurn;
+    }
+
+    /** @return Generator<int, string> */
+    public function streamAnswer(DocumentChatTurn $documentChatTurn): Generator
+    {
+        $stream = null;
+        $answer = '';
+        $documentChatTurn->markAsProcessing();
+
+        try {
+            $data = new AskDTO(
+                documentId: $documentChatTurn->document_id,
+                ownerId: $documentChatTurn->document->owner_id,
+                question: $documentChatTurn->question,
+            );
+            $stream = $this->aiClient->streamPost(RouteEnum::ASK->value, $data->toArray());
+
+            while (! $stream->eof()) {
+                $chunk = $stream->read(1024);
+
+                if ($chunk === '') {
+                    continue;
+                }
+
+                $answer .= $chunk;
+                yield $chunk;
+            }
+
+            if (trim($answer) === '') {
+                throw new UnexpectedValueException('The AI service returned an empty answer.');
+            }
+
+            $documentChatTurn->markAsCompleted(answer: $answer);
+            $documentChatTurn->document->update(['last_message' => $answer]);
+        } catch (Throwable $exception) {
+            $documentChatTurn->markAsFailed(error: $exception->getMessage());
+
+            throw $exception;
+        } finally {
+            $stream?->close();
+        }
     }
 }

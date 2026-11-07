@@ -1,16 +1,16 @@
-import { Link, usePage } from "@inertiajs/react";
-import { useMemo } from "react";
-import { show } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import type { DocumentConversationPageProps } from "@/Modules/ChatWithDocument/Types";
-import DocumentEmbeddingListener from "./DocumentEmbeddingListener";
-import DocumentChatSidebar from "./DocumentChatSidebar";
-import DocumentChatHeader from "./DocumentChatHeader";
-import DocumentConversation from "./DocumentConversation";
-import useAutoScroll from "../Hooks/useAutoScroll";
-import useChatNavigation from "../Hooks/useChatNavigation";
-import useDocumentEmbedding from "../Hooks/useDocumentEmbedding";
-import useDocumentQuestion from "../Hooks/useDocumentQuestion";
-import DocumentAnswerListener from "./DocumentAnswerListener";
+import { Link, usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
+import { show } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
+import type { DocumentConversationPageProps } from '@/Modules/ChatWithDocument/Types';
+import DocumentEmbeddingListener from './DocumentEmbeddingListener';
+import DocumentChatSidebar from './DocumentChatSidebar';
+import DocumentChatHeader from './DocumentChatHeader';
+import DocumentConversation from './DocumentConversation';
+import useAutoScroll from '../Hooks/useAutoScroll';
+import useChatNavigation from '../Hooks/useChatNavigation';
+import useDocumentEmbedding from '../Hooks/useDocumentEmbedding';
+import useDocumentQuestion from '../Hooks/useDocumentQuestion';
+import DocumentAnswerListener from './DocumentAnswerListener';
 
 export default function DocumentChat({
     documents = [],
@@ -24,11 +24,7 @@ export default function DocumentChat({
     const { embeddingStatus, isDocumentReady, updateEmbeddingStatus } =
         useDocumentEmbedding(selected);
     const error = errors.form;
-    const questionState = useDocumentQuestion(
-        selected.uuid,
-        isDocumentReady,
-        turns.length,
-    );
+    const questionState = useDocumentQuestion(selected.uuid, isDocumentReady);
     const { showList, setShowList, newChat, selectChat } = useChatNavigation(
         questionState.asking,
         () => {
@@ -38,7 +34,12 @@ export default function DocumentChat({
     const displayTurns = useMemo(
         () =>
             questionState.pendingTurn
-                ? [...turns, questionState.pendingTurn]
+                ? [
+                      ...turns.filter(
+                          (turn) => turn.id !== questionState.pendingTurn?.id,
+                      ),
+                      questionState.pendingTurn,
+                  ]
                 : turns,
         [turns, questionState.pendingTurn],
     );
@@ -72,7 +73,7 @@ export default function DocumentChat({
                 pagination={documentsPagination}
             />
             <div
-                className={`${showList ? "hidden md:flex" : "flex"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
+                className={`${showList ? 'hidden md:flex' : 'flex'} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
             >
                 <DocumentChatHeader
                     title={selected.title}

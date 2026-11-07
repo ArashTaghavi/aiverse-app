@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Psr\Http\Message\StreamInterface;
 
 class AIClient
 {
@@ -28,5 +29,17 @@ class AIClient
         return $this->client()
             ->post($route, $data)
             ->throw();
+    }
+
+    public function streamPost(string $route, array $data = []): StreamInterface
+    {
+        return $this->client()
+            ->accept('text/plain')
+            ->timeout(300)
+            ->withOptions(['stream' => true, 'read_timeout' => 300])
+            ->post($route, $data)
+            ->throw()
+            ->toPsrResponse()
+            ->getBody();
     }
 }
