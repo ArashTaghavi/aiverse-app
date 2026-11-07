@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { router } from '@inertiajs/react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { upload } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
-import type { DocumentResponse, NewChatFormValues } from '@/types';
-import { newChatSchema } from '../schemas/new-chat.schema';
+import { useState } from "react";
+import { router } from "@inertiajs/react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { upload } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import type { DocumentResponse, NewChatFormValues } from "@/types";
+import { newChatSchema } from "../schemas/new-chat.schema";
 
 export default function useDocumentUpload(isAsking: () => boolean) {
     const [uploadFormKey, setUploadFormKey] = useState(0);
@@ -15,7 +15,7 @@ export default function useDocumentUpload(isAsking: () => boolean) {
         useState<DocumentResponse | null>(null);
     const uploadForm = useForm<NewChatFormValues>({
         resolver: zodResolver(newChatSchema),
-        defaultValues: { file: null, title: '' },
+        defaultValues: { file: null, title: "" },
     });
 
     function resetUploadForm() {
@@ -39,10 +39,10 @@ export default function useDocumentUpload(isAsking: () => boolean) {
             onFinish: () => setUploading(false),
             onError: (errors) => {
                 closeUploadProgress();
-                for (const field of ['title', 'file'] as const) {
+                for (const field of ["title", "file"] as const) {
                     if (errors[field]) {
                         uploadForm.setError(field, {
-                            type: 'server',
+                            type: "server",
                             message: errors[field],
                         });
                     }

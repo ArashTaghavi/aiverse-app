@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import UserLayout from '../layout';
+import { UserWorkspaceLayout } from '../layout';
 import DocumentChat from './components/DocumentChat';
 import type { DocumentConversationPageProps } from '@/types';
 
@@ -14,4 +14,4 @@ export default function DocumentConversationPage(
     );
 }
 
-DocumentConversationPage.layout = UserLayout;
+DocumentConversationPage.layout = UserWorkspaceLayout;

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 
-abstract class BaseEmbeddableService
+abstract class BaseService
 {
     public function __construct(protected StorageService $storageService) {}
 

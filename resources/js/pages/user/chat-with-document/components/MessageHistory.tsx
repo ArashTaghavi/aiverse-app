@@ -1,3 +1,4 @@
+import { AnswerStatusEnum } from '@/types/base/enums/AnswerStatusEnum';
 import type { MessageHistoryProps, MessageTimeProps } from '@/types';
 import { groupMessagesByDay, messageDate } from '../lib/message-dates';
 import { UserRound } from 'lucide-react';
@@ -57,8 +58,8 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                     </div>
                     <AssistantMessage>
                         {turn.answer == null &&
-                        (turn.answer_status === 'PENDING' ||
-                            turn.answer_status === 'PROCESSING') ? (
+                        (turn.answer_status === AnswerStatusEnum.Pending ||
+                            turn.answer_status === AnswerStatusEnum.Processing) ? (
                             <TypingIndicator />
                         ) : (
                             <p
@@ -66,14 +67,14 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                                 className="text-sm leading-7 break-words whitespace-pre-wrap text-zinc-200"
                             >
                                 {turn.answer ??
-                                    (turn.answer_status === 'FAILED'
+                                    (turn.answer_status === AnswerStatusEnum.Failed
                                         ? 'Could not prepare an answer. Please try again.'
                                         : 'No answer was returned.')}
                             </p>
                         )}
                         {(turn.answer != null ||
-                            turn.answer_status === 'FAILED' ||
-                            turn.answer_status === 'COMPLETED') && (
+                            turn.answer_status === AnswerStatusEnum.Failed ||
+                            turn.answer_status === AnswerStatusEnum.Completed) && (
                             <MessageTime timestamp={turn.created_at} />
                         )}
                     </AssistantMessage>

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import PublicSurface from '@/components/ui/background/PublicSurface';
+import PublicSurface from '@/pages/site/components/background/PublicSurface';
 import { cn } from '@/lib/utils';
-import SiteHeader from './home/_components/SiteHeader';
+import SiteHeader from './home/components/SiteHeader';
 
 type SiteLayoutProps = {
     children: ReactNode;

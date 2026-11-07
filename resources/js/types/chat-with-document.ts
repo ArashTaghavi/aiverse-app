@@ -1,4 +1,5 @@
 import type { z } from 'zod';
+import type { AnswerStatusEnum } from './base/enums/AnswerStatusEnum';
 import type { newChatSchema } from '@/pages/user/chat-with-document/schemas/new-chat.schema';
 import type { documentQuestionSchema } from '@/pages/user/chat-with-document/schemas/question.schema';
 
@@ -19,7 +20,7 @@ export type ChatTurnResponse = {
     id: number;
     question: string;
     answer: string | null;
-    answer_status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+    answer_status: AnswerStatusEnum;
     created_at: string;
 };
 

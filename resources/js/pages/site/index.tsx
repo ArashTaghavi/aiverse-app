@@ -1,6 +1,6 @@
-﻿import { Head } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import SiteLayout from './layout';
-import ProjectSlider from './home/_components/ProjectSlider';
+import ProjectSlider from './home/components/ProjectSlider';
 
 export default function Home() {
     return (

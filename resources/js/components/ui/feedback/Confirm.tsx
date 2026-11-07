@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { Check, X } from "lucide-react";
-import Button from "./Button";
+import Button from "../buttons/Button";
 
 export interface ConfirmProps {
     open: boolean;

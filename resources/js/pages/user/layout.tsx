@@ -1,12 +1,15 @@
-import type { UserLayoutProps } from '@/types';
-import Header from './_components/layout/Header';
-import Aside from './_components/layout/Aside';
-import Main from './_components/layout/Main';
+import type { UserLayoutProps } from "@/types";
+import Header from "./components/layout/Header";
+import Aside from "./components/layout/Aside";
+import styles from "./layout.module.css";
 
-export default function UserLayout({ children }: UserLayoutProps) {
+export default function UserLayout({
+    children,
+    contentMode = "page",
+}: UserLayoutProps) {
     return (
         <div
-            data-chat-viewport="true"
+            data-user-viewport="true"
             className="user-theme fixed inset-0 h-dvh max-h-dvh overflow-hidden bg-[#0c0c11] font-sans text-zinc-100 selection:bg-violet-500/30"
         >
             <a
@@ -19,8 +22,26 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
             <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden lg:pl-64 [&>header]:shrink-0">
                 <Header />
-                <Main viewport>{children}</Main>
+                <main
+                    id="dashboard-content"
+                    tabIndex={-1}
+                    className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-linear-to-br from-white/[0.035] via-[#111117] to-white/[0.015] outline-none"
+                >
+                    <div
+                        aria-hidden="true"
+                        className={`${styles.edgeShine} pointer-events-none absolute inset-x-6 top-0 z-10 h-px overflow-hidden bg-linear-to-r from-transparent via-violet-300 to-transparent shadow-[0_0_18px_2px_#8b5cf670]`}
+                    />
+                    <div
+                        className={`flex min-h-0 min-w-0 flex-1 ${contentMode === "workspace" ? "overflow-hidden" : "flex-col gap-6 overflow-y-auto overscroll-contain p-4 sm:p-6"}`}
+                    >
+                        {children}
+                    </div>
+                </main>
             </div>
         </div>
     );
+}
+
+export function UserWorkspaceLayout({ children }: UserLayoutProps) {
+    return <UserLayout contentMode="workspace">{children}</UserLayout>;
 }

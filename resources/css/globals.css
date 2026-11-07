@@ -121,9 +121,9 @@ body {
     font-family: var(--font-sans);
 }
 
-/* Chat routes scroll inside their message lists, never on the document. */
-html:has([data-chat-viewport='true']),
-body:has([data-chat-viewport='true']) {
+/* User pages scroll inside the layout content, never on the document. */
+html:has([data-user-viewport='true']),
+body:has([data-user-viewport='true']) {
     height: 100%;
     overflow: hidden;
     overscroll-behavior: none;

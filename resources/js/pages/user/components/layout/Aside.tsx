@@ -1,13 +1,13 @@
-import { index as userPanel } from '@/actions/App/Http/Controllers/User/UserPanelController';
-import { ShieldCheck, Sparkles } from 'lucide-react';
-import { Link } from '@inertiajs/react';
-import Navigation from './Navigation';
+import { index as dashboard } from "@/actions/App/Http/Controllers/User/DashboardController";
+import { ShieldCheck, Sparkles } from "lucide-react";
+import { Link } from "@inertiajs/react";
+import Navigation from "./Navigation";
 
 export default function Aside() {
     return (
         <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-ui-border-subtle bg-[#101016] p-6 lg:flex">
             <Link
-                href={userPanel().url}
+                href={dashboard().url}
                 className="flex items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-violet-400"
             >
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-violet-400/25 bg-violet-400/10 text-violet-300">

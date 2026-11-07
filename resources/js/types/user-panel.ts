@@ -12,6 +12,8 @@ export type UserPageProps = {
     fillHeight?: boolean;
 };
 
-export type UserLayoutProps = { children: ReactNode };
-export type UserMainProps = { children: ReactNode; viewport?: boolean };
+export type UserLayoutProps = {
+    children: ReactNode;
+    contentMode?: 'page' | 'workspace';
+};
 export type UserNavigationProps = { onNavigate?: () => void };

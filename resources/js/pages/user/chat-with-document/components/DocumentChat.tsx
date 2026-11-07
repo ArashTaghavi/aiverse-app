@@ -1,3 +1,4 @@
+import { AnswerStatusEnum } from '@/types/base/enums/AnswerStatusEnum';
 import { Link, usePage, usePoll } from '@inertiajs/react';
 import { useEffect, useMemo } from 'react';
 import { index } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
@@ -80,8 +81,8 @@ export default function DocumentChat({
         ) ||
         turns.some(
             (turn) =>
-                turn.answer_status === 'PENDING' ||
-                turn.answer_status === 'PROCESSING',
+                turn.answer_status === AnswerStatusEnum.Pending ||
+                turn.answer_status === AnswerStatusEnum.Processing,
         );
     useEffect(() => {
         if (awaitingUpdate) start();
@@ -90,7 +91,7 @@ export default function DocumentChat({
     }, [awaitingUpdate, start, stop]);
 
     return (
-        <div className="flex h-full min-h-0 w-full flex-1 overflow-hidden">
+        <>
             {auth.user && (
                 <DocumentEmbeddingListener
                     userId={auth.user.id}
@@ -113,7 +114,7 @@ export default function DocumentChat({
                 pagination={documentsPagination}
             />
             <div
-                className={`${showList ? 'hidden md:flex' : 'flex'} h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
+                className={`${showList ? 'hidden md:flex' : 'flex'} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
             >
                 <DocumentChatHeader
                     title={selected?.title}
@@ -192,6 +193,6 @@ export default function DocumentChat({
                     </p>
                 )}
             </div>
-        </div>
+        </>
     );
 }

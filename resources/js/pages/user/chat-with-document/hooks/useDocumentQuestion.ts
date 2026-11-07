@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { router } from '@inertiajs/react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ask } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
-import type { ChatTurnResponse, DocumentQuestionValues } from '@/types';
-import { documentQuestionSchema } from '../schemas/question.schema';
+import { AnswerStatusEnum } from '@/types/base/enums/AnswerStatusEnum';
+import { useState } from "react";
+import { router } from "@inertiajs/react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ask } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import type { ChatTurnResponse, DocumentQuestionValues } from "@/types";
+import { documentQuestionSchema } from "../schemas/question.schema";
 
 export default function useDocumentQuestion(
     documentUuid: string | null,
@@ -19,7 +20,7 @@ export default function useDocumentQuestion(
     );
     const questionForm = useForm<DocumentQuestionValues>({
         resolver: zodResolver(documentQuestionSchema),
-        defaultValues: { question: '' },
+        defaultValues: { question: "" },
     });
 
     const sendQuestion: SubmitHandler<DocumentQuestionValues> = (data) => {
@@ -33,7 +34,7 @@ export default function useDocumentQuestion(
                     id: -Date.now(),
                     question: data.question,
                     answer: null,
-                    answer_status: 'PENDING',
+                    answer_status: AnswerStatusEnum.Pending,
                     created_at: new Date().toISOString(),
                 });
                 setAsking(true);
@@ -45,8 +46,8 @@ export default function useDocumentQuestion(
             onSuccess: () => questionForm.reset(),
             onError: (errors) => {
                 if (errors.question) {
-                    questionForm.setError('question', {
-                        type: 'server',
+                    questionForm.setError("question", {
+                        type: "server",
                         message: errors.question,
                     });
                 }
