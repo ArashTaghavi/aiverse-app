@@ -1,19 +1,19 @@
-import { AnswerStatusEnum } from '@/Modules/Base/Enums/AnswerStatusEnum';
-import { Link, usePage, usePoll } from '@inertiajs/react';
-import { useEffect, useMemo } from 'react';
-import { index } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
-import type { DocumentChatProps } from '@/Modules/ChatWithDocument/Types';
-import DocumentEmbeddingListener from './DocumentEmbeddingListener';
-import DocumentChatSidebar from './DocumentChatSidebar';
-import DocumentChatHeader from './DocumentChatHeader';
-import DocumentUploadPanel from './DocumentUploadPanel';
-import DocumentConversation from './DocumentConversation';
-import useAutoScroll from '../Hooks/useAutoScroll';
-import useChatNavigation from '../Hooks/useChatNavigation';
-import useDocumentEmbedding from '../Hooks/useDocumentEmbedding';
-import useDocumentQuestion from '../Hooks/useDocumentQuestion';
-import useDocumentUpload from '../Hooks/useDocumentUpload';
-import DocumentAnswerListener from './DocumentAnswerListener';
+import { AnswerStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
+import { Link, usePage, usePoll } from "@inertiajs/react";
+import { useEffect, useMemo } from "react";
+import { index } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import type { DocumentChatProps } from "@/Modules/ChatWithDocument/Types";
+import DocumentEmbeddingListener from "./DocumentEmbeddingListener";
+import DocumentChatSidebar from "./DocumentChatSidebar";
+import DocumentChatHeader from "./DocumentChatHeader";
+import DocumentUploadPanel from "./DocumentUploadPanel";
+import DocumentConversation from "./DocumentConversation";
+import useAutoScroll from "../Hooks/useAutoScroll";
+import useChatNavigation from "../Hooks/useChatNavigation";
+import useDocumentEmbedding from "../Hooks/useDocumentEmbedding";
+import useDocumentQuestion from "../Hooks/useDocumentQuestion";
+import useDocumentUpload from "../Hooks/useDocumentUpload";
+import DocumentAnswerListener from "./DocumentAnswerListener";
 
 export default function DocumentChat({
     documentId = null,
@@ -62,22 +62,22 @@ export default function DocumentChat({
         5000,
         {
             only: [
-                'history',
-                'documents',
-                'selectedDocument',
-                'historyPagination',
-                'documentsPagination',
+                "history",
+                "documents",
+                "selectedDocument",
+                "historyPagination",
+                "documentsPagination",
             ],
         },
         { autoStart: false },
     );
     const awaitingUpdate =
-        selected?.embedding_status === 'PENDING' ||
-        selected?.embedding_status === 'PROCESSING' ||
+        selected?.embedding_status === "PENDING" ||
+        selected?.embedding_status === "PROCESSING" ||
         documents.some(
             (document) =>
-                document.embedding_status === 'PENDING' ||
-                document.embedding_status === 'PROCESSING',
+                document.embedding_status === "PENDING" ||
+                document.embedding_status === "PROCESSING",
         ) ||
         turns.some(
             (turn) =>
@@ -114,7 +114,7 @@ export default function DocumentChat({
                 pagination={documentsPagination}
             />
             <div
-                className={`${showList ? 'hidden md:flex' : 'flex'} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
+                className={`${showList ? "hidden md:flex" : "flex"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
             >
                 <DocumentChatHeader
                     title={selected?.title}

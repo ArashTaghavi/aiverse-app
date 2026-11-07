@@ -1,10 +1,13 @@
-import { AnswerStatusEnum } from '@/Modules/Base/Enums/AnswerStatusEnum';
-import type { MessageHistoryProps, MessageTimeProps } from '@/Modules/ChatWithDocument/Types';
-import { groupMessagesByDay, messageDate } from '../Utils/MessageDates';
-import { UserRound } from 'lucide-react';
-import styles from './MessageHistory.module.css';
-import TypingIndicator from './TypingIndicator';
-import AssistantMessage from './AssistantMessage';
+import { AnswerStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
+import type {
+    MessageHistoryProps,
+    MessageTimeProps,
+} from "@/Modules/ChatWithDocument/Types";
+import { groupMessagesByDay, messageDate } from "../Utils/MessageDates";
+import { UserRound } from "lucide-react";
+import styles from "./MessageHistory.module.css";
+import TypingIndicator from "./TypingIndicator";
+import AssistantMessage from "./AssistantMessage";
 
 function MessageTime({ timestamp }: MessageTimeProps) {
     const date = messageDate(timestamp);
@@ -59,7 +62,8 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                     <AssistantMessage>
                         {turn.answer == null &&
                         (turn.answer_status === AnswerStatusEnum.Pending ||
-                            turn.answer_status === AnswerStatusEnum.Processing) ? (
+                            turn.answer_status ===
+                                AnswerStatusEnum.Processing) ? (
                             <TypingIndicator />
                         ) : (
                             <p
@@ -67,14 +71,16 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                                 className="text-sm leading-7 break-words whitespace-pre-wrap text-zinc-200"
                             >
                                 {turn.answer ??
-                                    (turn.answer_status === AnswerStatusEnum.Failed
-                                        ? 'Could not prepare an answer. Please try again.'
-                                        : 'No answer was returned.')}
+                                    (turn.answer_status ===
+                                    AnswerStatusEnum.Failed
+                                        ? "Could not prepare an answer. Please try again."
+                                        : "No answer was returned.")}
                             </p>
                         )}
                         {(turn.answer != null ||
                             turn.answer_status === AnswerStatusEnum.Failed ||
-                            turn.answer_status === AnswerStatusEnum.Completed) && (
+                            turn.answer_status ===
+                                AnswerStatusEnum.Completed) && (
                             <MessageTime timestamp={turn.created_at} />
                         )}
                     </AssistantMessage>

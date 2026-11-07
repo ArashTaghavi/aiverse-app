@@ -1,6 +1,6 @@
-import { router } from '@inertiajs/react';
-import { useEcho } from '@laravel/echo-react';
-import type { AnswerStatusEnum } from '@/Modules/Base/Enums/AnswerStatusEnum';
+import { router } from "@inertiajs/react";
+import { useEcho } from "@laravel/echo-react";
+import type { AnswerStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
 
 type Props = {
     userId: number;
@@ -14,14 +14,14 @@ export default function DocumentAnswerListener({ userId, documentId }: Props) {
     }>(
         `chat-with-document.users.${userId}`,
         [
-            '.chat-with-document.answer.completed',
-            '.chat-with-document.answer.failed',
+            ".chat-with-document.answer.completed",
+            ".chat-with-document.answer.failed",
         ],
         (event) => {
             if (event.document_id !== documentId) return;
 
             router.reload({
-                only: ['history', 'documents'],
+                only: ["history", "documents"],
             });
         },
         [documentId],

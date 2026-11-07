@@ -1,9 +1,9 @@
-import type { z } from 'zod';
-import type { AnswerStatusEnum } from '../../Base/Enums/AnswerStatusEnum';
-import type { newChatSchema } from '@/Modules/ChatWithDocument/Schemas/NewChatSchema';
-import type { documentQuestionSchema } from '@/Modules/ChatWithDocument/Schemas/QuestionSchema';
+import type { z } from "zod";
+import type { newChatSchema } from "@/Modules/ChatWithDocument/Schemas/NewChatSchema";
+import type { questionSchema } from "@/Modules/Base/Schemas/QuestionSchema";
+import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
 
-export type EmbeddingStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+export type EmbeddingStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
 
 export type DocumentResponse = {
     id: number;
@@ -20,7 +20,7 @@ export type ChatTurnResponse = {
     id: number;
     question: string;
     answer: string | null;
-    answer_status: AnswerStatusEnum;
+    answer_status: ProcessingStatusEnum;
     created_at: string;
 };
 
@@ -35,7 +35,7 @@ export type DocumentChatProps = {
 };
 
 export type NewChatFormValues = z.infer<typeof newChatSchema>;
-export type DocumentQuestionValues = z.infer<typeof documentQuestionSchema>;
+export type DocumentQuestionValues = z.infer<typeof questionSchema>;
 export type DocumentConversationPageProps = DocumentChatProps & {
     documentId: string;
 };
@@ -45,7 +45,7 @@ export type DocumentNotificationsProps = { userId: number };
 
 export type EmbeddingCompletedPayload = {
     document_id: number;
-    embedding_status: 'COMPLETED';
+    embedding_status: "COMPLETED";
 };
 
 export type DocumentEmbeddingListenerProps = {

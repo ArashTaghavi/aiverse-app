@@ -1,12 +1,13 @@
-import { Head } from '@inertiajs/react';
-import { UserWorkspaceLayout } from '../../../Layouts/UserLayout';
-import DocumentChat from '../Components/DocumentChat';
-import type { DocumentChatProps } from '@/Modules/ChatWithDocument/Types';
+import { Head } from "@inertiajs/react";
+import DocumentChat from "../Components/DocumentChat";
+import type { DocumentChatProps } from "@/Modules/ChatWithDocument/Types";
+import { UserWorkspaceLayout } from "@/Layouts/UserLayout";
+import { Module } from "../Module";
 
 export default function DocumentChatPage(props: DocumentChatProps) {
     return (
         <>
-            <Head title="Chat with document" />
+            <Head title={Module.TITLE} />
             <DocumentChat {...props} />
         </>
     );

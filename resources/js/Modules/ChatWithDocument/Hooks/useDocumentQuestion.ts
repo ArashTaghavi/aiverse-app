@@ -1,11 +1,14 @@
-import { AnswerStatusEnum } from '@/Modules/Base/Enums/AnswerStatusEnum';
+import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
 import { useState } from "react";
 import { router } from "@inertiajs/react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ask } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import type { ChatTurnResponse, DocumentQuestionValues } from '@/Modules/ChatWithDocument/Types';
-import { documentQuestionSchema } from "../Schemas/QuestionSchema";
+import type {
+    ChatTurnResponse,
+    DocumentQuestionValues,
+} from "@/Modules/ChatWithDocument/Types";
+import { questionSchema } from "@/Modules/Base/Schemas/QuestionSchema";
 
 export default function useDocumentQuestion(
     documentUuid: string | null,
@@ -19,7 +22,7 @@ export default function useDocumentQuestion(
         null,
     );
     const questionForm = useForm<DocumentQuestionValues>({
-        resolver: zodResolver(documentQuestionSchema),
+        resolver: zodResolver(questionSchema),
         defaultValues: { question: "" },
     });
 
@@ -34,7 +37,7 @@ export default function useDocumentQuestion(
                     id: -Date.now(),
                     question: data.question,
                     answer: null,
-                    answer_status: AnswerStatusEnum.Pending,
+                    answer_status: ProcessingStatusEnum.Pending,
                     created_at: new Date().toISOString(),
                 });
                 setAsking(true);
