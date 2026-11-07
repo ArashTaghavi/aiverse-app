@@ -1,5 +1,5 @@
 import { Camera, UserRound } from 'lucide-react';
-import { profile } from '../_data/portfolio';
+import { profile } from '../Data/Portfolio';
 import styles from '../Portfolio.module.css';
 import IntroTypewriter from './IntroTypewriter';
 

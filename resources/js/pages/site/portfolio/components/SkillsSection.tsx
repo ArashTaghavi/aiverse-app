@@ -7,7 +7,7 @@ import {
     Network,
     Server,
 } from 'lucide-react';
-import { creativeInterests, skillGroups } from '../_data/portfolio';
+import { creativeInterests, skillGroups } from '../Data/Portfolio';
 import styles from './Skills.module.css';
 
 const categoryIcons = {

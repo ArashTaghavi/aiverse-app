@@ -1,5 +1,6 @@
 import { createInertiaApp } from '@inertiajs/react';
 import { configureEcho } from '@laravel/echo-react';
+import type { ComponentType } from 'react';
 
 if (!import.meta.env.SSR) {
     configureEcho({
@@ -16,6 +17,19 @@ if (!import.meta.env.SSR) {
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 void createInertiaApp({
+    resolve: async (name) => {
+        const pages = import.meta.glob<{ default: ComponentType }>([
+            './Pages/**/*.tsx',
+            './Modules/*/Pages/**/*.tsx',
+        ]);
+        const loadPage = pages[`./${name}.tsx`];
+
+        if (!loadPage) {
+            throw new Error(`Page not found: ${name}`);
+        }
+
+        return (await loadPage()).default;
+    },
     title: (title) => (title ? `${title} - ${appName}` : appName),
     progress: {
         color: '#4B5563',

@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Base\Enums\EmbeddingStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -38,8 +38,8 @@ return new class extends Migration
             // Schema Embedding
             $table->enum(
                 'embedding_status',
-                array_column(EmbeddingStatusEnum::cases(), 'value')
-            )->default(EmbeddingStatusEnum::Pending->value);
+                array_column(ProcessingStatusEnum::cases(), 'value')
+            )->default(ProcessingStatusEnum::Pending->value);
 
             $table->text('embedding_error')->nullable();
 

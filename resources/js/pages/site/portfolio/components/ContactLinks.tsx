@@ -1,5 +1,5 @@
 import { ArrowUpRight, Link2, Mail, Phone } from 'lucide-react';
-import { profile } from '../_data/portfolio';
+import { profile } from '../Data/Portfolio';
 import styles from './Skills.module.css';
 
 const contacts = [

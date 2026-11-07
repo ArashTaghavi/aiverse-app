@@ -9,6 +9,6 @@ class AuthController extends Controller
 {
     public function show(): Response
     {
-        return Inertia::render('auth/index');
+        return Inertia::render('Pages/Auth/Index');
     }
 }

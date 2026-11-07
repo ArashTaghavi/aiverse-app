@@ -9,11 +9,11 @@ class SiteController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('site/index');
+        return Inertia::render('Pages/Site/Index');
     }
 
     public function portfolio(): Response
     {
-        return Inertia::render('site/portfolio/index');
+        return Inertia::render('Pages/Site/Portfolio/Index');
     }
 }

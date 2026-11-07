@@ -2,7 +2,7 @@
 
 namespace App\Modules\DatabaseAnalyst\Listeners;
 
-use App\Modules\Base\Enums\EmbeddingStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\DatabaseAnalyst\DTOs\IngestDTO;
 use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
@@ -25,7 +25,7 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
         $database = $event->database;
         $database->refresh();
 
-        if ($database->embedding_status === EmbeddingStatusEnum::Completed) {
+        if ($database->embedding_status === ProcessingStatusEnum::Completed) {
             $this->broadcastProgress($database, UploadProgressEnum::Embedding, 'completed');
             $this->broadcastProgress($database, UploadProgressEnum::Result, 'completed');
 
@@ -53,7 +53,7 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
         $database = $event->database;
         $database->refresh();
 
-        if ($database->embedding_status === EmbeddingStatusEnum::Completed) {
+        if ($database->embedding_status === ProcessingStatusEnum::Completed) {
             return;
         }
 

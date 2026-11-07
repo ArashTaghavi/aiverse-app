@@ -1,5 +1,5 @@
 import PreviewComposer from './PreviewComposer';
-import { sendPause } from './preview-timeline';
+import { sendPause } from './PreviewTimeline';
 
 import { useEffect, useState } from 'react';
 import { Check, Database, Sparkles } from 'lucide-react';

@@ -2,12 +2,12 @@
 
 namespace App\Modules\ChatWithDocument\Models;
 
-use App\Modules\Base\Enums\AnswerStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/** @property AnswerStatusEnum $answer_status */
+/** @property ProcessingStatusEnum $answer_status */
 #[Fillable([
     'question',
     'answer',
@@ -20,7 +20,7 @@ class DocumentChatTurn extends Model
     {
         return [
             'document_id' => 'integer',
-            'answer_status' => AnswerStatusEnum::class,
+            'answer_status' => ProcessingStatusEnum::class,
         ];
     }
 
@@ -33,14 +33,14 @@ class DocumentChatTurn extends Model
     public function markAsProcessing(): void
     {
         $this->update([
-            'answer_status' => AnswerStatusEnum::Processing,
+            'answer_status' => ProcessingStatusEnum::Processing,
         ]);
     }
 
     public function markAsCompleted(string $answer): void
     {
         $this->update([
-            'answer_status' => AnswerStatusEnum::Completed,
+            'answer_status' => ProcessingStatusEnum::Completed,
             'answer' => $answer,
         ]);
     }
@@ -48,7 +48,7 @@ class DocumentChatTurn extends Model
     public function markAsFailed(?string $error = ''): void
     {
         $this->update([
-            'answer_status' => AnswerStatusEnum::Failed,
+            'answer_status' => ProcessingStatusEnum::Failed,
             'answer_error' => $error,
         ]);
     }

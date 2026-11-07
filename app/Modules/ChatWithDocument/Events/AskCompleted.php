@@ -2,7 +2,7 @@
 
 namespace App\Modules\ChatWithDocument\Events;
 
-use App\Modules\Base\Enums\AnswerStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\ChatWithDocument\Enums\EventEnum;
 use App\Modules\ChatWithDocument\Models\DocumentChatTurn;
 use App\Modules\ChatWithDocument\Module;
@@ -42,7 +42,7 @@ class AskCompleted implements ShouldBroadcastNow
         return EventEnum::ANSWER_COMPLETED->value;
     }
 
-    /** @return array{document_id: int, answer_status: AnswerStatusEnum} */
+    /** @return array{document_id: int, answer_status: ProcessingStatusEnum} */
     public function broadcastWith(): array
     {
         return [

@@ -2,11 +2,11 @@ import blueSpacebar from '../../../../../../assets/sounds/typewriter/blue-switch
 import blueModifier from '../../../../../../assets/sounds/typewriter/blue-switch-modifier.mp3?url';
 import mechanicalEnter from '../../../../../../assets/sounds/typewriter/mechanical-enter.mp3?url';
 import PreviewComposer from './PreviewComposer';
-import { buildHumanDraft, sendPause } from './preview-timeline';
+import { buildHumanDraft, sendPause } from './PreviewTimeline';
 import {
     MechanicalTypingSound,
     type TypewriterKey,
-} from '../../../portfolio/components/mechanical-typing-sound';
+} from '../../../Portfolio/Components/MechanicalTypingSound';
 
 import { useEffect, useRef, useState } from 'react';
 import { FileText, Sparkles, UserRound, Volume2, VolumeX } from 'lucide-react';

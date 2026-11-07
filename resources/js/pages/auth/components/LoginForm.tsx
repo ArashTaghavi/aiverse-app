@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { ArrowRight, UserPlus } from 'lucide-react';
 import { z } from 'zod';
 
-import { Form, Input, PasswordInput } from '@/components/form';
-import Button from '@/components/ui/buttons/Button';
+import { Form, Input, PasswordInput } from '@/Modules/Base/Components/Form';
+import Button from '@/Modules/Base/Components/UI/Buttons/Button';
 
 import { store as login } from '@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController';
 import { store as register } from '@/actions/Laravel/Fortify/Http/Controllers/RegisteredUserController';

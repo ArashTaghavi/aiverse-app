@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, RotateCcw, Volume2, VolumeX } from 'lucide-react';
-import { learningSegments, profile } from '../_data/portfolio';
-import { buildIntroTimeline } from './intro-timeline';
-import { MechanicalTypingSound } from './mechanical-typing-sound';
+import { learningSegments, profile } from '../Data/Portfolio';
+import { buildIntroTimeline } from './IntroTimeline';
+import { MechanicalTypingSound } from './MechanicalTypingSound';
 import styles from '../Portfolio.module.css';
-import { keyboardSounds, type KeyboardSoundId } from './keyboard-sounds';
+import { keyboardSounds, type KeyboardSoundId } from './KeyboardSounds';
 
 const frames = buildIntroTimeline(profile.name, learningSegments);
 const finalFrame = frames[frames.length - 1];

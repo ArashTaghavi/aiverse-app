@@ -39,7 +39,7 @@ class ChatWithDocumentController extends Controller
             ->simplePaginate(30, ['*'], 'history_page');
         $uploadedDocument = $request->session()->get('uploaded_document_id');
 
-        return Inertia::render('user/chat-with-document/index', [
+        return Inertia::render('Modules/ChatWithDocument/Pages/Index', [
             'documents' => DocumentResource::collection($documents)->resolve($request),
             'documentsPagination' => [
                 'page' => $documents->currentPage(),

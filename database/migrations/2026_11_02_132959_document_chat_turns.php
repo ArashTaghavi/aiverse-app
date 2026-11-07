@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Base\Enums\AnswerStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('question');
             $table->text('answer')->nullable();
 
-            $table->enum('answer_status', array_column(AnswerStatusEnum::cases(), 'value'))->default(AnswerStatusEnum::Pending->value);
+            $table->enum('answer_status', array_column(ProcessingStatusEnum::cases(), 'value'))->default(ProcessingStatusEnum::Pending->value);
             $table->text('answer_error')->nullable();
             $table->timestamps();
         });

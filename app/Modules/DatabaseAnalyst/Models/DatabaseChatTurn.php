@@ -2,7 +2,7 @@
 
 namespace App\Modules\DatabaseAnalyst\Models;
 
-use App\Modules\Base\Enums\AnswerStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,7 +19,7 @@ class DatabaseChatTurn extends Model
     {
         return [
             'document_id' => 'integer',
-            'answer_status' => AnswerStatusEnum::class,
+            'answer_status' => ProcessingStatusEnum::class,
         ];
     }
 
@@ -31,14 +31,14 @@ class DatabaseChatTurn extends Model
     public function markAsProcessing(): void
     {
         $this->update([
-            'answer_status' => AnswerStatusEnum::Processing,
+            'answer_status' => ProcessingStatusEnum::Processing,
         ]);
     }
 
     public function markAsCompleted(string $answer): void
     {
         $this->update([
-            'answer_status' => AnswerStatusEnum::Completed,
+            'answer_status' => ProcessingStatusEnum::Completed,
             'answer' => $answer,
         ]);
     }
@@ -46,7 +46,7 @@ class DatabaseChatTurn extends Model
     public function markAsFailed(?string $error = ''): void
     {
         $this->update([
-            'answer_status' => AnswerStatusEnum::Failed,
+            'answer_status' => ProcessingStatusEnum::Failed,
             'answer_error' => $error,
         ]);
     }

@@ -1,4 +1,4 @@
-import { networkPaths, networkNodes } from "./network-data";
+import { networkPaths, networkNodes } from "./NetworkData";
 
 export default function PublicBackground() {
     return (

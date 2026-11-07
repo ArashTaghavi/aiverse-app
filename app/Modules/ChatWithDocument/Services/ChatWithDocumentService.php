@@ -3,8 +3,7 @@
 namespace App\Modules\ChatWithDocument\Services;
 
 use App\Models\User;
-use App\Modules\Base\Enums\AnswerStatusEnum;
-use App\Modules\Base\Enums\EmbeddingStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingRequested;
 use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
@@ -42,7 +41,7 @@ class ChatWithDocumentService
             'mime_type' => $file['mime_type'],
             'extension' => $file['extension'],
             'size' => $file['size'],
-            'embedding_status' => EmbeddingStatusEnum::Pending,
+            'embedding_status' => ProcessingStatusEnum::Pending,
         ]);
 
         try {
@@ -62,7 +61,7 @@ class ChatWithDocumentService
 
     public function ask(Document $relatedDocument, string $question): DocumentChatTurn
     {
-        if ($relatedDocument->embedding_status !== EmbeddingStatusEnum::Completed) {
+        if ($relatedDocument->embedding_status !== ProcessingStatusEnum::Completed) {
             throw ValidationException::withMessages([
                 'question' => 'This document is not ready for questions yet.',
             ]);
@@ -71,7 +70,7 @@ class ChatWithDocumentService
         $relatedDocument->update(['last_message' => $question]);
         $documentChatTurn = $relatedDocument->documentChatTurns()->create([
             'question' => $question,
-            'answer_status' => AnswerStatusEnum::Pending,
+            'answer_status' => ProcessingStatusEnum::Pending,
         ]);
 
         Ask::dispatch(documentChatTurn: $documentChatTurn);

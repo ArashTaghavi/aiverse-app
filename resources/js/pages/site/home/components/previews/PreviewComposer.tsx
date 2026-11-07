@@ -1,5 +1,5 @@
 import { ArrowUp, Paperclip } from 'lucide-react';
-import { previewDraft, type PreviewMessage } from './preview-timeline';
+import { previewDraft, type PreviewMessage } from './PreviewTimeline';
 
 export default function PreviewComposer({
     timeline,

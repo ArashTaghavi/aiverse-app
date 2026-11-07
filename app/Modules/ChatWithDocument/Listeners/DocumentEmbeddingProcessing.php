@@ -2,7 +2,7 @@
 
 namespace App\Modules\ChatWithDocument\Listeners;
 
-use App\Modules\Base\Enums\EmbeddingStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\ChatWithDocument\DTOs\IngestDTO;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
@@ -33,7 +33,7 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
         $document = $event->document;
         $document->refresh();
 
-        if ($document->embedding_status === EmbeddingStatusEnum::Completed) {
+        if ($document->embedding_status === ProcessingStatusEnum::Completed) {
             $this->broadcastStatus($document);
             $this->broadcastProgress($document, UploadProgressEnum::Embedding, 'completed');
             $this->broadcastProgress($document, UploadProgressEnum::Result, 'completed');
@@ -63,7 +63,7 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
         $document = $event->document;
         $document->refresh();
 
-        if ($document->embedding_status === EmbeddingStatusEnum::Completed) {
+        if ($document->embedding_status === ProcessingStatusEnum::Completed) {
             return;
         }
 
@@ -77,7 +77,7 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
     private function broadcastStatus(Document $document): void
     {
         try {
-            if ($document->embedding_status === EmbeddingStatusEnum::Completed) {
+            if ($document->embedding_status === ProcessingStatusEnum::Completed) {
                 DocumentEmbeddingCompleted::dispatch($document);
             } else {
                 DocumentEmbeddingFailed::dispatch($document);

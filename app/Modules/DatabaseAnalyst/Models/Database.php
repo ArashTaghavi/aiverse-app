@@ -2,7 +2,7 @@
 
 namespace App\Modules\DatabaseAnalyst\Models;
 
-use App\Modules\Base\Enums\EmbeddingStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Traits\HasEmbeddableFile;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +35,7 @@ class Database extends Model
 
     protected function embeddingStatusEnum(): string
     {
-        return EmbeddingStatusEnum::class;
+        return ProcessingStatusEnum::class;
     }
 
     public function casts(): array

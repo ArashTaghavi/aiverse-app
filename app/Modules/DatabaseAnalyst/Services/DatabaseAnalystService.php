@@ -2,7 +2,7 @@
 
 namespace App\Modules\DatabaseAnalyst\Services;
 
-use App\Modules\Base\Enums\EmbeddingStatusEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\DatabaseAnalyst\Events\DatabaseEmbeddingRequested;
 use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
@@ -28,7 +28,7 @@ class DatabaseAnalystService
             'mime_type' => $file['mime_type'],
             'extension' => $file['extension'],
             'size' => $file['size'],
-            'embedding_status' => EmbeddingStatusEnum::Pending,
+            'embedding_status' => ProcessingStatusEnum::Pending,
         ]);
 
         DatabaseUploadProgress::dispatch(

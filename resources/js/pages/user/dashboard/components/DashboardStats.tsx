@@ -1,4 +1,4 @@
-import { StatCard } from "@/components/ui";
+import { StatCard } from "@/Modules/Base/Components/UI";
 
 export default function DashboardStats() {
     return (
