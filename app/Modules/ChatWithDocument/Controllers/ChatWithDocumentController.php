@@ -98,7 +98,6 @@ class ChatWithDocumentController extends Controller
 
     public function ask(Document $relatedDocument, RequestsAskRequest $request): StreamedResponse
     {
-        set_time_limit(300);
 
         $turn = $this->service->ask(
             relatedDocument: $relatedDocument,

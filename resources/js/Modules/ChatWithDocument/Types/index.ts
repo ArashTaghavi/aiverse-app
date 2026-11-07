@@ -1,9 +1,10 @@
-import type { z } from "zod";
-import type { newChatSchema } from "@/Modules/ChatWithDocument/Schemas/NewChatSchema";
-import type { questionSchema } from "@/Modules/Base/Schemas/QuestionSchema";
-import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
+import type { z } from 'zod';
+import type { newChatSchema } from '@/Modules/ChatWithDocument/Schemas/NewChatSchema';
+import type { questionSchema } from '@/Modules/Base/Schemas/QuestionSchema';
+import type { ChatTurnResponse } from '@/Modules/Base/Types/Chat';
+export type { ChatTurnResponse } from '@/Modules/Base/Types/Chat';
 
-export type EmbeddingStatus = "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+export type EmbeddingStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
 
 export type DocumentResponse = {
     id: number;
@@ -13,14 +14,6 @@ export type DocumentResponse = {
     size: string;
     last_message: string | null;
     embedding_status: EmbeddingStatus;
-    created_at: string;
-};
-
-export type ChatTurnResponse = {
-    id: number;
-    question: string;
-    answer: string | null;
-    answer_status: ProcessingStatusEnum;
     created_at: string;
 };
 
@@ -37,13 +30,11 @@ export type DocumentConversationPageProps = DocumentChatProps & {
     history: ChatTurnResponse[];
     historyPagination: { page: number; hasMore: boolean };
 };
-export type MessageHistoryProps = { turns: ChatTurnResponse[] };
-export type MessageTimeProps = { timestamp: string };
 export type DocumentNotificationsProps = { userId: number };
 
 export type EmbeddingCompletedPayload = {
     document_id: number;
-    embedding_status: "COMPLETED";
+    embedding_status: 'COMPLETED';
 };
 
 export type DocumentEmbeddingListenerProps = {

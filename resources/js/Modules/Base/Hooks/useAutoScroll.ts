@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import type { ChatTurnResponse } from '@/Modules/ChatWithDocument/Types';
+import { useEffect, useRef } from 'react';
+import type { ChatTurnResponse } from '@/Modules/Base/Types/Chat';
 
 export default function useAutoScroll(
     activeId: string | null,

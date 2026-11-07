@@ -1,9 +1,9 @@
-import { FileText, Upload } from 'lucide-react';
-import { FileInput, Form, Input } from '@/Modules/Base/Components/Form';
-import { Button } from '@/Modules/Base/Components/UI';
-import type { NewChatFormValues } from '@/Modules/ChatWithDocument/Types';
-import type useDocumentUpload from '../Hooks/useDocumentUpload';
-import PreparingUpload from './PreparingUpload';
+import { FileText, Upload } from "lucide-react";
+import { FileInput, Form, Input } from "@/Modules/Base/Components/Form";
+import { Button } from "@/Modules/Base/Components/UI";
+import type { NewChatFormValues } from "@/Modules/ChatWithDocument/Types";
+import type useDocumentUpload from "../Hooks/useDocumentUpload";
+import PreparingUpload from "./PreparingUpload";
 
 type Props = {
     userId?: number;
@@ -28,8 +28,8 @@ export default function DocumentUploadPanel({ userId, uploadState }: Props) {
                 isPending={uploading}
                 className={
                     showUploadProgress
-                        ? 'hidden'
-                        : 'm-auto w-full max-w-lg space-y-5 py-6'
+                        ? "hidden"
+                        : "m-auto w-full max-w-lg space-y-5 py-6"
                 }
             >
                 <div className="space-y-2 text-center">
@@ -73,8 +73,8 @@ export default function DocumentUploadPanel({ userId, uploadState }: Props) {
                 <div
                     className={
                         showUploadProgress
-                            ? 'm-auto w-full max-w-lg py-6'
-                            : 'hidden'
+                            ? "m-auto w-full max-w-lg py-6"
+                            : "hidden"
                     }
                 >
                     <PreparingUpload

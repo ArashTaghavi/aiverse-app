@@ -1,4 +1,4 @@
-import type { ChatTurnResponse } from '@/Modules/ChatWithDocument/Types';
+import type { ChatTurnResponse } from '@/Modules/Base/Types/Chat';
 
 const timeZone = 'Asia/Tehran';
 const dayFormatter = new Intl.DateTimeFormat('en-CA', {

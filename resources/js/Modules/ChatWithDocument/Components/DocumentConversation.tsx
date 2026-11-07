@@ -1,8 +1,11 @@
 import type { Ref } from 'react';
 import { FileText } from 'lucide-react';
-import type { ChatTurnResponse, EmbeddingStatus } from '@/Modules/ChatWithDocument/Types';
+import type {
+    ChatTurnResponse,
+    EmbeddingStatus,
+} from '@/Modules/ChatWithDocument/Types';
 import type useDocumentQuestion from '../Hooks/useDocumentQuestion';
-import MessageHistory from './MessageHistory';
+import { ChatMessages, MessageHistory } from '@/Modules/Base/Components/Chat';
 import DocumentQuestionForm from './DocumentQuestionForm';
 
 type Props = {
@@ -50,13 +53,9 @@ export default function DocumentConversation({
                     </div>
                 </div>
             )}
-            <div
-                ref={messagesRef}
-                role="log"
-                aria-label="Document conversation"
-                aria-live="polite"
-                aria-relevant="additions text"
-                className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain bg-[#0d0e16] bg-[radial-gradient(ellipse_at_top_right,rgba(139,92,246,0.11),transparent_60%),radial-gradient(ellipse_at_bottom_left,rgba(56,189,248,0.05),transparent_55%)] px-2 py-3 sm:px-3"
+            <ChatMessages
+                messagesRef={messagesRef}
+                label="Document conversation"
             >
                 {turns.length === 0 && (
                     <p className="py-12 text-center text-sm text-ui-muted">
@@ -68,7 +67,7 @@ export default function DocumentConversation({
                     </p>
                 )}
                 <MessageHistory turns={turns ?? []} />
-            </div>
+            </ChatMessages>
             <DocumentQuestionForm
                 questionForm={questionForm}
                 sendQuestion={sendQuestion}

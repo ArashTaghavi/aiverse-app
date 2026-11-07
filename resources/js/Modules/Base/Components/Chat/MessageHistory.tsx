@@ -1,13 +1,16 @@
-import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
+import { ProcessingStatusEnum } from '@/Modules/Base/Enums/ProcessingStatusEnum';
 import type {
     MessageHistoryProps,
     MessageTimeProps,
-} from "@/Modules/ChatWithDocument/Types";
-import { groupMessagesByDay, messageDate } from "../Utils/MessageDates";
-import { UserRound } from "lucide-react";
-import styles from "./MessageHistory.module.css";
-import TypingIndicator from "./TypingIndicator";
-import AssistantMessage from "./AssistantMessage";
+} from '@/Modules/Base/Types/Chat';
+import {
+    groupMessagesByDay,
+    messageDate,
+} from '@/Modules/Base/Utils/MessageDates';
+import { UserRound } from 'lucide-react';
+import styles from './MessageHistory.module.css';
+import TypingIndicator from './TypingIndicator';
+import AssistantMessage from './AssistantMessage';
 
 function MessageTime({ timestamp }: MessageTimeProps) {
     const date = messageDate(timestamp);
@@ -73,12 +76,13 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                                 {turn.answer ??
                                     (turn.answer_status ===
                                     ProcessingStatusEnum.Failed
-                                        ? "Could not prepare an answer. Please try again."
-                                        : "No answer was returned.")}
+                                        ? 'Could not prepare an answer. Please try again.'
+                                        : 'No answer was returned.')}
                             </p>
                         )}
                         {(turn.answer != null ||
-                            turn.answer_status === ProcessingStatusEnum.Failed ||
+                            turn.answer_status ===
+                                ProcessingStatusEnum.Failed ||
                             turn.answer_status ===
                                 ProcessingStatusEnum.Completed) && (
                             <MessageTime timestamp={turn.created_at} />

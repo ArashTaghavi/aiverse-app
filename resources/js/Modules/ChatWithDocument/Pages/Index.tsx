@@ -1,9 +1,10 @@
 import { Head, usePage } from "@inertiajs/react";
-import DocumentChatSidebar from "../Components/DocumentChatSidebar";
-import DocumentChatHeader from "../Components/DocumentChatHeader";
-import DocumentUploadPanel from "../Components/DocumentUploadPanel";
-import useDocumentUpload from "../Hooks/useDocumentUpload";
-import useChatNavigation from "../Hooks/useChatNavigation";
+import {
+    DocumentChatSidebar,
+    DocumentChatHeader,
+    DocumentUploadPanel,
+} from "../Components";
+import { useDocumentUpload, useChatNavigation } from "../Hooks";
 import type { DocumentChatProps } from "@/Modules/ChatWithDocument/Types";
 import { UserWorkspaceLayout } from "@/Layouts/UserLayout";
 import { Module } from "../Module";

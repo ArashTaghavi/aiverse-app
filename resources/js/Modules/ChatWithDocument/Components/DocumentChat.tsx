@@ -6,7 +6,7 @@ import DocumentEmbeddingListener from './DocumentEmbeddingListener';
 import DocumentChatSidebar from './DocumentChatSidebar';
 import DocumentChatHeader from './DocumentChatHeader';
 import DocumentConversation from './DocumentConversation';
-import useAutoScroll from '../Hooks/useAutoScroll';
+import useAutoScroll from '@/Modules/Base/Hooks/useAutoScroll';
 import useChatNavigation from '../Hooks/useChatNavigation';
 import useDocumentEmbedding from '../Hooks/useDocumentEmbedding';
 import useDocumentQuestion from '../Hooks/useDocumentQuestion';
