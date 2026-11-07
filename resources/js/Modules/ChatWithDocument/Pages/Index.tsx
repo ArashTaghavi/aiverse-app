@@ -5,11 +5,11 @@ import {
     DocumentUploadPanel,
 } from "../Components";
 import { useDocumentUpload, useChatNavigation } from "../Hooks";
-import type { DocumentChatProps } from "@/Modules/ChatWithDocument/Types";
+import type { ChatWithDatabaseChatProps } from "@/Modules/ChatWithDocument/Types";
 import { UserWorkspaceLayout } from "@/Layouts/UserLayout";
 import { Module } from "../Module";
 
-export default function DocumentChatPage(props: DocumentChatProps) {
+export default function DocumentChatPage(props: ChatWithDatabaseChatProps) {
     const { auth, errors } = usePage().props;
     const uploadState = useDocumentUpload(() => false);
     const { showList, setShowList, newChat, selectChat } = useChatNavigation(
@@ -22,7 +22,7 @@ export default function DocumentChatPage(props: DocumentChatProps) {
 
     return (
         <>
-            <Head title={Module.TITLE} />
+            <Head title={Module.Title} />
             <DocumentChatSidebar
                 documents={props.documents}
                 activeId={null}

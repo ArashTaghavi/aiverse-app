@@ -1,15 +1,15 @@
 import { index as chatWithDocument } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import { index as databaseAnalyst } from "@/actions/App/Modules/DatabaseAnalyst/Controllers/DatabaseAnalystController";
 import { index as dashboard } from "@/actions/App/Http/Controllers/User/DashboardController";
 import { Link } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
-import type { UserNavigationProps } from '@/Types/UserPanel';
+import type { UserNavigationProps } from "@/Types/UserPanel";
 import {
     ChevronRight,
     Database,
     FileText,
     LayoutDashboard,
 } from "lucide-react";
-
 const items = [
     {
         label: "Dashboard",
@@ -23,7 +23,7 @@ const items = [
     },
     {
         label: "Database Analyst",
-        href: null,
+        href: databaseAnalyst().url,
         icon: Database,
     },
 ];

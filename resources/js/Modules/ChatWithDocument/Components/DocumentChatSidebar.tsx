@@ -1,18 +1,18 @@
-import { ChatSidebar } from '@/Modules/Base/Components/Chat';
+import { ChatSidebar } from "@/Modules/Base/Components/Chat";
 import {
     index,
     show,
-} from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
-import type { DocumentResponse } from '@/Modules/ChatWithDocument/Types';
-import type useChatNavigation from '../Hooks/useChatNavigation';
+} from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import type useChatNavigation from "../Hooks/useChatNavigation";
+import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/EmbeddableFileResponse";
 
 type Props = {
-    documents: DocumentResponse[];
+    documents: EmbeddableFileResponse[];
     activeId: string | null;
     showList: boolean;
     busy: boolean;
     newChat: () => void;
-    selectChat: ReturnType<typeof useChatNavigation>['selectChat'];
+    selectChat: ReturnType<typeof useChatNavigation>["selectChat"];
     pagination: { page: number; hasMore: boolean };
 };
 

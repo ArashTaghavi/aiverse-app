@@ -3,8 +3,9 @@ import { router } from "@inertiajs/react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { upload } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import type { DocumentResponse, NewChatFormValues } from '@/Modules/ChatWithDocument/Types';
-import { newChatSchema } from "../Schemas/NewChatSchema";
+import { NewChatSchema } from "../Schemas/NewChatSchema";
+import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/EmbeddableFileResponse";
+import { NewChatFormValues } from "@/Modules/DatabaseAnalyst/Types";
 
 export default function useDocumentUpload(isAsking: () => boolean) {
     const [uploadFormKey, setUploadFormKey] = useState(0);
@@ -12,9 +13,9 @@ export default function useDocumentUpload(isAsking: () => boolean) {
     const [uploadAttempt, setUploadAttempt] = useState(0);
     const [showUploadProgress, setShowUploadProgress] = useState(false);
     const [uploadedDocument, setUploadedDocument] =
-        useState<DocumentResponse | null>(null);
+        useState<EmbeddableFileResponse | null>(null);
     const uploadForm = useForm<NewChatFormValues>({
-        resolver: zodResolver(newChatSchema),
+        resolver: zodResolver(NewChatSchema),
         defaultValues: { file: null, title: "" },
     });
 

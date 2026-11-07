@@ -17,4 +17,5 @@ Route::middleware('auth')
     ->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         require app_path('Modules/ChatWithDocument/routes.php');
+        require app_path('Modules/DatabaseAnalyst/routes.php');
     });

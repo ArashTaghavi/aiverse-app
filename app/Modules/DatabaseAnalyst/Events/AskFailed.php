@@ -35,7 +35,7 @@ class AskFailed implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return EventEnum::ANSWER_FAILED->value;
+        return EventEnum::AnswerFailed->value;
     }
 
     public function broadcastWith(): array

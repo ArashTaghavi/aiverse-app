@@ -39,7 +39,7 @@ class DocumentEmbeddingFailed implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return EventEnum::EMBEDDING_FAILED->value;
+        return EventEnum::EmbeddingFailed->value;
     }
 
     /** @return array{document_id: int, embedding_status: ProcessingStatusEnum} */

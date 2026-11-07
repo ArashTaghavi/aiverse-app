@@ -39,7 +39,7 @@ class DocumentEmbeddingCompleted implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return EventEnum::EMBEDDING_COMPLETED->value;
+        return EventEnum::EmbeddingCompleted->value;
     }
 
     /** @return array{document_id: int, embedding_status: ProcessingStatusEnum} */

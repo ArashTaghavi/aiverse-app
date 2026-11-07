@@ -24,7 +24,6 @@ class ChatWithDocumentService
 {
     public function __construct(private StorageService $storageService, private AIClient $aiClient) {}
 
-    /** @return Paginator<int, Document> */
     public function documents(User $user): Paginator
     {
         return $user->documents()->latest('id')->simplePaginate(20, ['*'], 'documents_page');
@@ -80,7 +79,6 @@ class ChatWithDocumentService
         return $documentChatTurn;
     }
 
-    /** @return Generator<int, string> */
     public function streamAnswer(DocumentChatTurn $documentChatTurn): Generator
     {
         $stream = null;

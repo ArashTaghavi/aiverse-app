@@ -36,7 +36,7 @@ class AskFailed implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return EventEnum::ANSWER_FAILED->value;
+        return EventEnum::AnswerFailed->value;
     }
 
     /** @return array{document_id: int, answer_status: ProcessingStatusEnum} */

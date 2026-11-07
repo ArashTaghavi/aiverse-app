@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Modules\ChatWithDocument\Models\Document;
+use App\Modules\DatabaseAnalyst\Models\Database;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -33,10 +34,13 @@ class User extends Authenticatable
         ];
     }
 
-    /** @return HasMany<Document, $this> */
     public function documents(): HasMany
     {
         return $this->hasMany(related: Document::class, foreignKey: 'owner_id');
+    }
 
+    public function databases(): HasMany
+    {
+        return $this->hasMany(related: Database::class, foreignKey: 'owner_id');
     }
 }

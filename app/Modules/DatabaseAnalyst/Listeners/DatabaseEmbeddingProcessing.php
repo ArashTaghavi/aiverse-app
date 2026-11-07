@@ -2,9 +2,10 @@
 
 namespace App\Modules\DatabaseAnalyst\Listeners;
 
+use App\Modules\Base\DTOs\IngestDTO;
+use App\Modules\Base\Enums\Module;
 use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
-use App\Modules\DatabaseAnalyst\DTOs\IngestDTO;
 use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
 use App\Modules\DatabaseAnalyst\Events\DatabaseEmbeddingRequested;
 use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
@@ -73,7 +74,10 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
                 status: $status,
             );
         } catch (Throwable $exception) {
-            report($exception);
+            report_exception(
+                exception: $exception,
+                module : Module::DatabaseAnalyst->value,
+            );
         }
     }
 }

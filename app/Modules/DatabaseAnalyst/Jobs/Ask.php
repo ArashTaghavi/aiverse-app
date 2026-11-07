@@ -2,6 +2,7 @@
 
 namespace App\Modules\DatabaseAnalyst\Jobs;
 
+use App\Modules\Base\Enums\Module;
 use App\Modules\ChatWithDocument\DTOs\AskDTO;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\AskCompleted;
@@ -57,8 +58,12 @@ class Ask implements ShouldQueue
 
         try {
             AskFailed::dispatch($this->documentChatTurn);
-        } catch (Throwable $broadcastException) {
-            report($broadcastException);
+        } catch (Throwable $exception) {
+            report_exception(
+                exception: $exception,
+                module : Module::DatabaseAnalyst->value,
+                jobClass : self::class,
+            );
         }
     }
 }

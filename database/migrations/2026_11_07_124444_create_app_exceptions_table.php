@@ -6,33 +6,42 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('app_exceptions', function (Blueprint $table) {
             $table->id();
+
+            // Default exception information
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('module');
+            $table->string('exception_class');
             $table->text('message');
-            $table->longText('trace');
+            $table->text('file');
             $table->unsignedInteger('line');
+            $table->longText('trace');
+
+            // Request information
+            $table->string('request_method')->nullable();
+            $table->text('request_url')->nullable();
+            $table->string('route_name')->nullable();
+
+            // Application information
+            $table->string('module')->nullable();
             $table->string('job_class')->nullable();
             $table->string('event_class')->nullable();
             $table->string('broadcast_channel')->nullable();
-            $table->text('request_url')->nullable();
+
+            // External API information
             $table->unsignedSmallInteger('response_status')->nullable();
             $table->longText('response_body')->nullable();
+
+            // Additional information
             $table->json('payload')->nullable();
             $table->json('context')->nullable();
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('app_exceptions');

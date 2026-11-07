@@ -17,6 +17,6 @@ class DocumentUploadProgress extends BaseUploadProgress
 
     public function broadcastAs(): string
     {
-        return EventEnum::UPLOAD_PROGRESS->value;
+        return EventEnum::UploadProgress->value;
     }
 }

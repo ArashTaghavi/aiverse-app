@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const newChatSchema = z.object({
+export const NewChatSchema = z.object({
     title: z
         .string()
         .trim()

@@ -6,13 +6,13 @@ use App\Modules\DatabaseAnalyst\Module;
 
 enum EventEnum: string
 {
-    case UPLOAD_PROGRESS = Module::NAME.'.upload.progress';
+    case UploadProgress = Module::NAME.'.upload.progress';
 
-    case EMBEDDING_COMPLETED = Module::NAME.'.embedding.completed';
+    case EmbeddingCompleted = Module::NAME.'.embedding.completed';
 
-    case EMBEDDING_FAILED = Module::NAME.'.embedding.failed';
+    case EmbeddingFailed = Module::NAME.'.embedding.failed';
 
-    case ANSWER_COMPLETED = Module::NAME.'.answer.completed';
+    case AnswerCompleted = Module::NAME.'.answer.completed';
 
-    case ANSWER_FAILED = Module::NAME.'.answer.failed';
+    case AnswerFailed = Module::NAME.'.answer.failed';
 }

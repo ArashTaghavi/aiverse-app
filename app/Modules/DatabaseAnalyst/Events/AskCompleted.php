@@ -38,7 +38,7 @@ class AskCompleted implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return EventEnum::ANSWER_COMPLETED->value;
+        return EventEnum::AnswerCompleted->value;
     }
 
     public function broadcastWith(): array

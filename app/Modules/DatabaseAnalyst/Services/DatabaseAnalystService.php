@@ -2,6 +2,7 @@
 
 namespace App\Modules\DatabaseAnalyst\Services;
 
+use App\Models\User;
 use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\DatabaseAnalyst\Events\DatabaseEmbeddingRequested;
@@ -9,10 +10,16 @@ use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
 use App\Modules\DatabaseAnalyst\Models\Database;
 use App\Services\StorageService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Pagination\Paginator;
 
 class DatabaseAnalystService
 {
     public function __construct(private StorageService $storageService) {}
+
+    public function databases(User $user): Paginator
+    {
+        return $user->databases()->latest('id')->simplePaginate(20, ['*'], 'documents_page');
+    }
 
     public function upload(UploadedFile $file, string $title, int $ownerId): Database
     {

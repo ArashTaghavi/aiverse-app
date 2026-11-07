@@ -38,7 +38,7 @@ class DatabaseEmbeddingCompleted implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return EventEnum::EMBEDDING_COMPLETED->value;
+        return EventEnum::EmbeddingCompleted->value;
     }
 
     public function broadcastWith(): array
