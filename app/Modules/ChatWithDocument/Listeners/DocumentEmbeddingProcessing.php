@@ -4,7 +4,7 @@ namespace App\Modules\ChatWithDocument\Listeners;
 
 use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
-use App\Modules\ChatWithDocument\DTOs\IngestDTO;
+use App\Modules\Base\DTOs\IngestDTO;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingCompleted;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingFailed;

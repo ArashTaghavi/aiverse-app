@@ -3,7 +3,7 @@
 namespace App\Modules\DatabaseAnalyst\Listeners;
 
 use App\Modules\Base\DTOs\IngestDTO;
-use App\Modules\Base\Enums\Module;
+use App\Modules\Base\Enums\ModuleEnum;
 use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
@@ -76,7 +76,7 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
         } catch (Throwable $exception) {
             report_exception(
                 exception: $exception,
-                module : Module::DatabaseAnalyst->value,
+                module : ModuleEnum::DatabaseAnalyst->value,
             );
         }
     }

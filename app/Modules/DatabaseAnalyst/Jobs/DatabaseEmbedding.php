@@ -3,7 +3,7 @@
 namespace App\Modules\DatabaseAnalyst\Jobs;
 
 use App\Modules\Base\DTOs\IngestDTO;
-use App\Modules\Base\Enums\Module;
+use App\Modules\Base\Enums\ModuleEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
 use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
@@ -54,7 +54,7 @@ class DatabaseEmbedding implements ShouldQueue
         $this->database->markAsFailed(error: $exception?->getMessage());
         report_exception(
             exception: $exception,
-            module : Module::DatabaseAnalyst->value,
+            module : ModuleEnum::DatabaseAnalyst->value,
             jobClass : self::class,
         );
     }

@@ -2,7 +2,7 @@
 
 namespace App\Modules\ChatWithDocument\Jobs;
 
-use App\Modules\ChatWithDocument\DTOs\AskDTO;
+use App\Modules\Base\DTOs\AskDTO;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\AskCompleted;
 use App\Modules\ChatWithDocument\Events\AskFailed;
