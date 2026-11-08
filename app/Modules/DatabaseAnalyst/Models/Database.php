@@ -6,6 +6,7 @@ use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Traits\HasEmbeddableFile;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'owner_id',
@@ -46,5 +47,11 @@ class Database extends Model
             'connection' => 'encrypted:array',
             'embedding_status' => $this->embeddingStatusEnum(),
         ];
+    }
+
+    /** @return HasMany<DatabaseChatTurn, $this> */
+    public function databaseChatTurns(): HasMany
+    {
+        return $this->hasMany(DatabaseChatTurn::class);
     }
 }

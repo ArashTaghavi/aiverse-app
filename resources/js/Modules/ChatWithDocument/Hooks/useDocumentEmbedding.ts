@@ -1,11 +1,12 @@
 import { useState } from "react";
-import type { DocumentResponse, EmbeddingStatus } from '@/Modules/ChatWithDocument/Types';
+import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/EmbeddableFileResponse";
+import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
 
 export default function useDocumentEmbedding(
-    document: DocumentResponse | null | undefined,
+    document: EmbeddableFileResponse | null | undefined,
 ) {
     const [embeddingStatuses, setEmbeddingStatuses] = useState<
-        Record<number, EmbeddingStatus>
+        Record<number, ProcessingStatusEnum>
     >({});
     const embeddingStatus = document
         ? document.embedding_status === "COMPLETED" ||
@@ -14,7 +15,7 @@ export default function useDocumentEmbedding(
             : (embeddingStatuses[document.id] ?? document.embedding_status)
         : undefined;
 
-    function updateEmbeddingStatus(id: number, status: EmbeddingStatus) {
+    function updateEmbeddingStatus(id: number, status: ProcessingStatusEnum) {
         setEmbeddingStatuses((current) => ({ ...current, [id]: status }));
     }
 

@@ -22,12 +22,12 @@ export default function DocumentChatSidebar({
     ...props
 }: Props) {
     const pageUrl = props.activeId ? show.bind(null, props.activeId) : index;
-    const conversations = data.map((document) => ({
-        id: document.uuid,
-        title: document.title,
-        preview: document.last_message,
-        timestamp: document.created_at,
-        href: show(document.uuid, {
+    const conversations = data.map((d) => ({
+        id: d.uuid,
+        title: d.title,
+        preview: d.last_message,
+        timestamp: d.created_at,
+        href: show(d.uuid, {
             query: { page: pagination.page },
         }).url,
     }));

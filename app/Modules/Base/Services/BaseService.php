@@ -12,6 +12,7 @@ use Generator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 use UnexpectedValueException;
 
@@ -29,7 +30,11 @@ abstract class BaseService
 
     abstract protected function chatTurnRelation(): string;
 
-    abstract protected function askJob(): string;
+    abstract protected function chatTurnParentRelation(): string;
+
+    abstract protected function answerCompletedEvent(): string;
+
+    abstract protected function answerFailedEvent(): string;
 
     abstract protected function askRoute(): string;
 
@@ -47,7 +52,7 @@ abstract class BaseService
         $data = $this->data(user: $user);
 
         $uploadedRecordId = $request->session()->get('uploaded_record_id');
-        $uploadedRecord = $uploadedRecordId ? $user->{$this->userRelation()}()->findOrFail($uploadedRecordId) : [];
+        $uploadedRecord = $uploadedRecordId ? $user->{$this->userRelation()}()->findOrFail($uploadedRecordId) : null;
 
         return [$data, $uploadedRecord];
     }
@@ -90,11 +95,15 @@ abstract class BaseService
             'embedding_status' => $status::Pending,
         ]);
 
-        $uploadProgressEvent::dispatch(
-            model: $entity,
-            step: UploadProgressEnum::Upload->value,
-            status: ProcessingStatusEnum::Completed->value,
-        );
+        try {
+            $uploadProgressEvent::dispatch(
+                model: $entity,
+                step: UploadProgressEnum::Upload->value,
+                status: ProcessingStatusEnum::Completed->value,
+            );
+        } catch (Throwable $exception) {
+            report($exception);
+        }
 
         $embeddingRequestedEvent::dispatch(model: $entity);
 
@@ -103,16 +112,18 @@ abstract class BaseService
 
     public function ask(Model $entity, string $question): Model
     {
+        if ($entity->embedding_status !== ProcessingStatusEnum::Completed) {
+            throw ValidationException::withMessages([
+                'question' => 'The document is not ready for questions yet.',
+            ]);
+        }
+
         $entity->update(['last_message' => $question]);
 
         $chatTurn = $entity->{$this->chatTurnRelation()}()->create([
             'question' => $question,
             'answer_status' => ProcessingStatusEnum::Pending->value,
         ]);
-
-        $job = $this->askJob();
-
-        $job::dispatch(chatTurn: $chatTurn);
 
         return $chatTurn;
     }
@@ -124,9 +135,10 @@ abstract class BaseService
         $chatTurn->markAsProcessing();
 
         try {
+            $entity = $chatTurn->{$this->chatTurnParentRelation()};
             $data = new AskDTO(
-                documentId: $chatTurn->document_id,
-                ownerId: $chatTurn->document->owner_id,
+                documentId: $entity->getKey(),
+                ownerId: $entity->owner_id,
                 question: $chatTurn->question,
             );
             $stream = $this->aiClient->streamPost($this->askRoute(), $data->toArray());
@@ -147,13 +159,26 @@ abstract class BaseService
             }
 
             $chatTurn->markAsCompleted(answer: $answer);
-            $chatTurn->document->update(['last_message' => $answer]);
+            $entity->update(['last_message' => $answer]);
         } catch (Throwable $exception) {
             $chatTurn->markAsFailed(error: $exception->getMessage());
+            $this->broadcastAnswerStatus($this->answerFailedEvent(), $chatTurn);
 
             throw $exception;
         } finally {
             $stream?->close();
+        }
+
+        $this->broadcastAnswerStatus($this->answerCompletedEvent(), $chatTurn);
+    }
+
+    /** @param class-string $eventClass */
+    private function broadcastAnswerStatus(string $eventClass, Model $chatTurn): void
+    {
+        try {
+            event(new $eventClass($chatTurn));
+        } catch (Throwable $exception) {
+            report($exception);
         }
     }
 }

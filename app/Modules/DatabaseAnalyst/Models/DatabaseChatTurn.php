@@ -18,12 +18,12 @@ class DatabaseChatTurn extends Model
     public function casts(): array
     {
         return [
-            'document_id' => 'integer',
+            'database_id' => 'integer',
             'answer_status' => ProcessingStatusEnum::class,
         ];
     }
 
-    public function document(): BelongsTo
+    public function database(): BelongsTo
     {
         return $this->belongsTo(related: Database::class);
     }

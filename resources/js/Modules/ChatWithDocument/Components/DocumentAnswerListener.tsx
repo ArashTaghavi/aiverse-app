@@ -21,7 +21,7 @@ export default function DocumentAnswerListener({ userId, documentId }: Props) {
             if (event.document_id !== documentId) return;
 
             router.reload({
-                only: ["history", "documents"],
+                only: ["history", "data"],
             });
         },
         [documentId],

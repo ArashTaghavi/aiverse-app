@@ -43,7 +43,9 @@ abstract class BaseController extends Controller
                 'page' => $data->currentPage(),
                 'hasMore' => $data->hasMorePages(),
             ],
-            'uploadedRecord' => $uploadedRecord,
+            'uploadedRecord' => $uploadedRecord !== null
+                ? (new $resource($uploadedRecord))->resolve($request)
+                : null,
         ]);
     }
 

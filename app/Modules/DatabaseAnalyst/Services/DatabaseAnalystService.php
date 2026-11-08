@@ -4,9 +4,10 @@ namespace App\Modules\DatabaseAnalyst\Services;
 
 use App\Modules\Base\Services\BaseService;
 use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
+use App\Modules\DatabaseAnalyst\Events\AskCompleted;
+use App\Modules\DatabaseAnalyst\Events\AskFailed;
 use App\Modules\DatabaseAnalyst\Events\DatabaseEmbeddingRequested;
 use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
-use App\Modules\DatabaseAnalyst\Jobs\Ask;
 use App\Modules\DatabaseAnalyst\Models\Database;
 use Override;
 
@@ -27,9 +28,19 @@ class DatabaseAnalystService extends BaseService
         return DatabaseUploadProgress::class;
     }
 
-    public function askJob(): string
+    public function chatTurnParentRelation(): string
     {
-        return Ask::class;
+        return 'database';
+    }
+
+    public function answerCompletedEvent(): string
+    {
+        return AskCompleted::class;
+    }
+
+    public function answerFailedEvent(): string
+    {
+        return AskFailed::class;
     }
 
     public function chatTurnRelation(): string

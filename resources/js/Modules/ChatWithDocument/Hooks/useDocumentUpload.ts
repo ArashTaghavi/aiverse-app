@@ -51,7 +51,7 @@ export default function useDocumentUpload(isAsking: () => boolean) {
             },
             onSuccess: (page) => {
                 setUploadedRecord(
-                    page.props.uploadedRecord as DocumentResponse | null,
+                    page.props.uploadedRecord as EmbeddableFileResponse | null,
                 );
                 resetUploadForm();
             },

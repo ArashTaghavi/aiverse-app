@@ -4,9 +4,10 @@ namespace App\Modules\ChatWithDocument\Services;
 
 use App\Modules\Base\Services\BaseService;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
+use App\Modules\ChatWithDocument\Events\AskCompleted;
+use App\Modules\ChatWithDocument\Events\AskFailed;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingRequested;
 use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
-use App\Modules\ChatWithDocument\Jobs\Ask;
 use App\Modules\ChatWithDocument\Models\Document;
 
 class ChatWithDocumentService extends BaseService
@@ -26,9 +27,19 @@ class ChatWithDocumentService extends BaseService
         return DocumentUploadProgress::class;
     }
 
-    public function askJob(): string
+    public function chatTurnParentRelation(): string
     {
-        return Ask::class;
+        return 'document';
+    }
+
+    public function answerCompletedEvent(): string
+    {
+        return AskCompleted::class;
+    }
+
+    public function answerFailedEvent(): string
+    {
+        return AskFailed::class;
     }
 
     public function chatTurnRelation(): string

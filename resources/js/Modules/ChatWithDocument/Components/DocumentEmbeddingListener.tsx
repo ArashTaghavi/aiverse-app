@@ -1,6 +1,7 @@
 import { useEcho } from "@laravel/echo-react";
 import { useEffect, useRef } from "react";
-import type { DocumentEmbeddingListenerProps, EmbeddingStatus } from '@/Modules/ChatWithDocument/Types';
+import type { DocumentEmbeddingListenerProps } from "@/Modules/ChatWithDocument/Types";
+import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
 
 export default function DocumentEmbeddingListener({
     userId,
@@ -11,7 +12,7 @@ export default function DocumentEmbeddingListener({
         handler.current = onUpdate;
     }, [onUpdate]);
 
-    useEcho<{ document_id: number; embedding_status: EmbeddingStatus }>(
+    useEcho<{ document_id: number; embedding_status: ProcessingStatusEnum }>(
         `chat-with-document.users.${userId}`,
         [
             ".chat-with-document.embedding.completed",

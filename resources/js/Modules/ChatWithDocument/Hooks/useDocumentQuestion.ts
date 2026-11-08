@@ -154,7 +154,7 @@ export default function useDocumentQuestion(
             if (!controller.signal.aborted && shouldRefresh) {
                 await new Promise<void>((resolve) => {
                     router.reload({
-                        only: ["history", "documents", "historyPagination"],
+                        only: ["history", "data", "historyPagination"],
                         data: { history_page: 1 },
                         onSuccess: (page) => {
                             if (controller.signal.aborted) return;

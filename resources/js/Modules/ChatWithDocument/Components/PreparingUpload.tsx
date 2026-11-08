@@ -12,16 +12,13 @@ import {
 import { useEcho } from "@laravel/echo-react";
 import { UploadStatusEnum } from "@/Modules/Base/Enums/UploadStatusEnum";
 import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
-import type {
-    DocumentResponse,
-    EmbeddingStatus,
-} from "@/Modules/ChatWithDocument/Types";
 import { useEffect, useState } from "react";
 import { Link } from "@inertiajs/react";
 import {
     show as chatWithDocument,
     status as documentStatus,
 } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/EmbeddableFileResponse";
 
 type UploadProgressEvent = {
     step: UploadStatusEnum;
@@ -32,7 +29,7 @@ type UploadProgressEvent = {
         title: string;
         original_name: string;
         human_size: string;
-        embedding_status: EmbeddingStatus;
+        embedding_status: ProcessingStatusEnum;
         embedding_error: string | null;
     };
 };
@@ -48,9 +45,12 @@ const statusLabels: Record<StepStatus, string> = {
 
 const statusClasses: Record<ProcessingStatusEnum, string> = {
     [ProcessingStatusEnum.Pending]: "border-white/10 bg-white/5 text-ui-muted",
-    [ProcessingStatusEnum.Processing]: "border-violet-400/30 bg-violet-400/10 text-violet-300",
-    [ProcessingStatusEnum.Completed]: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
-    [ProcessingStatusEnum.Failed]: "border-red-400/30 bg-red-400/10 text-red-300",
+    [ProcessingStatusEnum.Processing]:
+        "border-violet-400/30 bg-violet-400/10 text-violet-300",
+    [ProcessingStatusEnum.Completed]:
+        "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+    [ProcessingStatusEnum.Failed]:
+        "border-red-400/30 bg-red-400/10 text-red-300",
 };
 
 const steps: {
@@ -87,7 +87,7 @@ export default function PreparingUpload({
 }: {
     userId: number;
     uploadAttempt: number;
-    document: DocumentResponse | null;
+    document: EmbeddableFileResponse | null;
     onClose: () => void;
 }) {
     const [statuses, setStatuses] = useState<
@@ -99,7 +99,9 @@ export default function PreparingUpload({
 
     useEffect(() => {
         if (uploadAttempt > 0) {
-            setStatuses({ [UploadStatusEnum.Upload]: ProcessingStatusEnum.Processing });
+            setStatuses({
+                [UploadStatusEnum.Upload]: ProcessingStatusEnum.Processing,
+            });
             setUploadedRecord(null);
         }
     }, [uploadAttempt]);
@@ -110,7 +112,7 @@ export default function PreparingUpload({
         const controller = new AbortController();
         let timer: ReturnType<typeof setTimeout>;
 
-        function update(snapshot: DocumentResponse) {
+        function update(snapshot: EmbeddableFileResponse) {
             const terminal =
                 snapshot.embedding_status === ProcessingStatusEnum.Completed
                     ? ProcessingStatusEnum.Completed
@@ -124,7 +126,8 @@ export default function PreparingUpload({
             });
             setStatuses({
                 [UploadStatusEnum.Upload]: ProcessingStatusEnum.Completed,
-                [UploadStatusEnum.Embedding]: terminal ?? ProcessingStatusEnum.Processing,
+                [UploadStatusEnum.Embedding]:
+                    terminal ?? ProcessingStatusEnum.Processing,
                 ...(terminal ? { [UploadStatusEnum.Result]: terminal } : {}),
             });
             return terminal !== null;
@@ -138,7 +141,7 @@ export default function PreparingUpload({
                 });
                 if (response.ok) {
                     const payload = (await response.json()) as {
-                        data: DocumentResponse;
+                        data: EmbeddableFileResponse;
                     };
                     if (controller.signal.aborted) return;
                     if (update(payload.data)) return;
@@ -216,7 +219,8 @@ export default function PreparingUpload({
             <ol aria-live="polite" className="pt-4">
                 {steps.map((step) => {
                     const status = statuses[step.key];
-                    const colors = statusClasses[status ?? ProcessingStatusEnum.Pending];
+                    const colors =
+                        statusClasses[status ?? ProcessingStatusEnum.Pending];
                     const Icon =
                         status === ProcessingStatusEnum.Completed
                             ? Check
@@ -230,7 +234,9 @@ export default function PreparingUpload({
                         <li
                             key={step.key}
                             aria-current={
-                                status === ProcessingStatusEnum.Processing ? "step" : undefined
+                                status === ProcessingStatusEnum.Processing
+                                    ? "step"
+                                    : undefined
                             }
                             className={`group flex gap-3 transition-opacity ${!status ? "opacity-40" : "opacity-100"}`}
                         >
@@ -242,7 +248,8 @@ export default function PreparingUpload({
                                         size={15}
                                         aria-hidden="true"
                                         className={
-                                            status === ProcessingStatusEnum.Processing
+                                            status ===
+                                            ProcessingStatusEnum.Processing
                                                 ? "motion-safe:animate-spin"
                                                 : undefined
                                         }
