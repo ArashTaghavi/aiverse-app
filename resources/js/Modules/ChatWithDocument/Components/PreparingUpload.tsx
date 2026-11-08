@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useEcho } from "@laravel/echo-react";
 import { UploadStatusEnum } from "@/Modules/Base/Enums/UploadStatusEnum";
+import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
 import type {
     DocumentResponse,
     EmbeddingStatus,
@@ -24,7 +25,7 @@ import {
 
 type UploadProgressEvent = {
     step: UploadStatusEnum;
-    status: "PROCESSING" | "COMPLETED" | "FAILED";
+    status: Exclude<ProcessingStatusEnum, typeof ProcessingStatusEnum.Pending>;
     data: {
         id: number;
         uuid: string;
@@ -40,16 +41,16 @@ type UploadStep = UploadProgressEvent["step"];
 type StepStatus = UploadProgressEvent["status"];
 
 const statusLabels: Record<StepStatus, string> = {
-    PROCESSING: "PROCESSING",
-    COMPLETED: "COMPLETED",
-    FAILED: "FAILED",
+    [ProcessingStatusEnum.Processing]: ProcessingStatusEnum.Processing,
+    [ProcessingStatusEnum.Completed]: ProcessingStatusEnum.Completed,
+    [ProcessingStatusEnum.Failed]: ProcessingStatusEnum.Failed,
 };
 
-const statusClasses: Record<StepStatus | "PENDING", string> = {
-    PENDING: "border-white/10 bg-white/5 text-ui-muted",
-    PROCESSING: "border-violet-400/30 bg-violet-400/10 text-violet-300",
-    COMPLETED: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
-    FAILED: "border-red-400/30 bg-red-400/10 text-red-300",
+const statusClasses: Record<ProcessingStatusEnum, string> = {
+    [ProcessingStatusEnum.Pending]: "border-white/10 bg-white/5 text-ui-muted",
+    [ProcessingStatusEnum.Processing]: "border-violet-400/30 bg-violet-400/10 text-violet-300",
+    [ProcessingStatusEnum.Completed]: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+    [ProcessingStatusEnum.Failed]: "border-red-400/30 bg-red-400/10 text-red-300",
 };
 
 const steps: {
@@ -98,7 +99,7 @@ export default function PreparingUpload({
 
     useEffect(() => {
         if (uploadAttempt > 0) {
-            setStatuses({ [UploadStatusEnum.Upload]: "processing" });
+            setStatuses({ [UploadStatusEnum.Upload]: ProcessingStatusEnum.Processing });
             setUploadedRecord(null);
         }
     }, [uploadAttempt]);
@@ -111,10 +112,10 @@ export default function PreparingUpload({
 
         function update(snapshot: DocumentResponse) {
             const terminal =
-                snapshot.embedding_status === "COMPLETED"
-                    ? "completed"
-                    : snapshot.embedding_status === "FAILED"
-                      ? "failed"
+                snapshot.embedding_status === ProcessingStatusEnum.Completed
+                    ? ProcessingStatusEnum.Completed
+                    : snapshot.embedding_status === ProcessingStatusEnum.Failed
+                      ? ProcessingStatusEnum.Failed
                       : null;
             setUploadedRecord({
                 ...snapshot,
@@ -122,8 +123,8 @@ export default function PreparingUpload({
                 embedding_error: null,
             });
             setStatuses({
-                [UploadStatusEnum.Upload]: "completed",
-                [UploadStatusEnum.Embedding]: terminal ?? "processing",
+                [UploadStatusEnum.Upload]: ProcessingStatusEnum.Completed,
+                [UploadStatusEnum.Embedding]: terminal ?? ProcessingStatusEnum.Processing,
                 ...(terminal ? { [UploadStatusEnum.Result]: terminal } : {}),
             });
             return terminal !== null;
@@ -164,14 +165,14 @@ export default function PreparingUpload({
             setStatuses((current) => {
                 const updated = { ...current, [event.step]: event.status };
 
-                if (event.status === "completed") {
+                if (event.status === ProcessingStatusEnum.Completed) {
                     const stepIndex = steps.findIndex(
                         (step) => step.key === event.step,
                     );
                     const nextStep = steps[stepIndex + 1];
 
                     if (nextStep && !updated[nextStep.key]) {
-                        updated[nextStep.key] = "processing";
+                        updated[nextStep.key] = ProcessingStatusEnum.Processing;
                     }
                 }
 
@@ -215,13 +216,13 @@ export default function PreparingUpload({
             <ol aria-live="polite" className="pt-4">
                 {steps.map((step) => {
                     const status = statuses[step.key];
-                    const colors = statusClasses[status ?? "PENDING"];
+                    const colors = statusClasses[status ?? ProcessingStatusEnum.Pending];
                     const Icon =
-                        status === "completed"
+                        status === ProcessingStatusEnum.Completed
                             ? Check
-                            : status === "failed"
+                            : status === ProcessingStatusEnum.Failed
                               ? X
-                              : status === "processing"
+                              : status === ProcessingStatusEnum.Processing
                                 ? LoaderCircle
                                 : step.icon;
 
@@ -229,19 +230,19 @@ export default function PreparingUpload({
                         <li
                             key={step.key}
                             aria-current={
-                                status === "processing" ? "step" : undefined
+                                status === ProcessingStatusEnum.Processing ? "step" : undefined
                             }
                             className={`group flex gap-3 transition-opacity ${!status ? "opacity-40" : "opacity-100"}`}
                         >
                             <div className="flex shrink-0 flex-col items-center">
                                 <div
-                                    className={`flex size-8 items-center justify-center rounded-lg border transition-colors ${colors} ${status === "processing" ? "ring-4 ring-violet-400/5" : ""}`}
+                                    className={`flex size-8 items-center justify-center rounded-lg border transition-colors ${colors} ${status === ProcessingStatusEnum.Processing ? "ring-4 ring-violet-400/5" : ""}`}
                                 >
                                     <Icon
                                         size={15}
                                         aria-hidden="true"
                                         className={
-                                            status === "processing"
+                                            status === ProcessingStatusEnum.Processing
                                                 ? "motion-safe:animate-spin"
                                                 : undefined
                                         }
@@ -249,13 +250,13 @@ export default function PreparingUpload({
                                 </div>
                                 <div
                                     aria-hidden="true"
-                                    className={`my-2 w-px flex-1 transition-colors group-last:hidden ${status === "completed" ? "bg-emerald-400/30" : "bg-white/10"}`}
+                                    className={`my-2 w-px flex-1 transition-colors group-last:hidden ${status === ProcessingStatusEnum.Completed ? "bg-emerald-400/30" : "bg-white/10"}`}
                                 />
                             </div>
                             <div className="flex min-w-0 flex-1 flex-col gap-1 pb-5 group-last:pb-0">
                                 <div className="flex flex-wrap items-center justify-between gap-2">
                                     <h3
-                                        className={`text-sm font-medium ${status === "completed" ? "text-emerald-300" : status === "failed" ? "text-red-300" : "text-zinc-200"}`}
+                                        className={`text-sm font-medium ${status === ProcessingStatusEnum.Completed ? "text-emerald-300" : status === ProcessingStatusEnum.Failed ? "text-red-300" : "text-zinc-200"}`}
                                     >
                                         {step.title}
                                     </h3>
@@ -269,16 +270,16 @@ export default function PreparingUpload({
                                 </div>
                                 {!(
                                     step.key === "RESULT" &&
-                                    status === "completed"
+                                    status === ProcessingStatusEnum.Completed
                                 ) && (
                                     <p className="text-xs leading-5 text-ui-muted">
                                         {step.description}
                                     </p>
                                 )}
                                 {step.key === "RESULT" &&
-                                    status === "completed" &&
+                                    status === ProcessingStatusEnum.Completed &&
                                     uploadedRecord?.embedding_status ===
-                                        "COMPLETED" && (
+                                        ProcessingStatusEnum.Completed && (
                                         <div className="mt-2 flex flex-col gap-3 overflow-hidden rounded-xl border border-emerald-400/20 bg-linear-to-br from-emerald-400/10 to-transparent p-3.5">
                                             <div className="flex items-center gap-2 text-emerald-300">
                                                 <FileCheck2
@@ -347,7 +348,7 @@ export default function PreparingUpload({
                                         </div>
                                     )}
                                 {step.key === "RESULT" &&
-                                    status === "failed" && (
+                                    status === ProcessingStatusEnum.Failed && (
                                         <p
                                             role="alert"
                                             className="text-sm leading-6 text-red-300"
