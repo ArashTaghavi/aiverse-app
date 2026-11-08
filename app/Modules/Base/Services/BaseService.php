@@ -5,6 +5,7 @@ namespace App\Modules\Base\Services;
 use App\Models\User;
 use App\Modules\Base\DTOs\AskDTO;
 use App\Modules\Base\Enums\ProcessingStatusEnum;
+use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Services\AIClient;
 use App\Services\StorageService;
 use Generator;
@@ -45,8 +46,8 @@ abstract class BaseService
 
         $data = $this->data(user: $user);
 
-        $uploadedId = $request->session()->get('uploaded_id');
-        $uploadedRecord = $uploadedId ? $user->{$this->userRelation()}()->findOrFail($uploadedId) : [];
+        $uploadedRecordId = $request->session()->get('uploaded_record_id');
+        $uploadedRecord = $uploadedRecordId ? $user->{$this->userRelation()}()->findOrFail($uploadedRecordId) : [];
 
         return [$data, $uploadedRecord];
     }
@@ -91,7 +92,7 @@ abstract class BaseService
 
         $uploadProgressEvent::dispatch(
             model: $entity,
-            step: 'upload',
+            step: UploadProgressEnum::Upload->value,
             status: ProcessingStatusEnum::Completed->value,
         );
 

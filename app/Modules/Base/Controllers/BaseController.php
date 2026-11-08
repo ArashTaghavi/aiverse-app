@@ -97,7 +97,7 @@ abstract class BaseController extends Controller
             ownerId: $request->user()->id,
         );
 
-        return back()->with('uploaded_data_id', $data->id);
+        return back()->with('uploaded_record_id', $data->id);
     }
 
     public function ask(Model $relatedModel, AskRequest $request): StreamedResponse

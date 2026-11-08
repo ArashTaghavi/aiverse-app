@@ -10,6 +10,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import { useEcho } from "@laravel/echo-react";
+import { UploadStatusEnum } from "@/Modules/Base/Enums/UploadStatusEnum";
 import type {
     DocumentResponse,
     EmbeddingStatus,
@@ -22,7 +23,7 @@ import {
 } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
 
 type UploadProgressEvent = {
-    step: "UPLOAD" | "EMBEDDING" | "RESULT";
+    step: UploadStatusEnum;
     status: "PROCESSING" | "COMPLETED" | "FAILED";
     data: {
         id: number;
@@ -58,19 +59,19 @@ const steps: {
     icon: LucideIcon;
 }[] = [
     {
-        key: "UPLOAD",
+        key: UploadStatusEnum.Upload,
         title: "Upload & save",
         description: "Store your file and its details.",
         icon: HardDriveUpload,
     },
     {
-        key: "EMBEDDING",
+        key: UploadStatusEnum.Embedding,
         title: "Generate embeddings",
         description: "Prepare the contents for your questions.",
         icon: Layers,
     },
     {
-        key: "RESULT",
+        key: UploadStatusEnum.Result,
         title: "Ready to chat",
         description: "Your document will be available here.",
         icon: FileCheck2,
@@ -97,7 +98,7 @@ export default function PreparingUpload({
 
     useEffect(() => {
         if (uploadAttempt > 0) {
-            setStatuses({ UPLOAD: "processing" });
+            setStatuses({ [UploadStatusEnum.Upload]: "processing" });
             setUploadedRecord(null);
         }
     }, [uploadAttempt]);
@@ -121,9 +122,9 @@ export default function PreparingUpload({
                 embedding_error: null,
             });
             setStatuses({
-                UPLOAD: "completed",
-                EMBEDDING: terminal ?? "processing",
-                ...(terminal ? { RESULT: terminal } : {}),
+                [UploadStatusEnum.Upload]: "completed",
+                [UploadStatusEnum.Embedding]: terminal ?? "processing",
+                ...(terminal ? { [UploadStatusEnum.Result]: terminal } : {}),
             });
             return terminal !== null;
         }
