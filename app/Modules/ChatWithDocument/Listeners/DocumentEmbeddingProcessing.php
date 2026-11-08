@@ -2,9 +2,9 @@
 
 namespace App\Modules\ChatWithDocument\Listeners;
 
+use App\Modules\Base\DTOs\IngestDTO;
 use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
-use App\Modules\Base\DTOs\IngestDTO;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingCompleted;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingFailed;
@@ -30,19 +30,19 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
      */
     public function handle(DocumentEmbeddingRequested $event): void
     {
-        $document = $event->document;
+        $document = $event->model;
         $document->refresh();
 
         if ($document->embedding_status === ProcessingStatusEnum::Completed) {
             $this->broadcastStatus($document);
-            $this->broadcastProgress($document, UploadProgressEnum::Embedding, 'completed');
-            $this->broadcastProgress($document, UploadProgressEnum::Result, 'completed');
+            $this->broadcastProgress($document, UploadProgressEnum::Embedding, ProcessingStatusEnum::Completed->value);
+            $this->broadcastProgress($document, UploadProgressEnum::Result, ProcessingStatusEnum::Completed->value);
 
             return;
         }
 
         $document->markAsProcessing();
-        $this->broadcastProgress($document, UploadProgressEnum::Embedding, 'processing');
+        $this->broadcastProgress($document, UploadProgressEnum::Embedding, ProcessingStatusEnum::Processing->value);
 
         $data = new IngestDTO(
             filePath: $document->absolute_path,
@@ -54,13 +54,13 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
         $document->markAsCompleted();
         $this->broadcastStatus($document);
 
-        $this->broadcastProgress($document, UploadProgressEnum::Embedding, 'completed');
-        $this->broadcastProgress($document, UploadProgressEnum::Result, 'completed');
+        $this->broadcastProgress($document, UploadProgressEnum::Embedding, ProcessingStatusEnum::Completed->value);
+        $this->broadcastProgress($document, UploadProgressEnum::Result, ProcessingStatusEnum::Completed->value);
     }
 
     public function failed(DocumentEmbeddingRequested $event, Throwable $exception): void
     {
-        $document = $event->document;
+        $document = $event->model;
         $document->refresh();
 
         if ($document->embedding_status === ProcessingStatusEnum::Completed) {
@@ -70,8 +70,8 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
         $document->markAsFailed(error: $exception->getMessage());
         $this->broadcastStatus($document);
 
-        $this->broadcastProgress($document, UploadProgressEnum::Embedding, 'failed');
-        $this->broadcastProgress($document, UploadProgressEnum::Result, 'failed');
+        $this->broadcastProgress($document, UploadProgressEnum::Embedding, ProcessingStatusEnum::Failed->value);
+        $this->broadcastProgress($document, UploadProgressEnum::Result, ProcessingStatusEnum::Failed->value);
     }
 
     private function broadcastStatus(Document $document): void

@@ -2,8 +2,8 @@
 
 namespace App\Modules\DatabaseAnalyst\Jobs;
 
-use App\Modules\Base\Enums\ModuleEnum;
 use App\Modules\Base\DTOs\AskDTO;
+use App\Modules\Base\Enums\ModuleEnum;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\AskCompleted;
 use App\Modules\ChatWithDocument\Events\AskFailed;
@@ -20,7 +20,7 @@ class Ask implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public DatabaseChatTurn $databaseChatTurn) {}
+    public function __construct(public DatabaseChatTurn $chatTurn) {}
 
     /**
      * Execute the job.
@@ -29,24 +29,24 @@ class Ask implements ShouldQueue
     {
 
         $data = new AskDTO(
-            documentId: $this->databaseChatTurn->document_id,
-            ownerId: $this->databaseChatTurn->document->owner_id,
-            question: $this->databaseChatTurn->question
+            documentId: $this->chatTurn->document_id,
+            ownerId: $this->chatTurn->document->owner_id,
+            question: $this->chatTurn->question
         );
 
-        $this->databaseChatTurn->markAsProcessing();
+        $this->chatTurn->markAsProcessing();
 
         $response = $client->post(RouteEnum::Ask->value, $data->toArray());
 
         // TODO
         $answer = json_decode($response->json('answer'));
 
-        $this->databaseChatTurn->markAsCompleted(answer: $answer);
-        $this->databaseChatTurn->document->update(['last_message' => $answer]);
+        $this->chatTurn->markAsCompleted(answer: $answer);
+        $this->chatTurn->document->update(['last_message' => $answer]);
 
         // A broadcast failure must not repeat a successful AI request.
         try {
-            AskCompleted::dispatch($this->databaseChatTurn);
+            AskCompleted::dispatch($this->chatTurn);
         } catch (Throwable $exception) {
             report($exception);
         }
@@ -54,10 +54,10 @@ class Ask implements ShouldQueue
 
     public function failed(?Throwable $exception): void
     {
-        $this->databaseChatTurn->markAsFailed(error: $exception?->getMessage());
+        $this->chatTurn->markAsFailed(error: $exception?->getMessage());
 
         try {
-            AskFailed::dispatch($this->databaseChatTurn);
+            AskFailed::dispatch($this->chatTurn);
         } catch (Throwable $exception) {
             report_exception(
                 exception: $exception,

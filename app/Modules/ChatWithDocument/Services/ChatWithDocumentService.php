@@ -5,6 +5,7 @@ namespace App\Modules\ChatWithDocument\Services;
 use App\Modules\Base\Services\BaseService;
 use App\Modules\ChatWithDocument\Enums\RouteEnum;
 use App\Modules\ChatWithDocument\Events\DocumentEmbeddingRequested;
+use App\Modules\ChatWithDocument\Events\DocumentUploadProgress;
 use App\Modules\ChatWithDocument\Jobs\Ask;
 use App\Modules\ChatWithDocument\Models\Document;
 
@@ -18,6 +19,11 @@ class ChatWithDocumentService extends BaseService
     public function embeddingRequestedEvent(): string
     {
         return DocumentEmbeddingRequested::class;
+    }
+
+    public function uploadProgressEvent(): string
+    {
+        return DocumentUploadProgress::class;
     }
 
     public function askJob(): string

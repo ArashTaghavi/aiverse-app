@@ -13,7 +13,7 @@ class DatabaseEmbeddingRequested
     /**
      * Create a new event instance.
      */
-    public function __construct(public Database $database)
+    public function __construct(public Database $model)
     {
         //
     }

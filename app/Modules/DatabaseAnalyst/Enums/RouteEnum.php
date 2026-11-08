@@ -2,7 +2,7 @@
 
 namespace App\Modules\DatabaseAnalyst\Enums;
 
-use App\Modules\ChatWithDocument\Module;
+use App\Modules\DatabaseAnalyst\Module;
 
 enum RouteEnum: string
 {

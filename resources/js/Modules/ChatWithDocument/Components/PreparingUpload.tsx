@@ -8,19 +8,22 @@ import {
     MessageSquare,
     X,
     type LucideIcon,
-} from 'lucide-react';
-import { useEcho } from '@laravel/echo-react';
-import type { DocumentResponse, EmbeddingStatus } from '@/Modules/ChatWithDocument/Types';
-import { useEffect, useState } from 'react';
-import { Link } from '@inertiajs/react';
+} from "lucide-react";
+import { useEcho } from "@laravel/echo-react";
+import type {
+    DocumentResponse,
+    EmbeddingStatus,
+} from "@/Modules/ChatWithDocument/Types";
+import { useEffect, useState } from "react";
+import { Link } from "@inertiajs/react";
 import {
     show as chatWithDocument,
     status as documentStatus,
-} from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
+} from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
 
 type UploadProgressEvent = {
-    step: 'UPLOAD' | 'EMBEDDING' | 'RESULT';
-    status: 'processing' | 'completed' | 'failed';
+    step: "UPLOAD" | "EMBEDDING" | "RESULT";
+    status: "PROCESSING" | "COMPLETED" | "FAILED";
     data: {
         id: number;
         uuid: string;
@@ -32,20 +35,20 @@ type UploadProgressEvent = {
     };
 };
 
-type UploadStep = UploadProgressEvent['step'];
-type StepStatus = UploadProgressEvent['status'];
+type UploadStep = UploadProgressEvent["step"];
+type StepStatus = UploadProgressEvent["status"];
 
 const statusLabels: Record<StepStatus, string> = {
-    processing: 'Processing',
-    completed: 'Completed',
-    failed: 'Failed',
+    PROCESSING: "PROCESSING",
+    COMPLETED: "COMPLETED",
+    FAILED: "FAILED",
 };
 
-const statusClasses: Record<StepStatus | 'pending', string> = {
-    pending: 'border-white/10 bg-white/5 text-ui-muted',
-    processing: 'border-violet-400/30 bg-violet-400/10 text-violet-300',
-    completed: 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300',
-    failed: 'border-red-400/30 bg-red-400/10 text-red-300',
+const statusClasses: Record<StepStatus | "PENDING", string> = {
+    PENDING: "border-white/10 bg-white/5 text-ui-muted",
+    PROCESSING: "border-violet-400/30 bg-violet-400/10 text-violet-300",
+    COMPLETED: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+    FAILED: "border-red-400/30 bg-red-400/10 text-red-300",
 };
 
 const steps: {
@@ -55,21 +58,21 @@ const steps: {
     icon: LucideIcon;
 }[] = [
     {
-        key: 'UPLOAD',
-        title: 'Upload & save',
-        description: 'Store your file and its details.',
+        key: "UPLOAD",
+        title: "Upload & save",
+        description: "Store your file and its details.",
         icon: HardDriveUpload,
     },
     {
-        key: 'EMBEDDING',
-        title: 'Generate embeddings',
-        description: 'Prepare the contents for your questions.',
+        key: "EMBEDDING",
+        title: "Generate embeddings",
+        description: "Prepare the contents for your questions.",
         icon: Layers,
     },
     {
-        key: 'RESULT',
-        title: 'Ready to chat',
-        description: 'Your document will be available here.',
+        key: "RESULT",
+        title: "Ready to chat",
+        description: "Your document will be available here.",
         icon: FileCheck2,
     },
 ];
@@ -88,14 +91,14 @@ export default function PreparingUpload({
     const [statuses, setStatuses] = useState<
         Partial<Record<UploadStep, StepStatus>>
     >({});
-    const [uploadedDocument, setUploadedDocument] = useState<
-        UploadProgressEvent['data'] | null
+    const [uploadedRecord, setUploadedRecord] = useState<
+        UploadProgressEvent["data"] | null
     >(null);
 
     useEffect(() => {
         if (uploadAttempt > 0) {
-            setStatuses({ UPLOAD: 'processing' });
-            setUploadedDocument(null);
+            setStatuses({ UPLOAD: "processing" });
+            setUploadedRecord(null);
         }
     }, [uploadAttempt]);
 
@@ -107,19 +110,19 @@ export default function PreparingUpload({
 
         function update(snapshot: DocumentResponse) {
             const terminal =
-                snapshot.embedding_status === 'COMPLETED'
-                    ? 'completed'
-                    : snapshot.embedding_status === 'FAILED'
-                      ? 'failed'
+                snapshot.embedding_status === "COMPLETED"
+                    ? "completed"
+                    : snapshot.embedding_status === "FAILED"
+                      ? "failed"
                       : null;
-            setUploadedDocument({
+            setUploadedRecord({
                 ...snapshot,
                 human_size: snapshot.size,
                 embedding_error: null,
             });
             setStatuses({
-                UPLOAD: 'completed',
-                EMBEDDING: terminal ?? 'processing',
+                UPLOAD: "completed",
+                EMBEDDING: terminal ?? "processing",
                 ...(terminal ? { RESULT: terminal } : {}),
             });
             return terminal !== null;
@@ -128,7 +131,7 @@ export default function PreparingUpload({
         async function poll() {
             try {
                 const response = await fetch(documentStatus(documentUuid).url, {
-                    headers: { Accept: 'application/json' },
+                    headers: { Accept: "application/json" },
                     signal: controller.signal,
                 });
                 if (response.ok) {
@@ -153,21 +156,21 @@ export default function PreparingUpload({
 
     useEcho<UploadProgressEvent>(
         `chat-with-document.users.${userId}`,
-        '.chat-with-document.upload.progress',
+        ".chat-with-document.upload.progress",
         (event) => {
             if (!document || event.data.id !== document.id) return;
-            setUploadedDocument(event.data);
+            setUploadedRecord(event.data);
             setStatuses((current) => {
                 const updated = { ...current, [event.step]: event.status };
 
-                if (event.status === 'completed') {
+                if (event.status === "completed") {
                     const stepIndex = steps.findIndex(
                         (step) => step.key === event.step,
                     );
                     const nextStep = steps[stepIndex + 1];
 
                     if (nextStep && !updated[nextStep.key]) {
-                        updated[nextStep.key] = 'processing';
+                        updated[nextStep.key] = "processing";
                     }
                 }
 
@@ -211,13 +214,13 @@ export default function PreparingUpload({
             <ol aria-live="polite" className="pt-4">
                 {steps.map((step) => {
                     const status = statuses[step.key];
-                    const colors = statusClasses[status ?? 'pending'];
+                    const colors = statusClasses[status ?? "PENDING"];
                     const Icon =
-                        status === 'completed'
+                        status === "completed"
                             ? Check
-                            : status === 'failed'
+                            : status === "failed"
                               ? X
-                              : status === 'processing'
+                              : status === "processing"
                                 ? LoaderCircle
                                 : step.icon;
 
@@ -225,33 +228,33 @@ export default function PreparingUpload({
                         <li
                             key={step.key}
                             aria-current={
-                                status === 'processing' ? 'step' : undefined
+                                status === "processing" ? "step" : undefined
                             }
-                            className={`group flex gap-3 transition-opacity ${!status ? 'opacity-40' : 'opacity-100'}`}
+                            className={`group flex gap-3 transition-opacity ${!status ? "opacity-40" : "opacity-100"}`}
                         >
                             <div className="flex shrink-0 flex-col items-center">
                                 <div
-                                    className={`flex size-8 items-center justify-center rounded-lg border transition-colors ${colors} ${status === 'processing' ? 'ring-4 ring-violet-400/5' : ''}`}
+                                    className={`flex size-8 items-center justify-center rounded-lg border transition-colors ${colors} ${status === "processing" ? "ring-4 ring-violet-400/5" : ""}`}
                                 >
                                     <Icon
                                         size={15}
                                         aria-hidden="true"
                                         className={
-                                            status === 'processing'
-                                                ? 'motion-safe:animate-spin'
+                                            status === "processing"
+                                                ? "motion-safe:animate-spin"
                                                 : undefined
                                         }
                                     />
                                 </div>
                                 <div
                                     aria-hidden="true"
-                                    className={`my-2 w-px flex-1 transition-colors group-last:hidden ${status === 'completed' ? 'bg-emerald-400/30' : 'bg-white/10'}`}
+                                    className={`my-2 w-px flex-1 transition-colors group-last:hidden ${status === "completed" ? "bg-emerald-400/30" : "bg-white/10"}`}
                                 />
                             </div>
                             <div className="flex min-w-0 flex-1 flex-col gap-1 pb-5 group-last:pb-0">
                                 <div className="flex flex-wrap items-center justify-between gap-2">
                                     <h3
-                                        className={`text-sm font-medium ${status === 'completed' ? 'text-emerald-300' : status === 'failed' ? 'text-red-300' : 'text-zinc-200'}`}
+                                        className={`text-sm font-medium ${status === "completed" ? "text-emerald-300" : status === "failed" ? "text-red-300" : "text-zinc-200"}`}
                                     >
                                         {step.title}
                                     </h3>
@@ -260,21 +263,21 @@ export default function PreparingUpload({
                                     >
                                         {status
                                             ? statusLabels[status]
-                                            : 'Waiting'}
+                                            : "Waiting"}
                                     </span>
                                 </div>
                                 {!(
-                                    step.key === 'RESULT' &&
-                                    status === 'completed'
+                                    step.key === "RESULT" &&
+                                    status === "completed"
                                 ) && (
                                     <p className="text-xs leading-5 text-ui-muted">
                                         {step.description}
                                     </p>
                                 )}
-                                {step.key === 'RESULT' &&
-                                    status === 'completed' &&
-                                    uploadedDocument?.embedding_status ===
-                                        'COMPLETED' && (
+                                {step.key === "RESULT" &&
+                                    status === "completed" &&
+                                    uploadedRecord?.embedding_status ===
+                                        "COMPLETED" && (
                                         <div className="mt-2 flex flex-col gap-3 overflow-hidden rounded-xl border border-emerald-400/20 bg-linear-to-br from-emerald-400/10 to-transparent p-3.5">
                                             <div className="flex items-center gap-2 text-emerald-300">
                                                 <FileCheck2
@@ -295,7 +298,7 @@ export default function PreparingUpload({
                                                         dir="auto"
                                                         className="mt-0.5 font-medium break-words text-zinc-100"
                                                     >
-                                                        {uploadedDocument.title}
+                                                        {uploadedRecord.title}
                                                     </dd>
                                                 </div>
                                                 <div className="min-w-0">
@@ -307,7 +310,7 @@ export default function PreparingUpload({
                                                         className="mt-0.5 text-xs break-words text-zinc-300"
                                                     >
                                                         {
-                                                            uploadedDocument.original_name
+                                                            uploadedRecord.original_name
                                                         }
                                                     </dd>
                                                 </div>
@@ -317,7 +320,7 @@ export default function PreparingUpload({
                                                     </dt>
                                                     <dd className="mt-0.5 text-xs whitespace-nowrap text-zinc-300">
                                                         {
-                                                            uploadedDocument.human_size
+                                                            uploadedRecord.human_size
                                                         }
                                                     </dd>
                                                 </div>
@@ -328,7 +331,9 @@ export default function PreparingUpload({
                                             </p>
                                             <Link
                                                 href={
-                                                    chatWithDocument(uploadedDocument.uuid).url
+                                                    chatWithDocument(
+                                                        uploadedRecord.uuid,
+                                                    ).url
                                                 }
                                                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-300/20 bg-violet-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-violet-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400"
                                             >
@@ -340,8 +345,8 @@ export default function PreparingUpload({
                                             </Link>
                                         </div>
                                     )}
-                                {step.key === 'RESULT' &&
-                                    status === 'failed' && (
+                                {step.key === "RESULT" &&
+                                    status === "failed" && (
                                         <p
                                             role="alert"
                                             className="text-sm leading-6 text-red-300"

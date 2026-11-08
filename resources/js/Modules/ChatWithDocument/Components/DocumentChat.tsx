@@ -13,8 +13,8 @@ import useDocumentQuestion from "../Hooks/useDocumentQuestion";
 import DocumentAnswerListener from "./DocumentAnswerListener";
 
 export default function DocumentChat({
-    documents = [],
-    selectedDocument: selected,
+    data = [],
+    selectedData: selected,
     history: turns = [],
     pagination = { page: 1, hasMore: false },
     historyPagination = { page: 1, hasMore: false },
@@ -64,7 +64,7 @@ export default function DocumentChat({
                 />
             )}
             <DocumentChatSidebar
-                documents={documents}
+                data={data}
                 activeId={activeId}
                 showList={showList}
                 busy={questionState.asking}

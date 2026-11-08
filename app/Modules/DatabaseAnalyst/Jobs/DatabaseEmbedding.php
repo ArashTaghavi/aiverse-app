@@ -4,6 +4,7 @@ namespace App\Modules\DatabaseAnalyst\Jobs;
 
 use App\Modules\Base\DTOs\IngestDTO;
 use App\Modules\Base\Enums\ModuleEnum;
+use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
 use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
@@ -45,7 +46,7 @@ class DatabaseEmbedding implements ShouldQueue
         DatabaseUploadProgress::dispatch(
             database: $this->database,
             step: UploadProgressEnum::Embedding->value,
-            status: 'completed',
+            status: ProcessingStatusEnum::Completed->value,
         );
     }
 

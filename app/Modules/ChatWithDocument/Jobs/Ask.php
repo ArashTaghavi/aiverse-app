@@ -27,7 +27,7 @@ class Ask implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public DocumentChatTurn $documentChatTurn) {}
+    public function __construct(public DocumentChatTurn $chatTurn) {}
 
     /**
      * Execute the job.
@@ -35,18 +35,18 @@ class Ask implements ShouldQueue
     public function handle(AIClient $client): void
     {
         $startedAt = hrtime(true);
-        $context = ['turn_id' => $this->documentChatTurn->id];
+        $context = ['turn_id' => $this->chatTurn->id];
         Log::debug('Document chat: job started', $context + [
-            'turn_age_ms' => round((microtime(true) - $this->documentChatTurn->created_at->getTimestamp()) * 1000, 2),
+            'turn_age_ms' => round((microtime(true) - $this->chatTurn->created_at->getTimestamp()) * 1000, 2),
         ]);
 
         $data = new AskDTO(
-            documentId: $this->documentChatTurn->document_id,
-            ownerId: $this->documentChatTurn->document->owner_id,
-            question: $this->documentChatTurn->question
+            documentId: $this->chatTurn->document_id,
+            ownerId: $this->chatTurn->document->owner_id,
+            question: $this->chatTurn->question
         );
 
-        $this->documentChatTurn->markAsProcessing();
+        $this->chatTurn->markAsProcessing();
 
         $aiStartedAt = hrtime(true);
         Log::debug('Document chat: AI request started', $context);
@@ -63,8 +63,8 @@ class Ask implements ShouldQueue
             throw new UnexpectedValueException('The AI service returned an invalid answer.');
         }
 
-        $this->documentChatTurn->markAsCompleted(answer: $answer);
-        $this->documentChatTurn->document->update(['last_message' => $answer]);
+        $this->chatTurn->markAsCompleted(answer: $answer);
+        $this->chatTurn->document->update(['last_message' => $answer]);
         Log::debug('Document chat: answer saved', $context + [
             'job_elapsed_ms' => round((hrtime(true) - $startedAt) / 1_000_000, 2),
         ]);
@@ -72,7 +72,7 @@ class Ask implements ShouldQueue
         // A broadcast failure must not repeat a successful AI request.
         $broadcastStartedAt = hrtime(true);
         try {
-            AskCompleted::dispatch($this->documentChatTurn);
+            AskCompleted::dispatch($this->chatTurn);
             Log::debug('Document chat: broadcast completed', $context + [
                 'broadcast_ms' => round((hrtime(true) - $broadcastStartedAt) / 1_000_000, 2),
             ]);
@@ -86,10 +86,10 @@ class Ask implements ShouldQueue
 
     public function failed(?Throwable $exception): void
     {
-        $this->documentChatTurn->markAsFailed(error: $exception?->getMessage());
+        $this->chatTurn->markAsFailed(error: $exception?->getMessage());
 
         try {
-            AskFailed::dispatch($this->documentChatTurn);
+            AskFailed::dispatch($this->chatTurn);
         } catch (Throwable $broadcastException) {
             report($broadcastException);
         }

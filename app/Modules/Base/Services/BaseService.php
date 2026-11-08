@@ -5,7 +5,6 @@ namespace App\Modules\Base\Services;
 use App\Models\User;
 use App\Modules\Base\DTOs\AskDTO;
 use App\Modules\Base\Enums\ProcessingStatusEnum;
-use App\Modules\Base\Events\BaseUploadProgress;
 use App\Services\AIClient;
 use App\Services\StorageService;
 use Generator;
@@ -23,17 +22,21 @@ abstract class BaseService
 
     abstract protected function embeddingRequestedEvent(): string;
 
+    abstract protected function uploadProgressEvent(): string;
+
     abstract protected function userRelation(): string;
 
-    abstract protected function askJob(): string;
-
     abstract protected function chatTurnRelation(): string;
+
+    abstract protected function askJob(): string;
 
     abstract protected function askRoute(): string;
 
     public function data(User $user)
     {
-        return $user->{$this->userRelation()}->latest('id')->simplePaginate(20, ['*'], 'page');
+        return $user->{$this->userRelation()}()
+            ->latest('id')
+            ->simplePaginate(20, ['*'], 'page');
     }
 
     public function index(Request $request): array
@@ -42,7 +45,7 @@ abstract class BaseService
 
         $data = $this->data(user: $user);
 
-        $uploadedId = $request->session()->get('uploaded_database_id');
+        $uploadedId = $request->session()->get('uploaded_id');
         $uploadedRecord = $uploadedId ? $user->{$this->userRelation()}()->findOrFail($uploadedId) : [];
 
         return [$data, $uploadedRecord];
@@ -72,8 +75,8 @@ abstract class BaseService
     {
         $model = $this->model();
         $status = ProcessingStatusEnum::class;
-        $progressEvent = BaseUploadProgress::class;
-        $embeddingEvent = $this->embeddingRequestedEvent();
+        $uploadProgressEvent = $this->uploadProgressEvent();
+        $embeddingRequestedEvent = $this->embeddingRequestedEvent();
 
         $uploaded = $this->storageService
             ->setBasePath($model::uploadPath()."/$ownerId")
@@ -86,13 +89,13 @@ abstract class BaseService
             'embedding_status' => $status::Pending,
         ]);
 
-        $progressEvent::dispatch(
+        $uploadProgressEvent::dispatch(
             model: $entity,
             step: 'upload',
-            status: 'completed',
+            status: ProcessingStatusEnum::Completed->value,
         );
 
-        $embeddingEvent::dispatch(model: $entity);
+        $embeddingRequestedEvent::dispatch(model: $entity);
 
         return $entity;
     }
@@ -101,16 +104,16 @@ abstract class BaseService
     {
         $entity->update(['last_message' => $question]);
 
-        $turn = $entity->{$this->chatTurnRelation()}()->create([
+        $chatTurn = $entity->{$this->chatTurnRelation()}()->create([
             'question' => $question,
-            'answer_status' => 'pending',
+            'answer_status' => ProcessingStatusEnum::Pending->value,
         ]);
 
         $job = $this->askJob();
 
-        $job::dispatch(chatTurn: $turn);
+        $job::dispatch(chatTurn: $chatTurn);
 
-        return $turn;
+        return $chatTurn;
     }
 
     public function streamAnswer(Model $chatTurn): Generator

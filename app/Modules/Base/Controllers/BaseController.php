@@ -17,7 +17,7 @@ use Throwable;
 
 abstract class BaseController extends Controller
 {
-    public function __construct(private BaseService $service) {}
+    public function __construct(protected BaseService $service) {}
 
     abstract protected function resource(): string;
 
@@ -30,7 +30,7 @@ abstract class BaseController extends Controller
     public function index(Request $request): Response
     {
         $request->validate([
-            'page' => ['nullable' => 'integer', 'min:1'],
+            'page' => ['nullable', 'integer', 'min:1'],
         ]);
 
         $resource = $this->resource();
@@ -59,7 +59,7 @@ abstract class BaseController extends Controller
 
         [$data,$history] = $this->service->show(request: $request, relatedModel: $relatedModel);
 
-        return Inertia::render($this->view(), [
+        return Inertia::render(str_replace('Index', 'Show', $this->view()), [
             'data' => $resource::collection($data)->resolve($request),
 
             'pagination' => [

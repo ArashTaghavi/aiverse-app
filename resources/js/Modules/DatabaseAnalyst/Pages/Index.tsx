@@ -10,7 +10,7 @@ export default function DatabaseAnalystPage(props: DatabaseAnalystProps) {
         <>
             <Head title={Module.Title} />
             <DocumentChatSidebar
-                documents={props.databases}
+                data={props.databases}
                 activeId={null}
                 showList={false}
                 busy={false}

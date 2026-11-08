@@ -149,7 +149,7 @@ export default function MultiAgentPreview() {
     const state = [
         {
             key: 'research',
-            value: elapsed >= researchAt ? 'source notes ready' : 'pending',
+            value: elapsed >= researchAt ? 'source notes ready' : 'PENDING',
         },
         {
             key: 'brief',
@@ -158,7 +158,7 @@ export default function MultiAgentPreview() {
                     ? 'v2 · claim corrected'
                     : elapsed >= draftAt
                       ? 'v1 · awaiting review'
-                      : 'pending',
+                      : 'PENDING',
         },
         {
             key: 'review',
@@ -167,7 +167,7 @@ export default function MultiAgentPreview() {
                     ? 'passed'
                     : elapsed >= reviewAt
                       ? 'revision requested'
-                      : 'pending',
+                      : 'PENDING',
         },
     ];
 
@@ -353,7 +353,7 @@ export default function MultiAgentPreview() {
                             {field.key}:{' '}
                             <span
                                 className={
-                                    field.value === 'pending'
+                                    field.value === 'PENDING'
                                         ? 'text-zinc-600'
                                         : 'text-fuchsia-200/70'
                                 }

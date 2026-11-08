@@ -7,7 +7,7 @@ import type useChatNavigation from "../Hooks/useChatNavigation";
 import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/EmbeddableFileResponse";
 
 type Props = {
-    documents: EmbeddableFileResponse[];
+    data: EmbeddableFileResponse[];
     activeId: string | null;
     showList: boolean;
     busy: boolean;
@@ -17,12 +17,12 @@ type Props = {
 };
 
 export default function DocumentChatSidebar({
-    documents,
+    data,
     pagination,
     ...props
 }: Props) {
     const pageUrl = props.activeId ? show.bind(null, props.activeId) : index;
-    const conversations = documents.map((document) => ({
+    const conversations = data.map((document) => ({
         id: document.uuid,
         title: document.title,
         preview: document.last_message,

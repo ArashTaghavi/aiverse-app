@@ -24,7 +24,7 @@ export default function DocumentChatPage(props: ChatWithDatabaseChatProps) {
         <>
             <Head title={Module.Title} />
             <DocumentChatSidebar
-                documents={props.documents}
+                data={props.data}
                 activeId={null}
                 showList={showList}
                 busy={uploadState.uploading}

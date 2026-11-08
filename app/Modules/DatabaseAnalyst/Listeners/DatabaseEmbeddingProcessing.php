@@ -23,18 +23,18 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
      */
     public function handle(DatabaseEmbeddingRequested $event): void
     {
-        $database = $event->database;
+        $database = $event->model;
         $database->refresh();
 
         if ($database->embedding_status === ProcessingStatusEnum::Completed) {
-            $this->broadcastProgress($database, UploadProgressEnum::Embedding, 'completed');
-            $this->broadcastProgress($database, UploadProgressEnum::Result, 'completed');
+            $this->broadcastProgress($database, UploadProgressEnum::Embedding, ProcessingStatusEnum::Completed->value);
+            $this->broadcastProgress($database, UploadProgressEnum::Result, ProcessingStatusEnum::Completed->value);
 
             return;
         }
 
         $database->markAsProcessing();
-        $this->broadcastProgress($database, UploadProgressEnum::Embedding, 'processing');
+        $this->broadcastProgress($database, UploadProgressEnum::Embedding, ProcessingStatusEnum::Processing->value);
 
         $data = new IngestDTO(
             filePath: $database->absolute_path,
@@ -45,13 +45,13 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
         $this->client->post(RouteEnum::Ingest->value, $data->toArray());
         $database->markAsCompleted();
 
-        $this->broadcastProgress($database, UploadProgressEnum::Embedding, 'completed');
-        $this->broadcastProgress($database, UploadProgressEnum::Result, 'completed');
+        $this->broadcastProgress($database, UploadProgressEnum::Embedding, ProcessingStatusEnum::Completed->value);
+        $this->broadcastProgress($database, UploadProgressEnum::Result, ProcessingStatusEnum::Completed->value);
     }
 
     public function failed(DatabaseEmbeddingRequested $event, Throwable $exception): void
     {
-        $database = $event->database;
+        $database = $event->model;
         $database->refresh();
 
         if ($database->embedding_status === ProcessingStatusEnum::Completed) {
@@ -60,8 +60,8 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
 
         $database->markAsFailed(error: $exception->getMessage());
 
-        $this->broadcastProgress($database, UploadProgressEnum::Embedding, 'failed');
-        $this->broadcastProgress($database, UploadProgressEnum::Result, 'failed');
+        $this->broadcastProgress($database, UploadProgressEnum::Embedding, ProcessingStatusEnum::Failed->value);
+        $this->broadcastProgress($database, UploadProgressEnum::Result, ProcessingStatusEnum::Failed->value);
     }
 
     private function broadcastProgress(Database $database, UploadProgressEnum $step, string $status): void

@@ -12,7 +12,7 @@ export default function useDocumentUpload(isAsking: () => boolean) {
     const [uploading, setUploading] = useState(false);
     const [uploadAttempt, setUploadAttempt] = useState(0);
     const [showUploadProgress, setShowUploadProgress] = useState(false);
-    const [uploadedDocument, setUploadedDocument] =
+    const [uploadedRecord, setUploadedRecord] =
         useState<EmbeddableFileResponse | null>(null);
     const uploadForm = useForm<NewChatFormValues>({
         resolver: zodResolver(NewChatSchema),
@@ -35,7 +35,7 @@ export default function useDocumentUpload(isAsking: () => boolean) {
                 setUploadAttempt((attempt) => attempt + 1);
                 setShowUploadProgress(true);
                 setUploading(true);
-                setUploadedDocument(null);
+                setUploadedRecord(null);
             },
             onFinish: () => setUploading(false),
             onError: (errors) => {
@@ -50,8 +50,8 @@ export default function useDocumentUpload(isAsking: () => boolean) {
                 }
             },
             onSuccess: (page) => {
-                setUploadedDocument(
-                    page.props.uploadedDocument as DocumentResponse | null,
+                setUploadedRecord(
+                    page.props.uploadedRecord as DocumentResponse | null,
                 );
                 resetUploadForm();
             },
@@ -60,7 +60,7 @@ export default function useDocumentUpload(isAsking: () => boolean) {
 
     return {
         uploadForm,
-        uploadedDocument,
+        uploadedRecord,
         uploadFormKey,
         uploading,
         uploadAttempt,

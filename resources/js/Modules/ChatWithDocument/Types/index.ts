@@ -6,14 +6,14 @@ import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/Embeddabl
 export type { ChatTurnResponse } from "@/Modules/Base/Types/Chat";
 
 export type ChatWithDatabaseChatProps = {
-    documents: EmbeddableFileResponse[];
-    uploadedDocument?: EmbeddableFileResponse | null;
+    data: EmbeddableFileResponse[];
+    uploadedRecord?: EmbeddableFileResponse | null;
     pagination: { page: number; hasMore: boolean };
 };
 
 export type NewChatFormValues = z.infer<typeof NewChatSchema>;
 export type DocumentConversationPageProps = ChatWithDatabaseChatProps & {
-    selectedDocument: EmbeddableFileResponse;
+    selectedData: EmbeddableFileResponse;
     history: ChatTurnResponse[];
     historyPagination: { page: number; hasMore: boolean };
 };

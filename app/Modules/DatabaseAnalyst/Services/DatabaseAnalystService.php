@@ -5,6 +5,7 @@ namespace App\Modules\DatabaseAnalyst\Services;
 use App\Modules\Base\Services\BaseService;
 use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
 use App\Modules\DatabaseAnalyst\Events\DatabaseEmbeddingRequested;
+use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
 use App\Modules\DatabaseAnalyst\Jobs\Ask;
 use App\Modules\DatabaseAnalyst\Models\Database;
 use Override;
@@ -19,6 +20,11 @@ class DatabaseAnalystService extends BaseService
     public function embeddingRequestedEvent(): string
     {
         return DatabaseEmbeddingRequested::class;
+    }
+
+    public function uploadProgressEvent(): string
+    {
+        return DatabaseUploadProgress::class;
     }
 
     public function askJob(): string

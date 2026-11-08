@@ -13,7 +13,7 @@ class DocumentEmbeddingRequested
     /**
      * Create a new event instance.
      */
-    public function __construct(public Document $document)
+    public function __construct(public Document $model)
     {
         //
     }
