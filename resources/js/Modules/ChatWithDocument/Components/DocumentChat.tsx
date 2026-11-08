@@ -1,22 +1,22 @@
-import { Link, usePage } from '@inertiajs/react';
-import { useMemo } from 'react';
-import { show } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
-import type { DocumentConversationPageProps } from '@/Modules/ChatWithDocument/Types';
-import DocumentEmbeddingListener from './DocumentEmbeddingListener';
-import DocumentChatSidebar from './DocumentChatSidebar';
-import DocumentChatHeader from './DocumentChatHeader';
-import DocumentConversation from './DocumentConversation';
-import useAutoScroll from '@/Modules/Base/Hooks/useAutoScroll';
-import useChatNavigation from '../Hooks/useChatNavigation';
-import useDocumentEmbedding from '../Hooks/useDocumentEmbedding';
-import useDocumentQuestion from '../Hooks/useDocumentQuestion';
-import DocumentAnswerListener from './DocumentAnswerListener';
+import { Link, usePage } from "@inertiajs/react";
+import { useMemo } from "react";
+import { show } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import type { DocumentConversationPageProps } from "@/Modules/ChatWithDocument/Types";
+import DocumentEmbeddingListener from "./DocumentEmbeddingListener";
+import DocumentChatSidebar from "./DocumentChatSidebar";
+import DocumentChatHeader from "./DocumentChatHeader";
+import DocumentConversation from "./DocumentConversation";
+import useAutoScroll from "@/Modules/Base/Hooks/useAutoScroll";
+import useChatNavigation from "../Hooks/useChatNavigation";
+import useDocumentEmbedding from "../Hooks/useDocumentEmbedding";
+import useDocumentQuestion from "../Hooks/useDocumentQuestion";
+import DocumentAnswerListener from "./DocumentAnswerListener";
 
 export default function DocumentChat({
     documents = [],
     selectedDocument: selected,
     history: turns = [],
-    documentsPagination = { page: 1, hasMore: false },
+    pagination = { page: 1, hasMore: false },
     historyPagination = { page: 1, hasMore: false },
 }: DocumentConversationPageProps) {
     const { auth, errors } = usePage().props;
@@ -70,10 +70,10 @@ export default function DocumentChat({
                 busy={questionState.asking}
                 newChat={newChat}
                 selectChat={selectChat}
-                pagination={documentsPagination}
+                pagination={pagination}
             />
             <div
-                className={`${showList ? 'hidden md:flex' : 'flex'} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
+                className={`${showList ? "hidden md:flex" : "flex"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
             >
                 <DocumentChatHeader
                     title={selected.title}
@@ -90,8 +90,7 @@ export default function DocumentChat({
                                     href={
                                         show(selected.uuid, {
                                             query: {
-                                                documents_page:
-                                                    documentsPagination.page,
+                                                page: pagination.page,
                                                 history_page:
                                                     historyPagination.page + 1,
                                             },
@@ -107,8 +106,7 @@ export default function DocumentChat({
                                     href={
                                         show(selected.uuid, {
                                             query: {
-                                                documents_page:
-                                                    documentsPagination.page,
+                                                page: pagination.page,
                                                 history_page:
                                                     historyPagination.page - 1,
                                             },

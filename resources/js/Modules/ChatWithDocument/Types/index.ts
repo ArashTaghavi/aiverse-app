@@ -8,7 +8,7 @@ export type { ChatTurnResponse } from "@/Modules/Base/Types/Chat";
 export type ChatWithDatabaseChatProps = {
     documents: EmbeddableFileResponse[];
     uploadedDocument?: EmbeddableFileResponse | null;
-    documentsPagination: { page: number; hasMore: boolean };
+    pagination: { page: number; hasMore: boolean };
 };
 
 export type NewChatFormValues = z.infer<typeof NewChatSchema>;

@@ -3,34 +3,20 @@
 namespace App\Modules\DatabaseAnalyst\Controllers;
 
 use App\Modules\Base\Controllers\BaseController;
-use App\Modules\DatabaseAnalyst\Models\Database;
-use App\Modules\DatabaseAnalyst\Models\DatabaseChatTurn;
 use App\Modules\DatabaseAnalyst\Requests\UploadRequest;
+use App\Modules\DatabaseAnalyst\Resources\DatabaseChatTurnResource;
 use App\Modules\DatabaseAnalyst\Resources\DatabaseResource;
-use App\Modules\DatabaseAnalyst\Services\DatabaseAnalystService;
 
 class DatabaseAnalystController extends BaseController
 {
-    public function __construct(private DatabaseAnalystService $service) {}
-
-    public function model(): string
-    {
-        return Database::class;
-    }
-
-    public function relation(): string
-    {
-        return DatabaseChatTurn::class;
-    }
-
     public function resource(): string
     {
         return DatabaseResource::class;
     }
 
-    public function chatTurnRelation(): string
+    public function chatTurnResource(): string
     {
-        return DatabaseChatTurn::class;
+        return DatabaseChatTurnResource::class;
     }
 
     public function view(): string

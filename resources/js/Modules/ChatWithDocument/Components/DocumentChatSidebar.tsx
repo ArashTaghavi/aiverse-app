@@ -28,7 +28,7 @@ export default function DocumentChatSidebar({
         preview: document.last_message,
         timestamp: document.created_at,
         href: show(document.uuid, {
-            query: { documents_page: pagination.page },
+            query: { page: pagination.page },
         }).url,
     }));
 
@@ -41,14 +41,14 @@ export default function DocumentChatSidebar({
             previousPageUrl={
                 pagination.page > 1
                     ? pageUrl({
-                          query: { documents_page: pagination.page - 1 },
+                          query: { page: pagination.page - 1 },
                       }).url
                     : undefined
             }
             nextPageUrl={
                 pagination.hasMore
                     ? pageUrl({
-                          query: { documents_page: pagination.page + 1 },
+                          query: { page: pagination.page + 1 },
                       }).url
                     : undefined
             }

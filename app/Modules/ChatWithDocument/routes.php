@@ -8,7 +8,6 @@ Route::prefix('/chat-with-document')
     ->controller(ChatWithDocumentController::class)
     ->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/documents', 'documents')->name('documents');
         Route::get('/documents/{relatedDocument}', 'status')->name('status');
 
         Route::post('/upload', 'upload')->name('upload');

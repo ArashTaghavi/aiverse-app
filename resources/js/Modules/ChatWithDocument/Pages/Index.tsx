@@ -30,7 +30,7 @@ export default function DocumentChatPage(props: ChatWithDatabaseChatProps) {
                 busy={uploadState.uploading}
                 newChat={newChat}
                 selectChat={selectChat}
-                pagination={props.documentsPagination}
+                pagination={props.pagination}
             />
             <div
                 className={`${showList ? "hidden md:flex" : "flex"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}

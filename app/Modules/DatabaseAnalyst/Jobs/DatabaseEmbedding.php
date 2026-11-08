@@ -38,7 +38,7 @@ class DatabaseEmbedding implements ShouldQueue
 
         $this->database->markAsProcessing();
 
-        $client->post(RouteEnum::INGEST->value, $data->toArray());
+        $client->post(RouteEnum::Ingest->value, $data->toArray());
 
         $this->database->markAsCompleted();
 

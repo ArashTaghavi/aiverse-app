@@ -2,51 +2,43 @@
 
 namespace App\Modules\DatabaseAnalyst\Services;
 
-use App\Models\User;
-use App\Modules\Base\Enums\ProcessingStatusEnum;
-use App\Modules\Base\Enums\UploadProgressEnum;
+use App\Modules\Base\Services\BaseService;
+use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
 use App\Modules\DatabaseAnalyst\Events\DatabaseEmbeddingRequested;
-use App\Modules\DatabaseAnalyst\Events\DatabaseUploadProgress;
+use App\Modules\DatabaseAnalyst\Jobs\Ask;
 use App\Modules\DatabaseAnalyst\Models\Database;
-use App\Services\StorageService;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Pagination\Paginator;
+use Override;
 
-class DatabaseAnalystService
+class DatabaseAnalystService extends BaseService
 {
-    public function __construct(private StorageService $storageService) {}
-
-    public function databases(User $user): Paginator
+    public function model(): string
     {
-        return $user->databases()->latest('id')->simplePaginate(20, ['*'], 'documents_page');
+        return Database::class;
     }
 
-    public function upload(UploadedFile $file, string $title, int $ownerId): Database
+    public function embeddingRequestedEvent(): string
     {
-        $file = $this->storageService
-            ->setBasePath(basePath: Database::uploadPath())
-            ->upload(file: $file);
+        return DatabaseEmbeddingRequested::class;
+    }
 
-        $database = Database::create([
-            'owner_id' => $ownerId,
-            'title' => $title,
-            'original_name' => $file['original_name'],
-            'storage_path' => $file['storage_path'],
-            'mime_type' => $file['mime_type'],
-            'extension' => $file['extension'],
-            'size' => $file['size'],
-            'embedding_status' => ProcessingStatusEnum::Pending,
-        ]);
+    public function askJob(): string
+    {
+        return Ask::class;
+    }
 
-        DatabaseUploadProgress::dispatch(
-            model: $database,
-            step: UploadProgressEnum::Upload->value,
-            status: 'completed'
-        );
+    public function chatTurnRelation(): string
+    {
+        return 'databaseChatTurns';
+    }
 
-        DatabaseEmbeddingRequested::dispatch(database: $database);
+    public function askRoute(): string
+    {
+        return RouteEnum::Ask->value;
+    }
 
-        return $database;
-
+    #[Override]
+    public function userRelation(): string
+    {
+        return 'databases';
     }
 }

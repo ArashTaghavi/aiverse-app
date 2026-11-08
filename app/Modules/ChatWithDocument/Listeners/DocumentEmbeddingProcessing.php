@@ -50,7 +50,7 @@ class DocumentEmbeddingProcessing implements ShouldQueueAfterCommit
             ownerId: $document->owner_id
         );
 
-        $this->client->post(RouteEnum::INGEST->value, $data->toArray());
+        $this->client->post(RouteEnum::Ingest->value, $data->toArray());
         $document->markAsCompleted();
         $this->broadcastStatus($document);
 

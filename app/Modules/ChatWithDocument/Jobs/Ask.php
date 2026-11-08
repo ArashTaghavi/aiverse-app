@@ -50,7 +50,7 @@ class Ask implements ShouldQueue
 
         $aiStartedAt = hrtime(true);
         Log::debug('Document chat: AI request started', $context);
-        $response = $client->post(RouteEnum::ASK->value, $data->toArray());
+        $response = $client->post(RouteEnum::Ask->value, $data->toArray());
         Log::debug('Document chat: AI response received', $context + [
             'ai_ms' => round((hrtime(true) - $aiStartedAt) / 1_000_000, 2),
         ]);
