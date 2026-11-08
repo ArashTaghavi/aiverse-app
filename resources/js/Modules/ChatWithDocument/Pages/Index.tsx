@@ -1,59 +1,11 @@
-import { Head, usePage } from "@inertiajs/react";
-import {
-    DocumentChatSidebar,
-    DocumentChatHeader,
-    DocumentUploadPanel,
-} from "../Components";
-import { useDocumentUpload, useChatNavigation } from "../Hooks";
-import type { ChatWithDatabaseChatProps } from "@/Modules/ChatWithDocument/Types";
+import { Head } from "@inertiajs/react";
 import { UserWorkspaceLayout } from "@/Layouts/UserLayout";
-import { Module } from "../Module";
+import FileChatIndex from "@/Modules/Base/Components/Chat/FileChatIndex";
+import type { FileChatPageProps } from "@/Modules/Base/Types/FileChat";
+import { ChatConfig } from "../ChatConfig";
 
-export default function DocumentChatPage(props: ChatWithDatabaseChatProps) {
-    const { auth, errors } = usePage().props;
-    const uploadState = useDocumentUpload(() => false);
-    const { showList, setShowList, newChat, selectChat } = useChatNavigation(
-        uploadState.uploading,
-        () => {
-            uploadState.closeUploadProgress();
-            uploadState.resetUploadForm();
-        },
-    );
-
-    return (
-        <>
-            <Head title={Module.Title} />
-            <DocumentChatSidebar
-                data={props.data}
-                activeId={null}
-                showList={showList}
-                busy={uploadState.uploading}
-                newChat={newChat}
-                selectChat={selectChat}
-                pagination={props.pagination}
-            />
-            <div
-                className={`${showList ? "hidden md:flex" : "flex"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
-            >
-                <DocumentChatHeader
-                    hasDocument={false}
-                    onShowConversations={() => setShowList(true)}
-                />
-                <DocumentUploadPanel
-                    userId={auth.user?.id}
-                    uploadState={uploadState}
-                />
-                {errors.form && (
-                    <p
-                        role="alert"
-                        className="max-h-24 shrink-0 overflow-y-auto rounded-xl border border-red-400/20 bg-red-400/5 p-3 text-sm text-red-300"
-                    >
-                        {errors.form}
-                    </p>
-                )}
-            </div>
-        </>
-    );
+export default function Index(props: FileChatPageProps) {
+    return <><Head title={ChatConfig.title} /><FileChatIndex config={ChatConfig} {...props} /></>;
 }
 
-DocumentChatPage.layout = UserWorkspaceLayout;
+Index.layout = UserWorkspaceLayout;

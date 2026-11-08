@@ -22,9 +22,19 @@ class ChatWithDocumentService extends BaseService
         return DocumentEmbeddingRequested::class;
     }
 
+    public function answerCompletedEvent(): string
+    {
+        return AskCompleted::class;
+    }
+
     public function uploadProgressEvent(): string
     {
         return DocumentUploadProgress::class;
+    }
+
+    public function answerFailedEvent(): string
+    {
+        return AskFailed::class;
     }
 
     public function chatTurnParentRelation(): string
@@ -32,14 +42,9 @@ class ChatWithDocumentService extends BaseService
         return 'document';
     }
 
-    public function answerCompletedEvent(): string
+    public function userRelation(): string
     {
-        return AskCompleted::class;
-    }
-
-    public function answerFailedEvent(): string
-    {
-        return AskFailed::class;
+        return 'documents';
     }
 
     public function chatTurnRelation(): string
@@ -50,10 +55,5 @@ class ChatWithDocumentService extends BaseService
     public function askRoute(): string
     {
         return RouteEnum::Ask->value;
-    }
-
-    public function userRelation(): string
-    {
-        return 'documents';
     }
 }

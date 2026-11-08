@@ -1,31 +1,32 @@
-import { Link, usePage } from "@inertiajs/react";
-import { useMemo } from "react";
-import { show } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import type { DocumentConversationPageProps } from "@/Modules/ChatWithDocument/Types";
-import DocumentEmbeddingListener from "./DocumentEmbeddingListener";
-import DocumentChatSidebar from "./DocumentChatSidebar";
-import DocumentChatHeader from "./DocumentChatHeader";
-import DocumentConversation from "./DocumentConversation";
-import useAutoScroll from "@/Modules/Base/Hooks/useAutoScroll";
-import useChatNavigation from "../Hooks/useChatNavigation";
-import useDocumentEmbedding from "../Hooks/useDocumentEmbedding";
-import useDocumentQuestion from "../Hooks/useDocumentQuestion";
-import DocumentAnswerListener from "./DocumentAnswerListener";
+import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
+import { Link, usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
+import type { FileConversationPageProps } from '@/Modules/Base/Types/FileChat';
+import FileChatEvents from './FileChatEvents';
+import FileChatSidebar from './FileChatSidebar';
+import ChatHeader from './ChatHeader';
+import FileConversation from './FileConversation';
+import useAutoScroll from '@/Modules/Base/Hooks/useAutoScroll';
+import useChatNavigation from '@/Modules/Base/Hooks/useChatNavigation';
+import useFileEmbedding from '@/Modules/Base/Hooks/useFileEmbedding';
+import useFileQuestion from '@/Modules/Base/Hooks/useFileQuestion';
 
-export default function DocumentChat({
+export default function FileChat({
+    config,
     data = [],
     selectedData: selected,
     history: turns = [],
     pagination = { page: 1, hasMore: false },
     historyPagination = { page: 1, hasMore: false },
-}: DocumentConversationPageProps) {
+}: FileConversationPageProps & { config: FileChatConfig }) {
     const { auth, errors } = usePage().props;
     const activeId = selected.uuid;
-    const { embeddingStatus, isDocumentReady, updateEmbeddingStatus } =
-        useDocumentEmbedding(selected);
+    const { embeddingStatus, isFileReady, updateEmbeddingStatus } =
+        useFileEmbedding(selected);
     const error = errors.form;
-    const questionState = useDocumentQuestion(selected.uuid, isDocumentReady);
+    const questionState = useFileQuestion(config, selected.uuid, isFileReady);
     const { showList, setShowList, newChat, selectChat } = useChatNavigation(
+        config,
         questionState.asking,
         () => {
             questionState.questionForm.reset();
@@ -52,18 +53,16 @@ export default function DocumentChat({
     return (
         <>
             {auth.user && (
-                <DocumentEmbeddingListener
+                <FileChatEvents
+                    config={config}
                     userId={auth.user.id}
-                    onUpdate={updateEmbeddingStatus}
+                    fileId={selected.id}
+                    asking={questionState.asking}
+                    onEmbeddingUpdate={updateEmbeddingStatus}
                 />
             )}
-            {auth.user && (
-                <DocumentAnswerListener
-                    userId={auth.user.id}
-                    documentId={selected.id}
-                />
-            )}
-            <DocumentChatSidebar
+            <FileChatSidebar
+                config={config}
                 data={data}
                 activeId={activeId}
                 showList={showList}
@@ -73,11 +72,11 @@ export default function DocumentChat({
                 pagination={pagination}
             />
             <div
-                className={`${showList ? "hidden md:flex" : "flex"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
+                className={`${showList ? 'hidden md:flex' : 'flex'} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
             >
-                <DocumentChatHeader
+                <ChatHeader
                     title={selected.title}
-                    hasDocument
+                    subtitle="One file per conversation"
                     onShowConversations={() => setShowList(true)}
                 />
                 <>
@@ -88,7 +87,7 @@ export default function DocumentChat({
                                 <Link
                                     onClick={selectChat}
                                     href={
-                                        show(selected.uuid, {
+                                        config.routes.show(selected.uuid, {
                                             query: {
                                                 page: pagination.page,
                                                 history_page:
@@ -104,7 +103,7 @@ export default function DocumentChat({
                                 <Link
                                     onClick={selectChat}
                                     href={
-                                        show(selected.uuid, {
+                                        config.routes.show(selected.uuid, {
                                             query: {
                                                 page: pagination.page,
                                                 history_page:
@@ -118,15 +117,12 @@ export default function DocumentChat({
                             )}
                         </div>
                     )}
-                    <DocumentConversation
-                        document={{
-                            document_id: selected.id,
-                            original_filename: selected.original_name,
-                        }}
+                    <FileConversation
+                        file={selected}
                         messagesRef={messagesRef}
                         turns={displayTurns}
                         embeddingStatus={embeddingStatus}
-                        isDocumentReady={isDocumentReady}
+                        isFileReady={isFileReady}
                         questionState={questionState}
                     />
                 </>

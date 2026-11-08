@@ -1,8 +1,9 @@
-import { useState, type MouseEvent } from "react";
-import { router } from "@inertiajs/react";
-import { index } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
+import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
+import { useState, type MouseEvent } from 'react';
+import { router } from '@inertiajs/react';
 
 export default function useChatNavigation(
+    config: FileChatConfig,
     busy: boolean,
     resetForms: () => void,
 ) {
@@ -10,7 +11,7 @@ export default function useChatNavigation(
 
     function newChat() {
         if (busy) return;
-        router.visit(index().url, { preserveScroll: true });
+        router.visit(config.routes.index().url, { preserveScroll: true });
         setShowList(false);
         resetForms();
     }

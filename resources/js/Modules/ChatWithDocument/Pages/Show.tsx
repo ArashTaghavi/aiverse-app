@@ -1,17 +1,11 @@
 import { Head } from "@inertiajs/react";
-import DocumentChat from "../Components/DocumentChat";
-import type { DocumentConversationPageProps } from "@/Modules/ChatWithDocument/Types";
 import { UserWorkspaceLayout } from "@/Layouts/UserLayout";
+import FileChat from "@/Modules/Base/Components/Chat/FileChat";
+import type { FileConversationPageProps } from "@/Modules/Base/Types/FileChat";
+import { ChatConfig } from "../ChatConfig";
 
-export default function DocumentConversationPage(
-    props: DocumentConversationPageProps,
-) {
-    return (
-        <>
-            <Head title="Document conversation" />
-            <DocumentChat key={props.selectedData.uuid} {...props} />
-        </>
-    );
+export default function Show(props: FileConversationPageProps) {
+    return <><Head title={ChatConfig.title} /><FileChat key={props.selectedData.uuid} config={ChatConfig} {...props} /></>;
 }
 
-DocumentConversationPage.layout = UserWorkspaceLayout;
+Show.layout = UserWorkspaceLayout;

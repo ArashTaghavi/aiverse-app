@@ -1,3 +1,4 @@
+import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
 import {
     Check,
     FileCheck2,
@@ -8,34 +9,18 @@ import {
     MessageSquare,
     X,
     type LucideIcon,
-} from "lucide-react";
-import { useEcho } from "@laravel/echo-react";
-import { UploadStatusEnum } from "@/Modules/Base/Enums/UploadStatusEnum";
-import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
-import { useEffect, useState } from "react";
-import { Link } from "@inertiajs/react";
-import {
-    show as chatWithDocument,
-    status as documentStatus,
-} from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/EmbeddableFileResponse";
+} from 'lucide-react';
+import { useEcho } from '@laravel/echo-react';
+import { UploadProgressEnum } from '@/Modules/Base/Enums/UploadProgressEnum';
+import { ProcessingStatusEnum } from '@/Modules/Base/Enums/ProcessingStatusEnum';
+import { useEffect, useState } from 'react';
+import { Link } from '@inertiajs/react';
+import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses/EmbeddableFileResponse';
 
-type UploadProgressEvent = {
-    step: UploadStatusEnum;
-    status: Exclude<ProcessingStatusEnum, typeof ProcessingStatusEnum.Pending>;
-    data: {
-        id: number;
-        uuid: string;
-        title: string;
-        original_name: string;
-        human_size: string;
-        embedding_status: ProcessingStatusEnum;
-        embedding_error: string | null;
-    };
-};
+import type { FileUploadProgressEvent as UploadProgressEvent } from '@/Modules/Base/Types/FileChat';
 
-type UploadStep = UploadProgressEvent["step"];
-type StepStatus = UploadProgressEvent["status"];
+type UploadStep = UploadProgressEvent['step'];
+type StepStatus = UploadProgressEvent['status'];
 
 const statusLabels: Record<StepStatus, string> = {
     [ProcessingStatusEnum.Processing]: ProcessingStatusEnum.Processing,
@@ -44,13 +29,13 @@ const statusLabels: Record<StepStatus, string> = {
 };
 
 const statusClasses: Record<ProcessingStatusEnum, string> = {
-    [ProcessingStatusEnum.Pending]: "border-white/10 bg-white/5 text-ui-muted",
+    [ProcessingStatusEnum.Pending]: 'border-white/10 bg-white/5 text-ui-muted',
     [ProcessingStatusEnum.Processing]:
-        "border-violet-400/30 bg-violet-400/10 text-violet-300",
+        'border-violet-400/30 bg-violet-400/10 text-violet-300',
     [ProcessingStatusEnum.Completed]:
-        "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+        'border-emerald-400/30 bg-emerald-400/10 text-emerald-300',
     [ProcessingStatusEnum.Failed]:
-        "border-red-400/30 bg-red-400/10 text-red-300",
+        'border-red-400/30 bg-red-400/10 text-red-300',
 };
 
 const steps: {
@@ -60,55 +45,57 @@ const steps: {
     icon: LucideIcon;
 }[] = [
     {
-        key: UploadStatusEnum.Upload,
-        title: "Upload & save",
-        description: "Store your file and its details.",
+        key: UploadProgressEnum.Upload,
+        title: 'Upload & save',
+        description: 'Store your file and its details.',
         icon: HardDriveUpload,
     },
     {
-        key: UploadStatusEnum.Embedding,
-        title: "Generate embeddings",
-        description: "Prepare the contents for your questions.",
+        key: UploadProgressEnum.Embedding,
+        title: 'Generate embeddings',
+        description: 'Prepare the contents for your questions.',
         icon: Layers,
     },
     {
-        key: UploadStatusEnum.Result,
-        title: "Ready to chat",
-        description: "Your document will be available here.",
+        key: UploadProgressEnum.Result,
+        title: 'Ready to chat',
+        description: 'Your file will be available here.',
         icon: FileCheck2,
     },
 ];
 
-export default function PreparingUpload({
+export default function FileUploadProgress({
+    config,
     userId,
     uploadAttempt,
-    document,
+    file,
     onClose,
 }: {
+    config: FileChatConfig;
     userId: number;
     uploadAttempt: number;
-    document: EmbeddableFileResponse | null;
+    file: EmbeddableFileResponse | null;
     onClose: () => void;
 }) {
     const [statuses, setStatuses] = useState<
         Partial<Record<UploadStep, StepStatus>>
     >({});
     const [uploadedRecord, setUploadedRecord] = useState<
-        UploadProgressEvent["data"] | null
+        UploadProgressEvent['data'] | null
     >(null);
 
     useEffect(() => {
         if (uploadAttempt > 0) {
             setStatuses({
-                [UploadStatusEnum.Upload]: ProcessingStatusEnum.Processing,
+                [UploadProgressEnum.Upload]: ProcessingStatusEnum.Processing,
             });
             setUploadedRecord(null);
         }
     }, [uploadAttempt]);
 
     useEffect(() => {
-        if (!document) return;
-        const documentUuid = document.uuid;
+        if (!file) return;
+        const fileUuid = file.uuid;
         const controller = new AbortController();
         let timer: ReturnType<typeof setTimeout>;
 
@@ -125,20 +112,23 @@ export default function PreparingUpload({
                 embedding_error: null,
             });
             setStatuses({
-                [UploadStatusEnum.Upload]: ProcessingStatusEnum.Completed,
-                [UploadStatusEnum.Embedding]:
+                [UploadProgressEnum.Upload]: ProcessingStatusEnum.Completed,
+                [UploadProgressEnum.Embedding]:
                     terminal ?? ProcessingStatusEnum.Processing,
-                ...(terminal ? { [UploadStatusEnum.Result]: terminal } : {}),
+                ...(terminal ? { [UploadProgressEnum.Result]: terminal } : {}),
             });
             return terminal !== null;
         }
 
         async function poll() {
             try {
-                const response = await fetch(documentStatus(documentUuid).url, {
-                    headers: { Accept: "application/json" },
-                    signal: controller.signal,
-                });
+                const response = await fetch(
+                    config.routes.status(fileUuid).url,
+                    {
+                        headers: { Accept: 'application/json' },
+                        signal: controller.signal,
+                    },
+                );
                 if (response.ok) {
                     const payload = (await response.json()) as {
                         data: EmbeddableFileResponse;
@@ -152,18 +142,18 @@ export default function PreparingUpload({
             if (!controller.signal.aborted) timer = setTimeout(poll, 5000);
         }
 
-        if (!update(document)) void poll();
+        if (!update(file)) void poll();
         return () => {
             controller.abort();
             clearTimeout(timer);
         };
-    }, [document]);
+    }, [config, file]);
 
     useEcho<UploadProgressEvent>(
-        `chat-with-document.users.${userId}`,
-        ".chat-with-document.upload.progress",
+        `${config.channelPrefix}.${userId}`,
+        `.${config.events.UploadProgress}`,
         (event) => {
-            if (!document || event.data.id !== document.id) return;
+            if (!file || event.data.id !== file.id) return;
             setUploadedRecord(event.data);
             setStatuses((current) => {
                 const updated = { ...current, [event.step]: event.status };
@@ -182,7 +172,7 @@ export default function PreparingUpload({
                 return updated;
             });
         },
-        [document?.id],
+        [file?.id],
     );
 
     return (
@@ -235,14 +225,14 @@ export default function PreparingUpload({
                             key={step.key}
                             aria-current={
                                 status === ProcessingStatusEnum.Processing
-                                    ? "step"
+                                    ? 'step'
                                     : undefined
                             }
-                            className={`group flex gap-3 transition-opacity ${!status ? "opacity-40" : "opacity-100"}`}
+                            className={`group flex gap-3 transition-opacity ${!status ? 'opacity-40' : 'opacity-100'}`}
                         >
                             <div className="flex shrink-0 flex-col items-center">
                                 <div
-                                    className={`flex size-8 items-center justify-center rounded-lg border transition-colors ${colors} ${status === ProcessingStatusEnum.Processing ? "ring-4 ring-violet-400/5" : ""}`}
+                                    className={`flex size-8 items-center justify-center rounded-lg border transition-colors ${colors} ${status === ProcessingStatusEnum.Processing ? 'ring-4 ring-violet-400/5' : ''}`}
                                 >
                                     <Icon
                                         size={15}
@@ -250,20 +240,20 @@ export default function PreparingUpload({
                                         className={
                                             status ===
                                             ProcessingStatusEnum.Processing
-                                                ? "motion-safe:animate-spin"
+                                                ? 'motion-safe:animate-spin'
                                                 : undefined
                                         }
                                     />
                                 </div>
                                 <div
                                     aria-hidden="true"
-                                    className={`my-2 w-px flex-1 transition-colors group-last:hidden ${status === ProcessingStatusEnum.Completed ? "bg-emerald-400/30" : "bg-white/10"}`}
+                                    className={`my-2 w-px flex-1 transition-colors group-last:hidden ${status === ProcessingStatusEnum.Completed ? 'bg-emerald-400/30' : 'bg-white/10'}`}
                                 />
                             </div>
                             <div className="flex min-w-0 flex-1 flex-col gap-1 pb-5 group-last:pb-0">
                                 <div className="flex flex-wrap items-center justify-between gap-2">
                                     <h3
-                                        className={`text-sm font-medium ${status === ProcessingStatusEnum.Completed ? "text-emerald-300" : status === ProcessingStatusEnum.Failed ? "text-red-300" : "text-zinc-200"}`}
+                                        className={`text-sm font-medium ${status === ProcessingStatusEnum.Completed ? 'text-emerald-300' : status === ProcessingStatusEnum.Failed ? 'text-red-300' : 'text-zinc-200'}`}
                                     >
                                         {step.title}
                                     </h3>
@@ -272,18 +262,18 @@ export default function PreparingUpload({
                                     >
                                         {status
                                             ? statusLabels[status]
-                                            : "Waiting"}
+                                            : 'Waiting'}
                                     </span>
                                 </div>
                                 {!(
-                                    step.key === "RESULT" &&
+                                    step.key === UploadProgressEnum.Result &&
                                     status === ProcessingStatusEnum.Completed
                                 ) && (
                                     <p className="text-xs leading-5 text-ui-muted">
                                         {step.description}
                                     </p>
                                 )}
-                                {step.key === "RESULT" &&
+                                {step.key === UploadProgressEnum.Result &&
                                     status === ProcessingStatusEnum.Completed &&
                                     uploadedRecord?.embedding_status ===
                                         ProcessingStatusEnum.Completed && (
@@ -294,8 +284,7 @@ export default function PreparingUpload({
                                                     aria-hidden="true"
                                                 />
                                                 <span className="text-xs font-medium">
-                                                    Document prepared
-                                                    successfully
+                                                    File prepared successfully
                                                 </span>
                                             </div>
                                             <dl className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-2 text-sm">
@@ -336,11 +325,11 @@ export default function PreparingUpload({
                                             </dl>
                                             <p className="border-t border-emerald-400/10 pt-3 text-xs leading-5 text-ui-secondary">
                                                 Everything is ready. Start a
-                                                conversation with your document.
+                                                conversation with your file.
                                             </p>
                                             <Link
                                                 href={
-                                                    chatWithDocument(
+                                                    config.routes.show(
                                                         uploadedRecord.uuid,
                                                     ).url
                                                 }
@@ -354,13 +343,13 @@ export default function PreparingUpload({
                                             </Link>
                                         </div>
                                     )}
-                                {step.key === "RESULT" &&
+                                {step.key === UploadProgressEnum.Result &&
                                     status === ProcessingStatusEnum.Failed && (
                                         <p
                                             role="alert"
                                             className="text-sm leading-6 text-red-300"
                                         >
-                                            We could not prepare your document.
+                                            We could not prepare your file.
                                             Please try again.
                                         </p>
                                     )}

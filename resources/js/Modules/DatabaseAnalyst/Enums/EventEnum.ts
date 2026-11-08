@@ -7,3 +7,5 @@ export const EventEnum = {
     AnswerCompleted: `${Module.Name}.answer.completed`,
     AnswerFailed: `${Module.Name}.answer.failed`,
 } as const;
+
+export type EventEnum = (typeof EventEnum)[keyof typeof EventEnum];

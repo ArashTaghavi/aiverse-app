@@ -1,24 +1,11 @@
-import UserLayout from "@/Layouts/UserLayout";
 import { Head } from "@inertiajs/react";
-import { Module } from "../Module";
-import { DocumentChatSidebar } from "@/Modules/ChatWithDocument/Components";
-import { DatabaseAnalystProps } from "../Types";
+import { UserWorkspaceLayout } from "@/Layouts/UserLayout";
+import FileChatIndex from "@/Modules/Base/Components/Chat/FileChatIndex";
+import type { FileChatPageProps } from "@/Modules/Base/Types/FileChat";
+import { ChatConfig } from "../ChatConfig";
 
-export default function DatabaseAnalystPage(props: DatabaseAnalystProps) {
-    console.log(props);
-    return (
-        <>
-            <Head title={Module.Title} />
-            <DocumentChatSidebar
-                data={props.databases}
-                activeId={null}
-                showList={false}
-                busy={false}
-                newChat={() => {}}
-                selectChat={() => {}}
-                pagination={{ page: 1, hasMore: false }}
-            />
-        </>
-    );
+export default function Index(props: FileChatPageProps) {
+    return <><Head title={ChatConfig.title} /><FileChatIndex config={ChatConfig} {...props} /></>;
 }
-DatabaseAnalystPage.layout = UserLayout;
+
+Index.layout = UserWorkspaceLayout;

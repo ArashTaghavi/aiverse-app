@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { router } from "@inertiajs/react";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { upload } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import { NewChatSchema } from "../Schemas/NewChatSchema";
-import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/EmbeddableFileResponse";
-import { NewChatFormValues } from "@/Modules/DatabaseAnalyst/Types";
+import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
+import { useState } from 'react';
+import { router } from '@inertiajs/react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createFileUploadSchema } from '../Schemas/FileUploadSchema';
+import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses/EmbeddableFileResponse';
+import { FileUploadValues } from '@/Modules/Base/Types/FileChat';
 
-export default function useDocumentUpload(isAsking: () => boolean) {
+export default function useFileUpload(config: FileChatConfig) {
     const [uploadFormKey, setUploadFormKey] = useState(0);
     const [uploading, setUploading] = useState(false);
     const [uploadAttempt, setUploadAttempt] = useState(0);
     const [showUploadProgress, setShowUploadProgress] = useState(false);
     const [uploadedRecord, setUploadedRecord] =
         useState<EmbeddableFileResponse | null>(null);
-    const uploadForm = useForm<NewChatFormValues>({
-        resolver: zodResolver(NewChatSchema),
-        defaultValues: { file: null, title: "" },
+    const uploadForm = useForm<FileUploadValues>({
+        resolver: zodResolver(createFileUploadSchema(config.file.extension)),
+        defaultValues: { file: null, title: '' },
     });
 
     function resetUploadForm() {
@@ -28,9 +28,9 @@ export default function useDocumentUpload(isAsking: () => boolean) {
         setShowUploadProgress(false);
     }
 
-    const uploadDocument: SubmitHandler<NewChatFormValues> = (data) => {
-        if (uploading || isAsking() || !data.file) return;
-        router.post(upload().url, data, {
+    const uploadFile: SubmitHandler<FileUploadValues> = (data) => {
+        if (uploading || !data.file) return;
+        router.post(config.routes.upload().url, data, {
             onStart: () => {
                 setUploadAttempt((attempt) => attempt + 1);
                 setShowUploadProgress(true);
@@ -40,10 +40,10 @@ export default function useDocumentUpload(isAsking: () => boolean) {
             onFinish: () => setUploading(false),
             onError: (errors) => {
                 closeUploadProgress();
-                for (const field of ["title", "file"] as const) {
+                for (const field of ['title', 'file'] as const) {
                     if (errors[field]) {
                         uploadForm.setError(field, {
-                            type: "server",
+                            type: 'server',
                             message: errors[field],
                         });
                     }
@@ -65,7 +65,7 @@ export default function useDocumentUpload(isAsking: () => boolean) {
         uploading,
         uploadAttempt,
         showUploadProgress,
-        uploadDocument,
+        uploadFile,
         resetUploadForm,
         closeUploadProgress,
     };

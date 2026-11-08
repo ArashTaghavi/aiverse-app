@@ -5,7 +5,7 @@ import Navigation from "./Navigation";
 import { Link } from "@inertiajs/react";
 import { LogOut, UserRound } from "lucide-react";
 import { destroy as logout } from "@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController";
-import DocumentNotifications from "@/Modules/ChatWithDocument/Components/DocumentNotifications";
+import DocumentNotifications from "@/Layouts/Components/User/FileChatNotifications";
 import { getPageLabel } from "@/Utils/PageLabel";
 
 export default function Header() {

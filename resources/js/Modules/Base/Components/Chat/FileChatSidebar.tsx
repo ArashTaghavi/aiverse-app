@@ -1,33 +1,34 @@
-import { ChatSidebar } from "@/Modules/Base/Components/Chat";
-import {
-    index,
-    show,
-} from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import type useChatNavigation from "../Hooks/useChatNavigation";
-import { EmbeddableFileResponse } from "@/Modules/Base/Types/Responses/EmbeddableFileResponse";
+import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
+import { ChatSidebar } from '@/Modules/Base/Components/Chat';
+import type useChatNavigation from '@/Modules/Base/Hooks/useChatNavigation';
+import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses/EmbeddableFileResponse';
 
 type Props = {
+    config: FileChatConfig;
     data: EmbeddableFileResponse[];
     activeId: string | null;
     showList: boolean;
     busy: boolean;
     newChat: () => void;
-    selectChat: ReturnType<typeof useChatNavigation>["selectChat"];
+    selectChat: ReturnType<typeof useChatNavigation>['selectChat'];
     pagination: { page: number; hasMore: boolean };
 };
 
-export default function DocumentChatSidebar({
+export default function FileChatSidebar({
+    config,
     data,
     pagination,
     ...props
 }: Props) {
-    const pageUrl = props.activeId ? show.bind(null, props.activeId) : index;
+    const pageUrl = props.activeId
+        ? config.routes.show.bind(null, props.activeId)
+        : config.routes.index;
     const conversations = data.map((d) => ({
         id: d.uuid,
         title: d.title,
         preview: d.last_message,
         timestamp: d.created_at,
-        href: show(d.uuid, {
+        href: config.routes.show(d.uuid, {
             query: { page: pagination.page },
         }).url,
     }));
@@ -36,8 +37,8 @@ export default function DocumentChatSidebar({
         <ChatSidebar
             {...props}
             conversations={conversations}
-            title="Document chats"
-            emptyMessage="No conversations yet. Upload a document to start."
+            title={config.title}
+            emptyMessage="No conversations yet. Upload a file to start."
             previousPageUrl={
                 pagination.page > 1
                     ? pageUrl({

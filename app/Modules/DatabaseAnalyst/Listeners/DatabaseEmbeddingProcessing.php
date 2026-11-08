@@ -3,7 +3,6 @@
 namespace App\Modules\DatabaseAnalyst\Listeners;
 
 use App\Modules\Base\DTOs\IngestDTO;
-use App\Modules\Base\Enums\ModuleEnum;
 use App\Modules\Base\Enums\ProcessingStatusEnum;
 use App\Modules\Base\Enums\UploadProgressEnum;
 use App\Modules\DatabaseAnalyst\Enums\RouteEnum;
@@ -69,15 +68,12 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
         // A socket failure must not trigger another embedding request.
         try {
             DatabaseUploadProgress::dispatch(
-                database: $database,
+                model: $database,
                 step: $step->value,
                 status: $status,
             );
         } catch (Throwable $exception) {
-            report_exception(
-                exception: $exception,
-                module : ModuleEnum::DatabaseAnalyst->value,
-            );
+            report($exception);
         }
     }
 }

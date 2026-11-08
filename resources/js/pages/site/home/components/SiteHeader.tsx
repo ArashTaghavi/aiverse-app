@@ -1,4 +1,4 @@
-import DocumentEmbeddingNotifications from '@/Modules/ChatWithDocument/Components/DocumentNotifications';
+import DocumentEmbeddingNotifications from '@/Layouts/Components/User/FileChatNotifications';
 import { Link, usePage } from '@inertiajs/react';
 import { home, portfolio, auth } from '@/routes';
 import { LogIn, LogOut, Sparkles, UserRound } from 'lucide-react';

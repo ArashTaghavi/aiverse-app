@@ -1,19 +1,25 @@
-import { FileText, Upload } from "lucide-react";
-import { FileInput, Form, Input } from "@/Modules/Base/Components/Form";
-import { Button } from "@/Modules/Base/Components/UI";
-import type { NewChatFormValues } from "@/Modules/ChatWithDocument/Types";
-import type useDocumentUpload from "../Hooks/useDocumentUpload";
-import PreparingUpload from "./PreparingUpload";
+import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
+import { FileText, Upload } from 'lucide-react';
+import { FileInput, Form, Input } from '@/Modules/Base/Components/Form';
+import { Button } from '@/Modules/Base/Components/UI';
+import type { FileUploadValues } from '@/Modules/Base/Types/FileChat';
+import type useFileUpload from '@/Modules/Base/Hooks/useFileUpload';
+import FileUploadProgress from './FileUploadProgress';
 
 type Props = {
+    config: FileChatConfig;
     userId?: number;
-    uploadState: ReturnType<typeof useDocumentUpload>;
+    uploadState: ReturnType<typeof useFileUpload>;
 };
 
-export default function DocumentUploadPanel({ userId, uploadState }: Props) {
+export default function FileUploadPanel({
+    config,
+    userId,
+    uploadState,
+}: Props) {
     const {
         uploadForm,
-        uploadDocument,
+        uploadFile,
         uploading,
         showUploadProgress,
         uploadFormKey,
@@ -24,48 +30,46 @@ export default function DocumentUploadPanel({ userId, uploadState }: Props) {
         <div className="flex min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 sm:p-8">
             <Form
                 methods={uploadForm}
-                onSubmit={uploadDocument}
+                onSubmit={uploadFile}
                 isPending={uploading}
                 className={
                     showUploadProgress
-                        ? "hidden"
-                        : "m-auto w-full max-w-lg space-y-5 py-6"
+                        ? 'hidden'
+                        : 'm-auto w-full max-w-lg space-y-5 py-6'
                 }
             >
                 <div className="space-y-2 text-center">
                     <FileText size={40} className="mx-auto text-violet-300" />
-                    <h2 className="text-xl font-semibold">
-                        Chat with your document
-                    </h2>
+                    <h2 className="text-xl font-semibold">{config.title}</h2>
                     <p className="text-sm text-ui-secondary">
                         Upload once, then ask questions about its contents.
                     </p>
                 </div>
-                <Input<NewChatFormValues>
+                <Input<FileUploadValues>
                     name="title"
-                    label="Document name (required)"
+                    label="Conversation name (required)"
                     placeholder="Give this conversation a name"
                     disabled={uploading}
                     dir="auto"
                 />
-                <FileInput<NewChatFormValues>
+                <FileInput<FileUploadValues>
                     key={uploadFormKey}
                     name="file"
-                    label="Word document"
-                    accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    label={config.file.label}
+                    accept={config.file.accept}
                     disabled={uploading}
-                    hint="One .docx file per conversation. The document cannot be replaced after upload."
+                    hint={`One ${config.file.extension} file per conversation.`}
                 />
                 <Button
                     type="submit"
                     loading={uploading}
                     startIcon={<Upload size={16} />}
                 >
-                    Upload document
+                    Upload file
                 </Button>
                 {uploading && (
                     <p role="status" className="text-sm text-ui-secondary">
-                        Uploading and preparing your document…
+                        Uploading and preparing your file…
                     </p>
                 )}
             </Form>
@@ -73,12 +77,13 @@ export default function DocumentUploadPanel({ userId, uploadState }: Props) {
                 <div
                     className={
                         showUploadProgress
-                            ? "m-auto w-full max-w-lg py-6"
-                            : "hidden"
+                            ? 'm-auto w-full max-w-lg py-6'
+                            : 'hidden'
                     }
                 >
-                    <PreparingUpload
-                        document={uploadState.uploadedRecord}
+                    <FileUploadProgress
+                        config={config}
+                        file={uploadState.uploadedRecord}
                         userId={userId}
                         uploadAttempt={uploadAttempt}
                         onClose={closeUploadProgress}

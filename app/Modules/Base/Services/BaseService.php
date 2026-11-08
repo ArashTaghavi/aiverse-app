@@ -137,9 +137,9 @@ abstract class BaseService
         try {
             $entity = $chatTurn->{$this->chatTurnParentRelation()};
             $data = new AskDTO(
-                documentId: $entity->getKey(),
-                ownerId: $entity->owner_id,
-                question: $chatTurn->question,
+                $entity->owner_id,
+                $chatTurn->question,
+                ...[$this->chatTurnParentRelation().'Id' => $entity->getKey()],
             );
             $stream = $this->aiClient->streamPost($this->askRoute(), $data->toArray());
 
@@ -172,7 +172,6 @@ abstract class BaseService
         $this->broadcastAnswerStatus($this->answerCompletedEvent(), $chatTurn);
     }
 
-    /** @param class-string $eventClass */
     private function broadcastAnswerStatus(string $eventClass, Model $chatTurn): void
     {
         try {
