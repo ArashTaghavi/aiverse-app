@@ -116,7 +116,6 @@ abstract class BaseController extends Controller
             $chunks->rewind();
         } catch (Throwable $exception) {
             report($exception);
-            abort(502, 'The AI service could not generate an answer.');
         }
 
         return response()->stream(function () use ($chunks): Generator {

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\User\DashboardController;
+use App\Modules\DatabaseAnalyst\Models\Database;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
@@ -19,3 +20,7 @@ Route::middleware('auth')
         require app_path('Modules/ChatWithDocument/routes.php');
         require app_path('Modules/DatabaseAnalyst/routes.php');
     });
+
+Route::get('/xxx', function () {
+    return Database::all();
+});

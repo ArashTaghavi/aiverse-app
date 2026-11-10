@@ -41,8 +41,9 @@ class DatabaseEmbeddingProcessing implements ShouldQueueAfterCommit
             ownerId: $database->owner_id
         );
 
-        $this->client->post(RouteEnum::Ingest->value, $data->toArray());
+        $response = $this->client->post(RouteEnum::Ingest->value, $data->toArray());
         $database->markAsCompleted();
+        $database->updateConnection(connection: $response->json());
 
         $this->broadcastProgress($database, UploadProgressEnum::Embedding, ProcessingStatusEnum::Completed->value);
         $this->broadcastProgress($database, UploadProgressEnum::Result, ProcessingStatusEnum::Completed->value);

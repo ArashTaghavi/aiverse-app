@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'container_id',
     'container_name',
     'database_name',
+    'connection',
     'container_provisioning_status',
     'container_provisioning_error',
     'embedding_status',
@@ -49,9 +50,13 @@ class Database extends Model
         ];
     }
 
-    /** @return HasMany<DatabaseChatTurn, $this> */
     public function databaseChatTurns(): HasMany
     {
         return $this->hasMany(DatabaseChatTurn::class);
+    }
+
+    public function updateConnection($connection)
+    {
+        $this->update(['connection' => $connection]);
     }
 }
