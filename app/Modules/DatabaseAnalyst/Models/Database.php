@@ -16,9 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'mime_type',
     'extension',
     'size',
-    'container_id',
-    'container_name',
-    'database_name',
     'connection',
     'container_provisioning_status',
     'container_provisioning_error',
@@ -45,7 +42,7 @@ class Database extends Model
         return [
             'owner_id' => 'integer',
             'size' => 'integer',
-            'connection' => 'encrypted:array',
+            'connection' => 'array',
             'embedding_status' => $this->embeddingStatusEnum(),
         ];
     }
@@ -55,7 +52,7 @@ class Database extends Model
         return $this->hasMany(DatabaseChatTurn::class);
     }
 
-    public function updateConnection($connection)
+    public function updateConnection(array $connection)
     {
         $this->update(['connection' => $connection]);
     }

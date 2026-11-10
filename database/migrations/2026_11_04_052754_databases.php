@@ -26,9 +26,6 @@ return new class extends Migration
             $table->unsignedBigInteger('size');
 
             // Docker
-            $table->string('container_id')->nullable();
-            $table->string('container_name')->nullable();
-            $table->string('database_name')->nullable();
             $table->text('connection')->nullable();
 
             // Provisioning
