@@ -61,7 +61,6 @@ abstract class BaseService
     {
         $request->validate([
             'page' => ['nullable', 'integer', 'min:1'],
-            'history_page' => ['nullable', 'integer', 'min:1'],
         ]);
         $user = $request->user();
 
@@ -70,8 +69,8 @@ abstract class BaseService
         $data = $this->data(user: $user);
 
         $history = $relatedModel->{$chatTurnRelation}()
-            ->latest('id')
-            ->simplePaginate(30, ['*'], 'history_page');
+            ->orderBy('id')
+            ->get();
 
         return [$data, $history];
 

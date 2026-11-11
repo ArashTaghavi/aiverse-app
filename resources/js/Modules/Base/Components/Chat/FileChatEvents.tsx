@@ -1,18 +1,17 @@
-import { router } from '@inertiajs/react';
-import { useEcho } from '@laravel/echo-react';
-import { useEffect, useRef } from 'react';
-import type { ProcessingStatusEnum } from '../../Enums/ProcessingStatusEnum';
+import { useConnectionStatus, useEcho } from "@laravel/echo-react";
+import { useEffect, useRef } from "react";
+import type { ProcessingStatusEnum } from "../../Enums/ProcessingStatusEnum";
 import type {
     FileChatConfig,
     FileStatusEvent,
     FileUploadProgressEvent,
-} from '../../Types/FileChat';
+} from "../../Types/FileChat";
 
 type Props = {
     config: FileChatConfig;
     userId: number;
     fileId: number;
-    asking: boolean;
+    onAnswerUpdate: () => Promise<void>;
     onEmbeddingUpdate: (id: number, status: ProcessingStatusEnum) => void;
 };
 
@@ -20,7 +19,7 @@ export default function FileChatEvents({
     config,
     userId,
     fileId,
-    asking,
+    onAnswerUpdate,
     onEmbeddingUpdate,
 }: Props) {
     const onUpdate = useRef(onEmbeddingUpdate);
@@ -28,13 +27,25 @@ export default function FileChatEvents({
         onUpdate.current = onEmbeddingUpdate;
     }, [onEmbeddingUpdate]);
     const channel = `${config.channelPrefix}.${userId}`;
+    const connectionStatus = useConnectionStatus();
+    useEffect(() => {
+        if (connectionStatus === "connected") void onAnswerUpdate();
+    }, [connectionStatus, onAnswerUpdate]);
+    useEffect(() => {
+        const refresh = () => {
+            if (document.visibilityState === "visible") void onAnswerUpdate();
+        };
+        window.addEventListener("online", refresh);
+        document.addEventListener("visibilitychange", refresh);
+        return () => {
+            window.removeEventListener("online", refresh);
+            document.removeEventListener("visibilitychange", refresh);
+        };
+    }, [onAnswerUpdate]);
 
     useEcho<FileStatusEvent>(
         channel,
-        [
-            `.${config.events.EmbeddingCompleted}`,
-            `.${config.events.EmbeddingFailed}`,
-        ],
+        [`.${config.events.EmbeddingCompleted}`, `.${config.events.EmbeddingFailed}`],
         (event) => {
             const id = event[config.eventId];
             if (id === fileId && event.embedding_status)
@@ -46,8 +57,7 @@ export default function FileChatEvents({
         channel,
         `.${config.events.UploadProgress}`,
         (event) => {
-            if (event.data.id === fileId)
-                onUpdate.current(fileId, event.data.embedding_status);
+            if (event.data.id === fileId) onUpdate.current(fileId, event.data.embedding_status);
         },
         [fileId],
     );
@@ -55,13 +65,10 @@ export default function FileChatEvents({
         channel,
         [`.${config.events.AnswerCompleted}`, `.${config.events.AnswerFailed}`],
         (event) => {
-            if (event[config.eventId] !== fileId || asking) return;
-            router.reload({
-                only: ['history', 'data', 'historyPagination'],
-                data: { history_page: 1 },
-            });
+            if (Number(event[config.eventId]) !== fileId) return;
+            void onAnswerUpdate();
         },
-        [config, fileId, asking],
+        [config, fileId, onAnswerUpdate],
     );
     return null;
 }

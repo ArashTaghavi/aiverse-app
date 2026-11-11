@@ -53,7 +53,6 @@ abstract class BaseController extends Controller
     {
         $request->validate([
             'page' => ['nullable', 'integer', 'min:1'],
-            'history_page' => ['nullable', 'integer', 'min:1'],
         ]);
 
         $resource = $this->resource();
@@ -71,14 +70,7 @@ abstract class BaseController extends Controller
 
             'selectedData' => (new $resource($relatedModel))->resolve($request),
 
-            'history' => $chatTurnResource::collection(
-                $history->getCollection()->reverse()->values()
-            )->resolve($request),
-
-            'historyPagination' => [
-                'page' => $history->currentPage(),
-                'hasMore' => $history->hasMorePages(),
-            ],
+            'history' => $chatTurnResource::collection($history)->resolve($request),
         ]);
     }
 

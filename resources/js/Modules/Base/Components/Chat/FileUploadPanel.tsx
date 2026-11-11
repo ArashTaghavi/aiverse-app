@@ -1,10 +1,10 @@
-import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
-import { FileText, Upload } from 'lucide-react';
-import { FileInput, Form, Input } from '@/Modules/Base/Components/Form';
-import { Button } from '@/Modules/Base/Components/UI';
-import type { FileUploadValues } from '@/Modules/Base/Types/FileChat';
-import type useFileUpload from '@/Modules/Base/Hooks/useFileUpload';
-import FileUploadProgress from './FileUploadProgress';
+import { FileChatConfig } from "@/Modules/Base/Types/FileChat";
+import { FileText, Upload } from "lucide-react";
+import { FileInput, Form, Input } from "@/Modules/Base/Components/Form";
+import { Button } from "@/Modules/Base/Components/UI";
+import type { FileUploadValues } from "@/Modules/Base/Types/FileChat";
+import type useFileUpload from "@/Modules/Base/Hooks/useFileUpload";
+import FileUploadProgress from "./FileUploadProgress";
 
 type Props = {
     config: FileChatConfig;
@@ -12,11 +12,7 @@ type Props = {
     uploadState: ReturnType<typeof useFileUpload>;
 };
 
-export default function FileUploadPanel({
-    config,
-    userId,
-    uploadState,
-}: Props) {
+export default function FileUploadPanel({ config, userId, uploadState }: Props) {
     const {
         uploadForm,
         uploadFile,
@@ -32,11 +28,7 @@ export default function FileUploadPanel({
                 methods={uploadForm}
                 onSubmit={uploadFile}
                 isPending={uploading}
-                className={
-                    showUploadProgress
-                        ? 'hidden'
-                        : 'm-auto w-full max-w-lg space-y-5 py-6'
-                }
+                className={showUploadProgress ? "hidden" : "m-auto w-full max-w-lg space-y-5 py-6"}
             >
                 <div className="space-y-2 text-center">
                     <FileText size={40} className="mx-auto text-violet-300" />
@@ -60,27 +52,17 @@ export default function FileUploadPanel({
                     disabled={uploading}
                     hint={`One ${config.file.extension} file per conversation.`}
                 />
-                <Button
-                    type="submit"
-                    loading={uploading}
-                    startIcon={<Upload size={16} />}
-                >
+                <Button type="submit" loading={uploading} startIcon={<Upload size={16} />}>
                     Upload file
                 </Button>
                 {uploading && (
                     <p role="status" className="text-sm text-ui-secondary">
-                        Uploading and preparing your file…
+                        Uploading and preparing your fileâ€¦
                     </p>
                 )}
             </Form>
             {userId !== undefined && (
-                <div
-                    className={
-                        showUploadProgress
-                            ? 'm-auto w-full max-w-lg py-6'
-                            : 'hidden'
-                    }
-                >
+                <div className={showUploadProgress ? "m-auto w-full max-w-lg py-6" : "hidden"}>
                     <FileUploadProgress
                         config={config}
                         file={uploadState.uploadedRecord}
