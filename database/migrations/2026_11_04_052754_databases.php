@@ -27,6 +27,7 @@ return new class extends Migration
 
             // Docker
             $table->text('connection')->nullable();
+            $table->text('database_schema')->nullable();
 
             // Provisioning
             $table->string('container_provisioning_status')->default('pending');

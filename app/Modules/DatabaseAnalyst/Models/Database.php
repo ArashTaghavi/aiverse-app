@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'extension',
     'size',
     'connection',
+    'database_schema',
     'container_provisioning_status',
     'container_provisioning_error',
     'embedding_status',
