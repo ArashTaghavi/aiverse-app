@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Modules\ChatWithDocument\Models\Document;
+use App\Modules\CustomerSupport\Models\Order;
 use App\Modules\DatabaseAnalyst\Models\Database;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -42,5 +43,10 @@ class User extends Authenticatable
     public function databases(): HasMany
     {
         return $this->hasMany(related: Database::class, foreignKey: 'owner_id');
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }
