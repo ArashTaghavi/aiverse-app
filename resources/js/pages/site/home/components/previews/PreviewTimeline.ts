@@ -1,4 +1,7 @@
-import { buildTypingTimeline, type TypingEvent } from '@/Modules/Base/Utils/TypingTimeline';
+import {
+    buildTypingTimeline,
+    type TypingEvent,
+} from '@/Modules/Base/Utils/TypingTimeline';
 
 export const sendPause = 450;
 

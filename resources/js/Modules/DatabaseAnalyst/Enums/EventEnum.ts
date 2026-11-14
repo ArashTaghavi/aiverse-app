@@ -1,4 +1,4 @@
-import { Module } from "../Module";
+import { Module } from '../Module';
 
 export const EventEnum = {
     UploadProgress: `${Module.Name}.upload.progress`,

@@ -9,7 +9,11 @@ type SearchValues = {
     name: string;
 };
 
-export default function SearchProduct({ onProcessingChange }: { onProcessingChange?: (processing: boolean) => void }) {
+export default function SearchProduct({
+    onProcessingChange,
+}: {
+    onProcessingChange?: (processing: boolean) => void;
+}) {
     const [processing, setProcessing] = useState(false);
     const methods = useForm<SearchValues>({
         defaultValues: { name: '' },
@@ -62,7 +66,9 @@ export default function SearchProduct({ onProcessingChange }: { onProcessingChan
                     variant="tab"
                     size="icon"
                     loading={processing}
-                    aria-label={processing ? 'Searching products' : 'Search products'}
+                    aria-label={
+                        processing ? 'Searching products' : 'Search products'
+                    }
                     className="absolute top-1.5 right-1.5"
                     startIcon={<Search size={17} />}
                 />

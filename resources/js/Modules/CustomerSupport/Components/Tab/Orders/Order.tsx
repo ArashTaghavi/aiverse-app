@@ -21,25 +21,17 @@ const paymentStyles: Record<PaymentStatus, string> = {
 const statusLabel = (status: string) =>
     status.charAt(0) + status.slice(1).toLowerCase();
 
-export default function Order({
-    order,
-}: {
-    order: OrderResponse;
-}) {
+export default function Order({ order }: { order: OrderResponse }) {
     const quantity = order.items.reduce(
         (total, item) => total + item.quantity,
         0,
     );
 
     return (
-        <article
-            className="relative flex min-h-0 min-w-0 flex-col gap-4 rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/3 to-violet-400/5 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-colors hover:border-violet-300/25"
-        >
+        <article className="relative flex min-h-0 min-w-0 flex-col gap-4 rounded-2xl border border-white/10 bg-linear-to-br from-white/8 via-white/3 to-violet-400/5 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-colors hover:border-violet-300/25">
             <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                    <h3
-                        className="truncate text-sm font-medium text-zinc-100"
-                    >
+                    <h3 className="truncate text-sm font-medium text-zinc-100">
                         {order.order_number}
                     </h3>
                 </div>
@@ -54,7 +46,7 @@ export default function Order({
                     role="region"
                     aria-label={`Items in order ${order.order_number}`}
                     tabIndex={0}
-                    className="flex min-w-0 max-w-full gap-3 overflow-x-auto overscroll-x-contain pb-2 focus-visible:outline-2 focus-visible:outline-violet-400"
+                    className="flex max-w-full min-w-0 gap-3 overflow-x-auto overscroll-x-contain pb-2 focus-visible:outline-2 focus-visible:outline-violet-400"
                 >
                     {order.items.map((item) => (
                         <div
@@ -78,9 +70,7 @@ export default function Order({
                                 )}
                             </div>
                             <div className="min-w-0">
-                                <p
-                                    className="line-clamp-2 text-xs leading-5 text-zinc-200"
-                                >
+                                <p className="line-clamp-2 text-xs leading-5 text-zinc-200">
                                     {item.title}
                                 </p>
                                 <p className="text-[10px] text-ui-muted">
@@ -116,9 +106,7 @@ export default function Order({
                             : ''}
                     </span>
                     {order.tracking_code && (
-                        <span
-                            className="inline-flex min-w-0 items-center gap-1.5"
-                        >
+                        <span className="inline-flex min-w-0 items-center gap-1.5">
                             <Truck
                                 size={13}
                                 className="shrink-0"
@@ -129,16 +117,16 @@ export default function Order({
                             </span>
                         </span>
                     )}
-                        <span className="inline-flex items-center gap-1.5">
-                            <MapPin
-                                size={13}
-                                className="shrink-0"
-                                aria-hidden="true"
-                            />
-                            <span dir="auto" className="line-clamp-1">
-                                {order.shipping_address}
-                            </span>
+                    <span className="inline-flex items-center gap-1.5">
+                        <MapPin
+                            size={13}
+                            className="shrink-0"
+                            aria-hidden="true"
+                        />
+                        <span dir="auto" className="line-clamp-1">
+                            {order.shipping_address}
                         </span>
+                    </span>
                     {order.cancellation_reason && (
                         <p dir="auto" className="line-clamp-2 text-rose-300/80">
                             {order.cancellation_reason}

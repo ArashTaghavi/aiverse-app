@@ -1,11 +1,11 @@
-import { useConnectionStatus, useEcho } from "@laravel/echo-react";
-import { useEffect, useRef } from "react";
-import type { ProcessingStatusEnum } from "../../Enums/ProcessingStatusEnum";
+import { useConnectionStatus, useEcho } from '@laravel/echo-react';
+import { useEffect, useRef } from 'react';
+import type { ProcessingStatusEnum } from '../../Enums/ProcessingStatusEnum';
 import type {
     FileChatConfig,
     FileStatusEvent,
     FileUploadProgressEvent,
-} from "../../Types/FileChat";
+} from '../../Types/FileChat';
 
 type Props = {
     config: FileChatConfig;
@@ -29,23 +29,26 @@ export default function FileChatEvents({
     const channel = `${config.channelPrefix}.${userId}`;
     const connectionStatus = useConnectionStatus();
     useEffect(() => {
-        if (connectionStatus === "connected") void onAnswerUpdate();
+        if (connectionStatus === 'connected') void onAnswerUpdate();
     }, [connectionStatus, onAnswerUpdate]);
     useEffect(() => {
         const refresh = () => {
-            if (document.visibilityState === "visible") void onAnswerUpdate();
+            if (document.visibilityState === 'visible') void onAnswerUpdate();
         };
-        window.addEventListener("online", refresh);
-        document.addEventListener("visibilitychange", refresh);
+        window.addEventListener('online', refresh);
+        document.addEventListener('visibilitychange', refresh);
         return () => {
-            window.removeEventListener("online", refresh);
-            document.removeEventListener("visibilitychange", refresh);
+            window.removeEventListener('online', refresh);
+            document.removeEventListener('visibilitychange', refresh);
         };
     }, [onAnswerUpdate]);
 
     useEcho<FileStatusEvent>(
         channel,
-        [`.${config.events.EmbeddingCompleted}`, `.${config.events.EmbeddingFailed}`],
+        [
+            `.${config.events.EmbeddingCompleted}`,
+            `.${config.events.EmbeddingFailed}`,
+        ],
         (event) => {
             const id = event[config.eventId];
             if (id === fileId && event.embedding_status)
@@ -57,7 +60,8 @@ export default function FileChatEvents({
         channel,
         `.${config.events.UploadProgress}`,
         (event) => {
-            if (event.data.id === fileId) onUpdate.current(fileId, event.data.embedding_status);
+            if (event.data.id === fileId)
+                onUpdate.current(fileId, event.data.embedding_status);
         },
         [fileId],
     );

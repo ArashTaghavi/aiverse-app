@@ -1,7 +1,7 @@
-import { index as dashboard } from "@/actions/App/Http/Controllers/User/DashboardController";
-import { ShieldCheck, Sparkles } from "lucide-react";
-import { Link } from "@inertiajs/react";
-import Navigation from "./Navigation";
+import { index as dashboard } from '@/actions/App/Http/Controllers/User/DashboardController';
+import { ShieldCheck, Sparkles } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import Navigation from './Navigation';
 
 export default function Aside() {
     return (

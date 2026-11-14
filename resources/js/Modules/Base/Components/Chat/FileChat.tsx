@@ -1,15 +1,15 @@
-import { FileChatConfig } from "@/Modules/Base/Types/FileChat";
-import { usePage } from "@inertiajs/react";
-import { useMemo } from "react";
-import type { FileConversationPageProps } from "@/Modules/Base/Types/FileChat";
-import FileChatEvents from "./FileChatEvents";
-import FileChatSidebar from "./FileChatSidebar";
-import ChatHeader from "./ChatHeader";
-import FileConversation from "./FileConversation";
-import useAutoScroll from "@/Modules/Base/Hooks/useAutoScroll";
-import useChatNavigation from "@/Modules/Base/Hooks/useChatNavigation";
-import useFileEmbedding from "@/Modules/Base/Hooks/useFileEmbedding";
-import useFileQuestion from "@/Modules/Base/Hooks/useFileQuestion";
+import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
+import { usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
+import type { FileConversationPageProps } from '@/Modules/Base/Types/FileChat';
+import FileChatEvents from './FileChatEvents';
+import FileChatSidebar from './FileChatSidebar';
+import ChatHeader from './ChatHeader';
+import FileConversation from './FileConversation';
+import useAutoScroll from '@/Modules/Base/Hooks/useAutoScroll';
+import useChatNavigation from '@/Modules/Base/Hooks/useChatNavigation';
+import useFileEmbedding from '@/Modules/Base/Hooks/useFileEmbedding';
+import useFileQuestion from '@/Modules/Base/Hooks/useFileQuestion';
 
 export default function FileChat({
     config,
@@ -20,9 +20,15 @@ export default function FileChat({
 }: FileConversationPageProps & { config: FileChatConfig }) {
     const { auth, errors } = usePage().props;
     const activeId = selected.uuid;
-    const { embeddingStatus, isFileReady, updateEmbeddingStatus } = useFileEmbedding(selected);
+    const { embeddingStatus, isFileReady, updateEmbeddingStatus } =
+        useFileEmbedding(selected);
     const error = errors.form;
-    const questionState = useFileQuestion(config, selected.uuid, isFileReady, turns);
+    const questionState = useFileQuestion(
+        config,
+        selected.uuid,
+        isFileReady,
+        turns,
+    );
     const { showList, setShowList, newChat, selectChat } = useChatNavigation(
         config,
         questionState.asking,
@@ -34,13 +40,19 @@ export default function FileChat({
         () =>
             questionState.pendingTurn
                 ? [
-                      ...turns.filter((turn) => turn.id !== questionState.pendingTurn?.id),
+                      ...turns.filter(
+                          (turn) => turn.id !== questionState.pendingTurn?.id,
+                      ),
                       questionState.pendingTurn,
                   ]
                 : turns,
         [turns, questionState.pendingTurn],
     );
-    const messagesRef = useAutoScroll(activeId, displayTurns, questionState.asking);
+    const messagesRef = useAutoScroll(
+        activeId,
+        displayTurns,
+        questionState.asking,
+    );
 
     return (
         <>
@@ -64,7 +76,7 @@ export default function FileChat({
                 pagination={pagination}
             />
             <div
-                className={`${showList ? "hidden md:flex" : "flex"} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
+                className={`${showList ? 'hidden md:flex' : 'flex'} min-h-0 min-w-0 flex-1 flex-col overflow-hidden`}
             >
                 <ChatHeader
                     title={selected.title}

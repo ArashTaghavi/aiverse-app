@@ -1,17 +1,26 @@
-import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
-import type { MessageHistoryProps, MessageTimeProps } from "@/Modules/Base/Types/Chat";
-import { groupMessagesByDay, messageDate } from "@/Modules/Base/Utils/MessageDates";
-import { UserRound } from "lucide-react";
-import styles from "./MessageHistory.module.css";
-import TypingIndicator from "./TypingIndicator";
-import AssistantMessage from "./AssistantMessage";
-import DatabaseAnswer, { parseDatabaseAnswer } from "./DatabaseAnswer";
+import { ProcessingStatusEnum } from '@/Modules/Base/Enums/ProcessingStatusEnum';
+import type {
+    MessageHistoryProps,
+    MessageTimeProps,
+} from '@/Modules/Base/Types/Chat';
+import {
+    groupMessagesByDay,
+    messageDate,
+} from '@/Modules/Base/Utils/MessageDates';
+import { UserRound } from 'lucide-react';
+import styles from './MessageHistory.module.css';
+import TypingIndicator from './TypingIndicator';
+import AssistantMessage from './AssistantMessage';
+import DatabaseAnswer, { parseDatabaseAnswer } from './DatabaseAnswer';
 
 function AnswerContent({ answer }: { answer: string | null }) {
     const parsed = parseDatabaseAnswer(answer);
     if (parsed) return <DatabaseAnswer answer={parsed} />;
     return (
-        <p dir="auto" className="text-sm leading-7 break-words whitespace-pre-wrap text-zinc-200">
+        <p
+            dir="auto"
+            className="text-sm leading-7 break-words whitespace-pre-wrap text-zinc-200"
+        >
             {answer}
         </p>
     );
@@ -68,23 +77,28 @@ export default function MessageHistory({ turns }: MessageHistoryProps) {
                         <MessageTime timestamp={turn.created_at} />
                     </div>
                     <AssistantMessage>
-                        {(turn.answer == null || turn.answer.trimStart().startsWith("{")) &&
+                        {(turn.answer == null ||
+                            turn.answer.trimStart().startsWith('{')) &&
                         (turn.answer_status === ProcessingStatusEnum.Pending ||
-                            turn.answer_status === ProcessingStatusEnum.Processing) ? (
+                            turn.answer_status ===
+                                ProcessingStatusEnum.Processing) ? (
                             <TypingIndicator />
                         ) : (
                             <AnswerContent
                                 answer={
                                     turn.answer ??
-                                    (turn.answer_status === ProcessingStatusEnum.Failed
-                                        ? "Could not prepare an answer. Please try again."
-                                        : "No answer was returned.")
+                                    (turn.answer_status ===
+                                    ProcessingStatusEnum.Failed
+                                        ? 'Could not prepare an answer. Please try again.'
+                                        : 'No answer was returned.')
                                 }
                             />
                         )}
                         {(turn.answer != null ||
-                            turn.answer_status === ProcessingStatusEnum.Failed ||
-                            turn.answer_status === ProcessingStatusEnum.Completed) && (
+                            turn.answer_status ===
+                                ProcessingStatusEnum.Failed ||
+                            turn.answer_status ===
+                                ProcessingStatusEnum.Completed) && (
                             <MessageTime timestamp={turn.created_at} />
                         )}
                     </AssistantMessage>

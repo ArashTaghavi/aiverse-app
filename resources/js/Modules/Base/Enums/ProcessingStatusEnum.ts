@@ -1,8 +1,8 @@
 export const ProcessingStatusEnum = {
-    Pending: "PENDING",
-    Processing: "PROCESSING",
-    Completed: "COMPLETED",
-    Failed: "FAILED",
+    Pending: 'PENDING',
+    Processing: 'PROCESSING',
+    Completed: 'COMPLETED',
+    Failed: 'FAILED',
 } as const;
 
 export type ProcessingStatusEnum =

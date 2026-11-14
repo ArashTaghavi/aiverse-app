@@ -1,12 +1,12 @@
-import { useRef } from "react";
-import { usePage } from "@inertiajs/react";
-import { ChevronRight, Menu, X } from "lucide-react";
-import Navigation from "./Navigation";
-import { Link } from "@inertiajs/react";
-import { LogOut, UserRound } from "lucide-react";
-import { destroy as logout } from "@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController";
-import DocumentNotifications from "@/Layouts/Components/User/FileChatNotifications";
-import { getPageLabel } from "@/Utils/PageLabel";
+import { useRef } from 'react';
+import { usePage } from '@inertiajs/react';
+import { ChevronRight, Menu, X } from 'lucide-react';
+import Navigation from './Navigation';
+import { Link } from '@inertiajs/react';
+import { LogOut, UserRound } from 'lucide-react';
+import { destroy as logout } from '@/actions/Laravel/Fortify/Http/Controllers/AuthenticatedSessionController';
+import DocumentNotifications from '@/Layouts/Components/User/FileChatNotifications';
+import { getPageLabel } from '@/Utils/PageLabel';
 
 export default function Header() {
     const user = usePage().props.auth.user;
@@ -69,7 +69,7 @@ export default function Header() {
                             aria-hidden="true"
                         />
                         <span className="truncate">
-                            {typeof user.username === "string"
+                            {typeof user.username === 'string'
                                 ? user.username
                                 : user.name}
                         </span>
@@ -80,7 +80,7 @@ export default function Header() {
                         as="button"
                         aria-label="Log out"
                         title="Log out"
-                        className="inline-flex cursor-pointer h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 text-xs text-zinc-400 transition-colors hover:border-rose-300/25 hover:bg-rose-400/10 hover:text-rose-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-300"
+                        className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 text-xs text-zinc-400 transition-colors hover:border-rose-300/25 hover:bg-rose-400/10 hover:text-rose-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-300"
                     >
                         <LogOut size={17} aria-hidden="true" />
                         <span className="hidden sm:inline">Log out</span>

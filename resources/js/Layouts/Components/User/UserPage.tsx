@@ -36,7 +36,7 @@ export default function UserPage({
             </div>
             {(toolbar != null || children != null) && (
                 <div
-                    className={`min-w-0 overflow-hidden rounded-2xl border border-ui-border bg-white/[0.025] ${fillHeight ? "flex min-h-0 flex-1 flex-col" : ""}`}
+                    className={`min-w-0 overflow-hidden rounded-2xl border border-ui-border bg-white/[0.025] ${fillHeight ? 'flex min-h-0 flex-1 flex-col' : ''}`}
                 >
                     {toolbar && (
                         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-ui-border p-5">

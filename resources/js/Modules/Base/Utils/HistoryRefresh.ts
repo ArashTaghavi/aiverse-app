@@ -1,9 +1,13 @@
 /** Serialize reloads and retain notifications received while streaming or reloading. */
-export function createHistoryRefresh(load: () => Promise<void>, isPaused: () => boolean) {
+export function createHistoryRefresh(
+    load: () => Promise<void>,
+    isPaused: () => boolean,
+) {
     let dirty = false;
     let running = false;
     let disposed = false;
-    let waiters: { resolve: () => void; reject: (error: unknown) => void }[] = [];
+    let waiters: { resolve: () => void; reject: (error: unknown) => void }[] =
+        [];
 
     async function drain() {
         if (running || disposed || isPaused()) return;
@@ -47,9 +51,12 @@ export function createHistoryRefresh(load: () => Promise<void>, isPaused: () => 
     };
 }
 
-export function isHistoryTurnSettled(turn?: { answer_status: string; answer: string | null }) {
+export function isHistoryTurnSettled(turn?: {
+    answer_status: string;
+    answer: string | null;
+}) {
     return (
-        turn?.answer_status === "FAILED" ||
-        (turn?.answer_status === "COMPLETED" && Boolean(turn.answer?.trim()))
+        turn?.answer_status === 'FAILED' ||
+        (turn?.answer_status === 'COMPLETED' && Boolean(turn.answer?.trim()))
     );
 }

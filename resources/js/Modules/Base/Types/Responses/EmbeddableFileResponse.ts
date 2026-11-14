@@ -1,4 +1,4 @@
-import { ProcessingStatusEnum } from "@/Modules/Base/Enums/ProcessingStatusEnum";
+import { ProcessingStatusEnum } from '@/Modules/Base/Enums/ProcessingStatusEnum';
 
 export type EmbeddableFileResponse = {
     id: number;

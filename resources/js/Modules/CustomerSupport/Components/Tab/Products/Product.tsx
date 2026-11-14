@@ -27,9 +27,7 @@ export default function Product({
             <div
                 className={`flex flex-col gap-3 px-1 pb-1 ${layout === 'list' ? 'min-w-0 flex-1' : 'shrink-0'}`}
             >
-                <h3
-                    className="line-clamp-2 min-h-12 text-sm leading-6 font-medium text-zinc-100"
-                >
+                <h3 className="line-clamp-2 min-h-12 text-sm leading-6 font-medium text-zinc-100">
                     {product.title}
                 </h3>
 

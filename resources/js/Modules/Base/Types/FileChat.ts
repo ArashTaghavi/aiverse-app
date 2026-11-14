@@ -1,8 +1,8 @@
-import type { RouteQueryOptions } from "@/wayfinder";
-import type { ProcessingStatusEnum } from "../Enums/ProcessingStatusEnum";
-import type { UploadProgressEnum } from "../Enums/UploadProgressEnum";
-import type { ChatTurnResponse } from "./Chat";
-import type { EmbeddableFileResponse } from "./Responses/EmbeddableFileResponse";
+import type { RouteQueryOptions } from '@/wayfinder';
+import type { ProcessingStatusEnum } from '../Enums/ProcessingStatusEnum';
+import type { UploadProgressEnum } from '../Enums/UploadProgressEnum';
+import type { ChatTurnResponse } from './Chat';
+import type { EmbeddableFileResponse } from './Responses/EmbeddableFileResponse';
 
 export type FileUploadValues = { title: string; file: File | null };
 export type Pagination = { page: number; hasMore: boolean };
@@ -19,14 +19,14 @@ export type FileChatConfig = {
     name: string;
     title: string;
     channelPrefix: string;
-    eventId: "document_id" | "database_id";
+    eventId: 'document_id' | 'database_id';
     file: { label: string; extension: string; accept: string };
     events: Record<
-        | "UploadProgress"
-        | "EmbeddingCompleted"
-        | "EmbeddingFailed"
-        | "AnswerCompleted"
-        | "AnswerFailed",
+        | 'UploadProgress'
+        | 'EmbeddingCompleted'
+        | 'EmbeddingFailed'
+        | 'AnswerCompleted'
+        | 'AnswerFailed',
         string
     >;
     routes: {
@@ -48,7 +48,7 @@ export type FileUploadProgressEvent = {
     status: Exclude<ProcessingStatusEnum, typeof ProcessingStatusEnum.Pending>;
     data: Pick<
         EmbeddableFileResponse,
-        "id" | "uuid" | "title" | "original_name" | "embedding_status"
+        'id' | 'uuid' | 'title' | 'original_name' | 'embedding_status'
     > & {
         human_size: string;
         embedding_error: string | null;

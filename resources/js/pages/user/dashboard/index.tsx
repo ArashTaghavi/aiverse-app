@@ -1,5 +1,5 @@
-import DashboardStats from "./Components/DashboardStats";
-import UserLayout from "../../../Layouts/UserLayout";
+import DashboardStats from './Components/DashboardStats';
+import UserLayout from '../../../Layouts/UserLayout';
 
 export default function Dashboard() {
     return (

@@ -26,7 +26,7 @@ export default function Tab() {
     const id = useId();
 
     return (
-        <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col gap-5 overflow-hidden">
+        <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col gap-5 overflow-hidden">
             <div className="flex shrink-0 gap-3 rounded-2xl border border-white/20 bg-linear-to-br from-white/15 via-white/5 to-violet-300/5 p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-2xl backdrop-saturate-150">
                 {tabs.map((tab) => (
                     <Button

@@ -1,36 +1,36 @@
-import { index as chatWithDocument } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
-import { index as databaseAnalyst } from "@/actions/App/Modules/DatabaseAnalyst/Controllers/DatabaseAnalystController";
-import { index as customerSupport } from "@/actions/App/Modules/CustomerSupport/Controllers/CustomerSupportController";
+import { index as chatWithDocument } from '@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController';
+import { index as databaseAnalyst } from '@/actions/App/Modules/DatabaseAnalyst/Controllers/DatabaseAnalystController';
+import { index as customerSupport } from '@/actions/App/Modules/CustomerSupport/Controllers/CustomerSupportController';
 
-import { index as dashboard } from "@/actions/App/Http/Controllers/User/DashboardController";
-import { Link } from "@inertiajs/react";
-import { usePage } from "@inertiajs/react";
-import type { UserNavigationProps } from "@/Types/UserPanel";
+import { index as dashboard } from '@/actions/App/Http/Controllers/User/DashboardController';
+import { Link } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
+import type { UserNavigationProps } from '@/Types/UserPanel';
 import {
     ChevronRight,
     Database,
     FileText,
     Headset,
     LayoutDashboard,
-} from "lucide-react";
+} from 'lucide-react';
 const items = [
     {
-        label: "Dashboard",
+        label: 'Dashboard',
         href: dashboard().url,
         icon: LayoutDashboard,
     },
     {
-        label: "Chat with Document",
+        label: 'Chat with Document',
         href: chatWithDocument().url,
         icon: FileText,
     },
     {
-        label: "Database Analyst",
+        label: 'Database Analyst',
         href: databaseAnalyst().url,
         icon: Database,
     },
     {
-        label: "Customer Support",
+        label: 'Customer Support',
         href: customerSupport().url,
         icon: Headset,
     },
@@ -69,14 +69,14 @@ export default function Navigation({ onNavigate }: UserNavigationProps) {
                         key={href}
                         href={href}
                         onClick={onNavigate}
-                        aria-current={active ? "page" : undefined}
-                        className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-violet-400 ${active ? "bg-violet-400/10 text-violet-300 ring-1 ring-violet-400/15" : "text-ui-secondary hover:bg-white/5 hover:text-white"}`}
+                        aria-current={active ? 'page' : undefined}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-violet-400 ${active ? 'bg-violet-400/10 text-violet-300 ring-1 ring-violet-400/15' : 'text-ui-secondary hover:bg-white/5 hover:text-white'}`}
                     >
                         <Icon
                             size={18}
                             className="shrink-0"
                             aria-hidden="true"
-                        />{" "}
+                        />{' '}
                         {label}
                         <ChevronRight
                             size={14}

@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import PublicBackground from "./PublicBackground";
+import type { ReactNode } from 'react';
+import PublicBackground from './PublicBackground';
 
 export default function PublicSurface({ children }: { children: ReactNode }) {
     return (

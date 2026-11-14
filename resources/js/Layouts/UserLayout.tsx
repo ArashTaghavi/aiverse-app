@@ -1,11 +1,11 @@
 import type { UserLayoutProps } from '@/Types/UserPanel';
-import Header from "./Components/User/Header";
-import Aside from "./Components/User/Aside";
-import styles from "./UserLayout.module.css";
+import Header from './Components/User/Header';
+import Aside from './Components/User/Aside';
+import styles from './UserLayout.module.css';
 
 export default function UserLayout({
     children,
-    contentMode = "page",
+    contentMode = 'page',
 }: UserLayoutProps) {
     return (
         <div
@@ -32,7 +32,7 @@ export default function UserLayout({
                         className={`${styles.edgeShine} pointer-events-none absolute inset-x-6 top-0 z-10 h-px overflow-hidden bg-linear-to-r from-transparent via-violet-300 to-transparent shadow-[0_0_18px_2px_#8b5cf670]`}
                     />
                     <div
-                        className={`flex min-h-0 min-w-0 flex-1 ${contentMode === "workspace" ? "overflow-hidden" : "flex-col gap-6 overflow-y-auto overscroll-contain p-4 sm:p-6"}`}
+                        className={`flex min-h-0 min-w-0 flex-1 ${contentMode === 'workspace' ? 'overflow-hidden' : 'flex-col gap-6 overflow-y-auto overscroll-contain p-4 sm:p-6'}`}
                     >
                         {children}
                     </div>
