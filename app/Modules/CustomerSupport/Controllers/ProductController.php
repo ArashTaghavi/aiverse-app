@@ -4,13 +4,17 @@ namespace App\Modules\CustomerSupport\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\CustomerSupport\Models\Product;
+use App\Modules\CustomerSupport\Models\ProductCategory;
 use App\Modules\CustomerSupport\Resources\ProductResource;
+use App\Services\StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
+    public function __construct(public StorageService $storageService) {}
+
     public function index(): AnonymousResourceCollection
     {
         return ProductResource::collection(Product::with('productCategory')->paginate());
@@ -23,7 +27,12 @@ class ProductController extends Controller
 
     public function store(Request $request): array
     {
-        Product::create($this->validatedData($request));
+        $product = Product::create($this->validatedData($request));
+
+        if ($request->hasFile('image')) {
+            $file = $this->storageService->upload($request->file('image'));
+            $product->update(['storage_path' => $file['storage_path']]);
+        }
 
         return ['message' => 'success'];
     }
@@ -31,6 +40,13 @@ class ProductController extends Controller
     public function update(Product $product, Request $request): array
     {
         $product->update($this->validatedData($request, updating: true));
+
+        if ($request->hasFile('image')) {
+            $this->storageService->delete($product->storage_path);
+
+            $file = $this->storageService->upload($request->file('image'));
+            $product->update(['storage_path' => $file['storage_path']]);
+        }
 
         return ['message' => 'success'];
     }
@@ -51,8 +67,8 @@ class ProductController extends Controller
             'description' => ['sometimes', 'nullable', 'string'],
             'price' => [$presence, 'required', 'integer', 'min:0', 'max:4294967295'],
             'stock' => ['sometimes', 'required', 'integer', 'min:0', 'max:65535'],
-            'product_category_id' => [$presence, 'required', 'integer', Rule::exists('product_categories', 'id')->withoutTrashed()],
-            'image' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'product_category_id' => [$presence, 'required', 'integer', Rule::exists(ProductCategory::class, 'id')],
+            'image' => ['sometimes', 'nullable', 'file'],
         ]);
     }
 }

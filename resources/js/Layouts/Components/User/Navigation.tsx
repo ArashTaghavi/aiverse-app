@@ -1,5 +1,7 @@
 import { index as chatWithDocument } from "@/actions/App/Modules/ChatWithDocument/Controllers/ChatWithDocumentController";
 import { index as databaseAnalyst } from "@/actions/App/Modules/DatabaseAnalyst/Controllers/DatabaseAnalystController";
+import { index as customerSupport } from "@/actions/App/Modules/CustomerSupport/Controllers/CustomerSupportController";
+
 import { index as dashboard } from "@/actions/App/Http/Controllers/User/DashboardController";
 import { Link } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
@@ -8,6 +10,7 @@ import {
     ChevronRight,
     Database,
     FileText,
+    Headset,
     LayoutDashboard,
 } from "lucide-react";
 const items = [
@@ -25,6 +28,11 @@ const items = [
         label: "Database Analyst",
         href: databaseAnalyst().url,
         icon: Database,
+    },
+    {
+        label: "Customer Support",
+        href: customerSupport().url,
+        icon: Headset,
     },
 ];
 
