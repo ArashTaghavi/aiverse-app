@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { router, usePage } from '@inertiajs/react';
+import { ProductResponse } from '@/Modules/CustomerSupport/Types/Responses/ProductResponse';
+import Product from './Product';
 
-type ProductsPageProps = {
-    products?: { id: number; title: string }[];
+type PropsType = {
+    products: ProductResponse[];
 };
 
-export default function ProductsContent() {
-    const { products } = usePage<ProductsPageProps>().props;
-    console.log(products);
+export default function Products() {
+    const { products } = usePage<PropsType>().props;
     useEffect(() => {
         router.reload({ only: ['products'] });
     }, []);
@@ -17,11 +18,11 @@ export default function ProductsContent() {
             {!products ? (
                 <p className="animate-pulse">Loading products...</p>
             ) : (
-                <ul>
+                <div className="flex">
                     {products.map((product) => (
-                        <li key={product.id}>{product.title}</li>
+                        <Product product={product} key={product.id} />
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     );

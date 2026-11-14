@@ -1,9 +1,9 @@
 import { useId, useState } from 'react';
 import { Headset, ShoppingBag, Package } from 'lucide-react';
 import Button from '@/Modules/Base/Components/UI/Buttons/Button';
-import SupportContent from './SupportContent';
-import OrdersContent from './OrdersContent';
-import ProductsContent from './ProductsContent';
+import SupportContent from './Support/Index';
+import OrdersContent from './Orders/Index';
+import ProductsContent from './Products/Index';
 
 const tabs = [
     {
