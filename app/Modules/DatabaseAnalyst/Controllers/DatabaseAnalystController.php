@@ -23,7 +23,7 @@ class DatabaseAnalystController extends BaseController
     public function chatTurnResource(): string
     {
         return DatabaseChatTurnResource::class;
-    }   
+    }
 
     public function view(): string
     {

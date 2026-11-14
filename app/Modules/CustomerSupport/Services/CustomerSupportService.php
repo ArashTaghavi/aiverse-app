@@ -2,6 +2,4 @@
 
 namespace App\Modules\CustomerSupport\Services;
 
-class CustomerSupportService
-{
-}
+class CustomerSupportService {}

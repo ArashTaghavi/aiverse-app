@@ -9,4 +9,3 @@ enum PaymentStatusEnum: string
     case Failed = 'FAILED';
     case Refunded = 'REFUNDED';
 }
-
