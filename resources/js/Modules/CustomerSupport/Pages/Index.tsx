@@ -8,7 +8,7 @@ export default function Index(props: FileChatPageProps) {
     return (
         <>
             <Head title={Module.Title} />
-            <div className="m-5 w-full">
+            <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden p-5">
                 <Tab />
             </div>
         </>

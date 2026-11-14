@@ -26,8 +26,8 @@ export default function Tab() {
     const id = useId();
 
     return (
-        <div className="flex w-full flex-col gap-5">
-            <div className="flex gap-3 rounded-2xl border border-white/20 bg-linear-to-br from-white/15 via-white/5 to-violet-300/5 p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-2xl backdrop-saturate-150">
+        <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col gap-5 overflow-hidden">
+            <div className="flex shrink-0 gap-3 rounded-2xl border border-white/20 bg-linear-to-br from-white/15 via-white/5 to-violet-300/5 p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-2xl backdrop-saturate-150">
                 {tabs.map((tab) => (
                     <Button
                         key={tab.id}
@@ -50,7 +50,7 @@ export default function Tab() {
                     id={`${id}-${tab.id}-panel`}
                     hidden={activeTab !== tab.id}
                     tabIndex={0}
-                    className="rounded-2xl border border-white/15 bg-linear-to-br from-white/10 via-white/3 to-violet-300/5 p-6 text-sm text-ui-secondary shadow-[0_12px_40px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-2xl backdrop-saturate-150 focus-visible:outline-2 focus-visible:outline-violet-400"
+                    className="min-h-0 min-w-0 flex-1 overflow-hidden rounded-2xl border border-white/15 bg-linear-to-br from-white/10 via-white/3 to-violet-300/5 p-6 text-sm text-ui-secondary shadow-[0_12px_40px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-2xl backdrop-saturate-150 focus-visible:outline-2 focus-visible:outline-violet-400"
                 >
                     {activeTab === tab.id && <tab.Content />}
                 </div>
