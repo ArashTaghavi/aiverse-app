@@ -52,7 +52,16 @@ function displayValue(value: unknown): string {
     if (value === null) return 'NULL';
     if (value === undefined) return '—';
     if (typeof value === 'object') return JSON.stringify(value);
-    return String(value);
+    if (typeof value === 'string') return value;
+    if (typeof value === 'function') return value.toString();
+    if (
+        typeof value === 'number' ||
+        typeof value === 'boolean' ||
+        typeof value === 'bigint' ||
+        typeof value === 'symbol'
+    )
+        return String(value);
+    return '';
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {

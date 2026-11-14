@@ -13,10 +13,10 @@ import useFileQuestion from '@/Modules/Base/Hooks/useFileQuestion';
 
 export default function FileChat({
     config,
-    data = [],
+    data,
     selectedData: selected,
-    history: turns = [],
-    pagination = { page: 1, hasMore: false },
+    history: turns,
+    pagination,
 }: FileConversationPageProps & { config: FileChatConfig }) {
     const { auth, errors } = usePage().props;
     const activeId = selected.uuid;

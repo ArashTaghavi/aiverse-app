@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
 import SiteLayout from '../../../Layouts/SiteLayout';
-import ProfileIntro from './Components/ProfileIntro';
-import ContactLinks from './Components/ContactLinks';
-import SkillsSection from './Components/SkillsSection';
+import ProfileIntro from './components/ProfileIntro';
+import ContactLinks from './components/ContactLinks';
+import SkillsSection from './components/SkillsSection';
 import { profile } from './Data/Portfolio';
 
 export default function PortfolioPage() {
