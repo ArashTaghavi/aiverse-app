@@ -133,7 +133,6 @@ export default function Products() {
                             only: ['products'],
                         })}
                         aria-label={sortLabel}
-                        title={sortLabel}
                     />
                     <Button
                         variant="secondary"
@@ -145,7 +144,6 @@ export default function Products() {
                             )
                         }
                         aria-label={`Current layout: ${layout.label}. Switch to ${layouts[(layoutIndex + 1) % layouts.length].label}`}
-                        title="Change layout"
                     />
                 </div>
             </div>
