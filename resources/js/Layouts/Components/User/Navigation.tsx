@@ -5,7 +5,7 @@ import { index as customerSupport } from '@/actions/App/Modules/CustomerSupport/
 import { index as dashboard } from '@/actions/App/Http/Controllers/User/DashboardController';
 import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import type { UserNavigationProps } from '@/Types/UserPanel';
+import type { UserNavigationProps } from '@/types/UserPanel';
 import {
     ChevronRight,
     Database,

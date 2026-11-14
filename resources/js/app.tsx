@@ -20,9 +20,13 @@ void createInertiaApp({
     resolve: async (name) => {
         const pages = import.meta.glob<{ default: ComponentType }>([
             './Pages/**/*.tsx',
+            './pages/**/*.tsx',
             './Modules/*/Pages/**/*.tsx',
         ]);
-        const loadPage = pages[`./${name}.tsx`];
+        const pagePath = Object.keys(pages).find(
+            (path) => path.toLowerCase() === `./${name}.tsx`.toLowerCase(),
+        );
+        const loadPage = pagePath ? pages[pagePath] : undefined;
 
         if (!loadPage) {
             throw new Error(`Page not found: ${name}`);

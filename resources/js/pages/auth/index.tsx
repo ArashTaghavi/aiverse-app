@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 import AuthLayout from '../../Layouts/AuthLayout';
-import LoginCard from './Components/LoginCard';
+import LoginCard from './components/LoginCard';
 
 export default function Auth() {
     return (

@@ -6,7 +6,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { ChatTurnResponse } from '@/Modules/Base/Types/Chat';
 import { QuestionSchema } from '@/Modules/Base/Schemas/QuestionSchema';
-import { QuestionValues } from '@/Types/UserPanel';
+import { QuestionValues } from '@/types/UserPanel';
 import {
     createHistoryRefresh,
     isHistoryTurnSettled,

@@ -1,4 +1,4 @@
-import type { UserLayoutProps } from '@/Types/UserPanel';
+import type { UserLayoutProps } from '@/types/UserPanel';
 import Header from './Components/User/Header';
 import Aside from './Components/User/Aside';
 import styles from './UserLayout.module.css';
