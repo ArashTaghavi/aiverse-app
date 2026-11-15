@@ -6,7 +6,7 @@ import { buildHumanDraft, sendPause } from './PreviewTimeline';
 import {
     MechanicalTypingSound,
     type TypewriterKey,
-} from '../../../portfolio/components/MechanicalTypingSound';
+} from '../../../Portfolio/components/MechanicalTypingSound';
 
 import { useEffect, useRef, useState } from 'react';
 import { FileText, Sparkles, UserRound, Volume2, VolumeX } from 'lucide-react';

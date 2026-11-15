@@ -4,7 +4,7 @@ import { router } from '@inertiajs/react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileUploadSchema } from '../Schemas/FileUploadSchema';
-import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses/EmbeddableFileResponse';
+import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses';
 import { FileUploadValues } from '@/Modules/Base/Types/FileChat';
 
 export default function useFileUpload(config: FileChatConfig) {

@@ -1,14 +1,14 @@
 ﻿import { useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import styles from './ProjectSlider.module.css';
-import DocumentChatPreview from './previews/DocumentChatPreview';
-import DatabaseAnalystPreview from './previews/DatabaseAnalystPreview';
-import CustomerSupportPreview from './previews/CustomerSupportPreview';
-import DeepResearchPreview from './previews/DeepResearchPreview';
-import CodebaseAssistantPreview from './previews/CodebaseAssistantPreview';
-import ContractIntelligencePreview from './previews/ContractIntelligencePreview';
-import WorkflowAutomationPreview from './previews/WorkflowAutomationPreview';
-import MultiAgentPreview from './previews/MultiAgentPreview';
+import DocumentChatPreview from './Previews/DocumentChatPreview';
+import DatabaseAnalystPreview from './Previews/DatabaseAnalystPreview';
+import CustomerSupportPreview from './Previews/CustomerSupportPreview';
+import DeepResearchPreview from './Previews/DeepResearchPreview';
+import CodebaseAssistantPreview from './Previews/CodebaseAssistantPreview';
+import ContractIntelligencePreview from './Previews/ContractIntelligencePreview';
+import WorkflowAutomationPreview from './Previews/WorkflowAutomationPreview';
+import MultiAgentPreview from './Previews/MultiAgentPreview';
 
 const projects = [
     {

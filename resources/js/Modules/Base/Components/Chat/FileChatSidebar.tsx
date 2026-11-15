@@ -1,7 +1,7 @@
 import { FileChatConfig } from '@/Modules/Base/Types/FileChat';
 import { ChatSidebar } from '@/Modules/Base/Components/Chat';
 import type useChatNavigation from '@/Modules/Base/Hooks/useChatNavigation';
-import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses/EmbeddableFileResponse';
+import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses';
 
 type Props = {
     config: FileChatConfig;

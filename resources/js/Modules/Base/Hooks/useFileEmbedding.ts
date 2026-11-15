@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses/EmbeddableFileResponse';
+import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses';
 import { ProcessingStatusEnum } from '@/Modules/Base/Enums/ProcessingStatusEnum';
 
 export default function useFileEmbedding(file: EmbeddableFileResponse) {

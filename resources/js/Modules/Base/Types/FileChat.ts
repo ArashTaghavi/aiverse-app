@@ -2,7 +2,7 @@ import type { RouteQueryOptions } from '@/wayfinder';
 import type { ProcessingStatusEnum } from '../Enums/ProcessingStatusEnum';
 import type { UploadProgressEnum } from '../Enums/UploadProgressEnum';
 import type { ChatTurnResponse } from './Chat';
-import type { EmbeddableFileResponse } from './Responses/EmbeddableFileResponse';
+import type { EmbeddableFileResponse } from './Responses';
 
 export type FileUploadValues = { title: string; file: File | null };
 export type Pagination = { page: number; hasMore: boolean };

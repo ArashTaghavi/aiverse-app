@@ -1,4 +1,4 @@
-import type { UserPageProps } from '@/types/UserPanel';
+import type { UserPageProps } from '@/Types/UserPanel';
 
 export default function UserPage({
     title,

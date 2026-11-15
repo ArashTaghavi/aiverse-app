@@ -15,7 +15,7 @@ import { UploadProgressEnum } from '@/Modules/Base/Enums/UploadProgressEnum';
 import { ProcessingStatusEnum } from '@/Modules/Base/Enums/ProcessingStatusEnum';
 import { useEffect, useState } from 'react';
 import { Link } from '@inertiajs/react';
-import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses/EmbeddableFileResponse';
+import { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses';
 
 import type { FileUploadProgressEvent as UploadProgressEvent } from '@/Modules/Base/Types/FileChat';
 

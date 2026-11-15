@@ -4,7 +4,7 @@ import type { ChatTurnResponse } from '@/Modules/Base/Types/Chat';
 import type useFileQuestion from '@/Modules/Base/Hooks/useFileQuestion';
 import { ChatMessages, MessageHistory } from '@/Modules/Base/Components/Chat';
 import ChatQuestionForm from './ChatQuestionForm';
-import type { EmbeddableFileResponse } from '../../Types/Responses/EmbeddableFileResponse';
+import type { EmbeddableFileResponse } from '@/Modules/Base/Types/Responses';
 import { ProcessingStatusEnum } from '@/Modules/Base/Enums/ProcessingStatusEnum';
 
 type Props = {

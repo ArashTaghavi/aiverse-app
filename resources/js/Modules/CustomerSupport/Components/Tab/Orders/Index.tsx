@@ -15,18 +15,12 @@ import { router, usePage } from '@inertiajs/react';
 import { OrderResponse } from '@/Modules/CustomerSupport/Types/Responses/OrderResponse';
 import Order from './Order';
 import SearchOrder from './Search';
+import { MetaResponse } from '@/Modules/Base/Types/Responses/MetaResponse';
 
 type PropsType = {
     orders?: {
         data: OrderResponse[];
-        meta: {
-            current_page: number;
-            last_page: number;
-            per_page: number;
-            from: number | null;
-            to: number | null;
-            total: number;
-        };
+        meta: MetaResponse;
     };
 };
 
