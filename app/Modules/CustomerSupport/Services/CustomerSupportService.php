@@ -3,12 +3,16 @@
 namespace App\Modules\CustomerSupport\Services;
 
 use App\Models\User;
+use App\Modules\CustomerSupport\Enums\RouteEnum;
 use App\Modules\CustomerSupport\Models\Product;
+use App\Services\AIClient;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class CustomerSupportService
 {
+    public function __construct(public AIClient $aiClient) {}
+
     public function products(?string $name, ?string $sort, int $perPage): LengthAwarePaginator
     {
         return Product::with('productCategory')
@@ -18,7 +22,7 @@ class CustomerSupportService
             ->paginate($perPage)->withQueryString();
     }
 
-    public function orders(User $user, string $search): LengthAwarePaginator
+    public function orders(User $user, string $search, array $validated): LengthAwarePaginator
     {
         return $user->orders()
             ->with(['orderItems.product', 'payments'])
@@ -35,5 +39,13 @@ class CustomerSupportService
             ->orderByDesc('id')
             ->paginate((int) ($validated['orders_per_page'] ?? 10), ['*'], 'orders_page')
             ->withQueryString();
+    }
+
+    public function ask(User $user, string $question)
+    {
+        return $this->aiClient->post(RouteEnum::Ask->value, [
+            'user_id' => $user->id,
+            'question' => $question,
+        ]);
     }
 }

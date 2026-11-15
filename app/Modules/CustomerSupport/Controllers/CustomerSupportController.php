@@ -45,10 +45,22 @@ class CustomerSupportController extends Controller
             ),
             'orders' => Inertia::optional(function () use ($validated, $request): AnonymousResourceCollection {
                 $search = trim($validated['order_search'] ?? '');
-                $orders = $this->customerSupportService->orders(user: $request->user(), search: $search);
+                $orders = $this->customerSupportService->orders(user: $request->user(), search: $search, validated: $validated);
 
                 return OrderResource::collection($orders);
             }),
         ]);
+    }
+
+    public function ask(Request $request)
+    {
+        $request->validate([
+            'question' => ['required', 'string', 'max:1000'],
+        ]);
+
+        return $this->customerSupportService->ask(
+            user: $request->user(),
+            question: $request->input('question')
+        );
     }
 }

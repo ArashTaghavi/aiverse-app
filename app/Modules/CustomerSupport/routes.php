@@ -9,6 +9,8 @@ Route::prefix('customer-support')
     ->name('customer-support.')
     ->group(function () {
         Route::get('/', [CustomerSupportController::class, 'index']);
+        Route::post('/ask', [CustomerSupportController::class, 'ask']);
+
         Route::prefix('product-categories')
             ->name('product-categories.')
             ->controller(ProductCategoryController::class)->group(function () {
