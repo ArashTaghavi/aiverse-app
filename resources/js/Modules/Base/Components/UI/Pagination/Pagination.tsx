@@ -1,4 +1,3 @@
-import { router } from '@inertiajs/react';
 import {
     ChevronLeft,
     ChevronRight,
@@ -8,22 +7,19 @@ import {
 import Button from '../Buttons/Button';
 import { MetaResponse } from '@/Modules/Base/Types/Responses';
 
-type PropsType = { pagination: MetaResponse };
+type PropsType = {
+    pagination: MetaResponse;
+    pageNumbers: readonly number[];
+    changePage: (page: number, perPage?: number) => void;
+    label?: string;
+};
 
-export default function Pagination({ pagination }: PropsType) {
-    const pageNumbers = Array.from(
-        { length: Math.min(5, pagination.last_page) },
-        (_, index) =>
-            Math.max(
-                1,
-                Math.min(pagination.current_page - 2, pagination.last_page - 4),
-            ) + index,
-    );
-    const changePage = (page: number, perPage?: number) =>
-        router.reload({
-            data: { page, ...(perPage ? { per_page: perPage } : {}) },
-            only: ['products'],
-        });
+export default function Pagination({
+    pagination,
+    label = 'Pagination',
+    pageNumbers,
+    changePage,
+}: PropsType) {
     return (
         <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-3 text-xs text-ui-secondary">
             <label className="flex items-center gap-2">
@@ -47,7 +43,7 @@ export default function Pagination({ pagination }: PropsType) {
                 {pagination.total}
             </span>
             <nav
-                aria-label="Products pagination"
+                aria-label={label}
                 className="flex max-w-full flex-wrap items-center gap-1"
             >
                 <Button

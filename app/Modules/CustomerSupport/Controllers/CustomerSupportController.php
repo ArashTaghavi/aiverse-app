@@ -5,10 +5,9 @@ namespace App\Modules\CustomerSupport\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\CustomerSupport\Enums\OrderStatusEnum;
 use App\Modules\CustomerSupport\Enums\PaymentStatusEnum;
-use App\Modules\CustomerSupport\Models\Product;
 use App\Modules\CustomerSupport\Resources\OrderResource;
 use App\Modules\CustomerSupport\Resources\ProductResource;
-use Illuminate\Database\Eloquent\Builder;
+use App\Modules\CustomerSupport\Services\CustomerSupportService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\Rule;
@@ -17,6 +16,8 @@ use Inertia\Response;
 
 class CustomerSupportController extends Controller
 {
+    public function __construct(private CustomerSupportService $customerSupportService) {}
+
     public function index(Request $request): Response
     {
         $validated = $request->validate([
@@ -38,30 +39,15 @@ class CustomerSupportController extends Controller
 
         return Inertia::render('Modules/CustomerSupport/Pages/Index', [
             'products' => Inertia::optional(
-                fn () => ProductResource::collection(Product::with('productCategory')
-                    ->when($name !== '', fn (Builder $query): Builder => $query->whereLike('title', "%{$name}%"))
-                    ->when($sort !== null, fn (Builder $query): Builder => $query->orderBy('price', $sort))
-                    ->orderBy('id')
-                    ->paginate($perPage)->withQueryString())
+                fn () => ProductResource::collection(
+                    $this->customerSupportService->products(name: $name, sort: $sort, perPage: $perPage)
+                )
             ),
-            'orders' => Inertia::optional(function () use ($request, $validated): AnonymousResourceCollection {
+            'orders' => Inertia::optional(function () use ($validated, $request): AnonymousResourceCollection {
                 $search = trim($validated['order_search'] ?? '');
+                $orders = $this->customerSupportService->orders(user: $request->user(), search: $search);
 
-                return OrderResource::collection($request->user()->orders()
-                    ->with(['orderItems.product', 'payments'])
-                    ->when($search !== '', function (Builder $query) use ($search): void {
-                        $query->where(function (Builder $query) use ($search): void {
-                            $query->whereLike('order_number', "%{$search}%")
-                                ->orWhereLike('tracking_code', "%{$search}%")
-                                ->orWhereHas('orderItems.product', fn (Builder $query): Builder => $query->whereLike('title', "%{$search}%"));
-                        });
-                    })
-                    ->when($validated['order_status'] ?? null, fn (Builder $query, string $status): Builder => $query->where('order_status', $status))
-                    ->when($validated['order_payment_status'] ?? null, fn (Builder $query, string $status): Builder => $query->where('payment_status', $status))
-                    ->when($validated['order_sort'] ?? null, fn (Builder $query, string $sort): Builder => $query->orderBy('total_amount', $sort))
-                    ->orderByDesc('id')
-                    ->paginate((int) ($validated['orders_per_page'] ?? 10), ['*'], 'orders_page')
-                    ->withQueryString());
+                return OrderResource::collection($orders);
             }),
         ]);
     }

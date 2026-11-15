@@ -6,3 +6,8 @@ export type MetaResponse = {
     to: number | null;
     total: number;
 };
+
+export type PaginateResponse<T> = {
+    data: T;
+    meta: MetaResponse;
+};

@@ -6,6 +6,7 @@ import Product from './Product';
 import SearchProduct from './Search';
 import { MetaResponse } from '@/Modules/Base/Types/Responses';
 import { Button, GridSort, Pagination } from '@/Modules/Base/Components/UI';
+import usePaginate from '@/Modules/Base/Hooks/usePaginate';
 
 type PropsType = {
     products?: {
@@ -43,6 +44,10 @@ export default function Products() {
     const layout = layouts[layoutIndex];
     const LayoutIcon = layout.icon;
     const pagination = products?.meta;
+    const [pageNumbers, changePage] = usePaginate({
+        meta: pagination,
+        only: ['products'],
+    });
     const requestedSort = new URLSearchParams(url.split('?')[1]).get('sort');
     const direction =
         requestedSort === 'asc' || requestedSort === 'desc'
@@ -81,7 +86,14 @@ export default function Products() {
             )}
             <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
                 <SearchProduct onProcessingChange={setSearching} />
-                {pagination && <Pagination pagination={pagination} />}
+                {pagination && (
+                    <Pagination
+                        pagination={pagination}
+                        pageNumbers={pageNumbers}
+                        changePage={changePage}
+                        label="Products pagination"
+                    />
+                )}
                 <GridSort
                     field="price"
                     direction={direction}
