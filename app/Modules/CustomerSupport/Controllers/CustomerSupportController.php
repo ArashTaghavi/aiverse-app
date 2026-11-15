@@ -8,6 +8,8 @@ use App\Modules\CustomerSupport\Enums\PaymentStatusEnum;
 use App\Modules\CustomerSupport\Resources\OrderResource;
 use App\Modules\CustomerSupport\Resources\ProductResource;
 use App\Modules\CustomerSupport\Services\CustomerSupportService;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\Rule;
@@ -52,15 +54,29 @@ class CustomerSupportController extends Controller
         ]);
     }
 
-    public function ask(Request $request)
+    public function ask(Request $request): JsonResponse
     {
-        $request->validate([
-            'question' => ['required', 'string', 'max:1000'],
+        $validated = $request->validate([
+            'question' => ['required_without:confirmation', Rule::prohibitedIf($request->has('confirmation')), 'string', 'max:1000'],
+            'thread_id' => ['required_with:confirmation', 'string', 'max:255'],
+            'confirmation' => ['required_without:question', Rule::prohibitedIf($request->has('question')), 'array:interrupt_id,confirmed'],
+            'confirmation.interrupt_id' => ['required_with:confirmation', 'string', 'max:255'],
+            'confirmation.confirmed' => ['required_with:confirmation', 'boolean:strict'],
         ]);
 
-        return $this->customerSupportService->ask(
-            user: $request->user(),
-            question: $request->input('question')
-        );
+        try {
+            $response = $this->customerSupportService->ask(
+                user: $request->user(),
+                question: $validated['question'] ?? null,
+                threadId: $validated['thread_id'] ?? null,
+                confirmation: $validated['confirmation'] ?? null,
+            );
+
+            return response()->json($response->json(), $response->status());
+        } catch (RequestException $exception) {
+            return response()->json([
+                'message' => 'ارتباط با پشتیبانی انجام نشد. لطفاً دوباره تلاش کنید.',
+            ], $exception->response->status());
+        }
     }
 }

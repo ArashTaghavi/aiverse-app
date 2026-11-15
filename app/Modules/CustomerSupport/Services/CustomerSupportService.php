@@ -7,6 +7,7 @@ use App\Modules\CustomerSupport\Enums\RouteEnum;
 use App\Modules\CustomerSupport\Models\Product;
 use App\Services\AIClient;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Client\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class CustomerSupportService
@@ -41,11 +42,19 @@ class CustomerSupportService
             ->withQueryString();
     }
 
-    public function ask(User $user, string $question)
+    public function ask(User $user, ?string $question = null, ?string $threadId = null, ?array $confirmation = null): Response
     {
-        return $this->aiClient->post(RouteEnum::Ask->value, [
-            'user_id' => $user->id,
-            'question' => $question,
-        ]);
+        $payload = ['user_id' => $user->id];
+        if ($question !== null) {
+            $payload['question'] = $question;
+        }
+        if ($threadId !== null) {
+            $payload['thread_id'] = $threadId;
+        }
+        if ($confirmation !== null) {
+            $payload['confirmation'] = $confirmation;
+        }
+
+        return $this->aiClient->post(RouteEnum::Ask->value, $payload);
     }
 }
