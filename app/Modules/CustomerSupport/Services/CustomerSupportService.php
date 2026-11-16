@@ -42,19 +42,20 @@ class CustomerSupportService
             ->withQueryString();
     }
 
-    public function ask(User $user, ?string $question = null, ?string $threadId = null, ?array $confirmation = null): Response
+    public function ask(User $user, string $question): Response
     {
-        $payload = ['user_id' => $user->id];
-        if ($question !== null) {
-            $payload['question'] = $question;
-        }
-        if ($threadId !== null) {
-            $payload['thread_id'] = $threadId;
-        }
-        if ($confirmation !== null) {
-            $payload['confirmation'] = $confirmation;
-        }
+        return $this->aiClient->post(RouteEnum::Ask->value, [
+            'user_id' => $user->id,
+            'question' => $question,
+        ]);
+    }
 
-        return $this->aiClient->post(RouteEnum::Ask->value, $payload);
+    public function confirmCancelOrder(User $user, string $threadId, bool $confirmed): Response
+    {
+        return $this->aiClient->post(RouteEnum::ConfirmCancelOrder->value, [
+            'user_id' => $user->id,
+            'thread_id' => $threadId,
+            'confirmed' => $confirmed,
+        ]);
     }
 }

@@ -57,25 +57,41 @@ class CustomerSupportController extends Controller
     public function ask(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'question' => ['required_without:confirmation', Rule::prohibitedIf($request->has('confirmation')), 'string', 'max:1000'],
-            'thread_id' => ['required_with:confirmation', 'string', 'max:255'],
-            'confirmation' => ['required_without:question', Rule::prohibitedIf($request->has('question')), 'array:interrupt_id,confirmed'],
-            'confirmation.interrupt_id' => ['required_with:confirmation', 'string', 'max:255'],
-            'confirmation.confirmed' => ['required_with:confirmation', 'boolean:strict'],
+            'question' => ['required', 'string', 'max:1000'],
         ]);
 
         try {
             $response = $this->customerSupportService->ask(
                 user: $request->user(),
-                question: $validated['question'] ?? null,
-                threadId: $validated['thread_id'] ?? null,
-                confirmation: $validated['confirmation'] ?? null,
+                question: $validated['question'],
             );
 
             return response()->json($response->json(), $response->status());
         } catch (RequestException $exception) {
             return response()->json([
                 'message' => 'ارتباط با پشتیبانی انجام نشد. لطفاً دوباره تلاش کنید.',
+            ], $exception->response->status());
+        }
+    }
+
+    public function confirmCancelOrder(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'thread_id' => ['required', 'string', 'max:255'],
+            'confirmed' => ['required', 'boolean:strict'],
+        ]);
+
+        try {
+            $response = $this->customerSupportService->confirmCancelOrder(
+                user: $request->user(),
+                threadId: $validated['thread_id'],
+                confirmed: $validated['confirmed'],
+            );
+
+            return response()->json($response->json(), $response->status());
+        } catch (RequestException $exception) {
+            return response()->json([
+                'message' => 'ثبت تصمیم لغو سفارش انجام نشد. لطفاً دوباره تلاش کنید.',
             ], $exception->response->status());
         }
     }

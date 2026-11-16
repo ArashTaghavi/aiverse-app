@@ -10,6 +10,7 @@ Route::prefix('customer-support')
     ->group(function () {
         Route::get('/', [CustomerSupportController::class, 'index']);
         Route::post('/ask', [CustomerSupportController::class, 'ask']);
+        Route::post('/confirm-cancel-order', [CustomerSupportController::class, 'confirmCancelOrder']);
 
         Route::prefix('product-categories')
             ->name('product-categories.')

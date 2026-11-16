@@ -1,4 +1,7 @@
-import { ask } from '@/actions/App/Modules/CustomerSupport/Controllers/CustomerSupportController';
+import {
+    ask,
+    confirmCancelOrder,
+} from '@/actions/App/Modules/CustomerSupport/Controllers/CustomerSupportController';
 import { Form, Input } from '@/Modules/Base/Components/Form';
 import Button from '@/Modules/Base/Components/UI/Buttons/Button';
 import { useHttp } from '@inertiajs/react';
@@ -7,51 +10,48 @@ import { useForm } from 'react-hook-form';
 import Product, { type SupportProduct } from './Product';
 import Order, { type SupportOrder } from './Order';
 
-type QuestionValues = {
-    question: string;
-};
+type QuestionValues = { question: string };
 
-type SupportRequest = {
-    question?: string;
-    thread_id?: string;
-    confirmation?: { interrupt_id: string; confirmed: boolean };
-};
-
-type SupportResponse = {
-    thread_id: string;
-    status: 'completed' | 'confirmation_required';
+type AnswerResponse = {
+    type?: never;
     message: string;
     blocks: (
         | { type: 'products'; data: SupportProduct[] }
         | { type: 'order'; data: SupportOrder }
     )[];
-    interrupts?: {
-        interrupt_id: string;
-        data: {
-            type: string;
-            message: string;
-            order_number?: string;
-            total_amount?: number;
-            cancellation_reason?: string | null;
-            refund_notice?: string;
-        };
-    }[];
+};
+
+type CancellationConfirmation = {
+    type: 'order_cancellation_confirmation';
+    thread_id: string;
+    message: string;
+};
+
+type SupportResponse = AnswerResponse | CancellationConfirmation;
+
+type ConfirmRequest = {
+    thread_id: string;
+    confirmed: boolean;
 };
 
 export default function Support() {
-    const request = useHttp<SupportRequest, SupportResponse>({
-        question: '',
+    const request = useHttp<QuestionValues, SupportResponse>({ question: '' });
+    const confirmationRequest = useHttp<ConfirmRequest, SupportResponse>({
+        thread_id: '',
+        confirmed: false,
     });
     const [response, setResponse] = useState<SupportResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
     const submitting = useRef(false);
-    const pending = response?.status === 'confirmation_required';
+    const pending =
+        response?.type === 'order_cancellation_confirmation' ? response : null;
+    const processing = request.processing || confirmationRequest.processing;
     const methods = useForm<QuestionValues>({
         defaultValues: { question: '' },
     });
 
-    const send = async (data: SupportRequest) => {
-        if (submitting.current) return;
+    const submit = async (data: QuestionValues) => {
+        if (submitting.current || pending) return;
         submitting.current = true;
         setError(null);
         request.transform(() => data);
@@ -64,17 +64,23 @@ export default function Support() {
         }
     };
 
-    const submit = async (data: QuestionValues) => {
-        if (pending) return;
-        await send({ ...data, thread_id: response?.thread_id });
-    };
-
-    const confirm = async (interruptId: string, confirmed: boolean) => {
-        if (!response?.thread_id) return;
-        await send({
-            thread_id: response.thread_id,
-            confirmation: { interrupt_id: interruptId, confirmed },
-        });
+    const confirm = async (confirmed: boolean) => {
+        if (submitting.current || !pending) return;
+        submitting.current = true;
+        setError(null);
+        confirmationRequest.transform(() => ({
+            thread_id: pending.thread_id,
+            confirmed,
+        }));
+        try {
+            setResponse(
+                await confirmationRequest.post(confirmCancelOrder.url()),
+            );
+        } catch {
+            setError('ثبت تصمیم لغو سفارش انجام نشد. لطفاً دوباره تلاش کنید.');
+        } finally {
+            submitting.current = false;
+        }
     };
 
     return (
@@ -82,7 +88,7 @@ export default function Support() {
             <Form
                 methods={methods}
                 onSubmit={submit}
-                isPending={request.processing}
+                isPending={processing}
                 className="space-y-4"
             >
                 <Input<QuestionValues>
@@ -91,12 +97,12 @@ export default function Support() {
                     label="سؤال"
                     placeholder="سؤالت را بنویس"
                     maxLength={1000}
-                    disabled={request.processing || pending}
+                    disabled={processing || !!pending}
                 />
                 <Button
                     type="submit"
                     loading={request.processing}
-                    disabled={pending}
+                    disabled={processing || !!pending}
                 >
                     ارسال
                 </Button>
@@ -106,93 +112,55 @@ export default function Support() {
                     {error}
                 </p>
             )}
-            {response?.message && (
-                <>
-                    <p dir="auto" className="mt-4 whitespace-pre-wrap">
-                        {response.message}
-                    </p>
-                    {response.blocks.map((block, index) => (
-                        <div key={index} className="mt-4 grid gap-3">
-                            {block.type === 'products' &&
-                                block.data.map((product) => (
-                                    <Product
-                                        key={product.id}
-                                        product={product}
-                                    />
-                                ))}
-                            {block.type === 'order' && (
-                                <Order order={block.data} />
-                            )}
-                        </div>
-                    ))}
-                </>
-            )}
-            {pending && (
-                <div dir="rtl" className="mt-4 space-y-3" aria-live="polite">
-                    <p className="text-sm text-ui-secondary">
-                        برای ادامه، درخواست‌های زیر را تأیید یا رد کنید.
-                    </p>
-                    {response.interrupts?.map((item) => (
-                        <section
-                            key={item.interrupt_id}
-                            aria-label="تأیید لغو سفارش"
-                            className="space-y-3 rounded-xl border border-ui-border p-4"
+            {pending ? (
+                <section
+                    dir="rtl"
+                    aria-label="تأیید لغو سفارش"
+                    aria-live="polite"
+                    className="mt-4 space-y-4 rounded-xl border border-ui-border p-4"
+                >
+                    <p className="whitespace-pre-wrap">{pending.message}</p>
+                    <div className="flex flex-wrap gap-2">
+                        <Button
+                            variant="danger"
+                            disabled={processing}
+                            loading={confirmationRequest.processing}
+                            onClick={() => void confirm(true)}
                         >
-                            <p>{item.data.message}</p>
-                            {item.data.total_amount !== undefined && (
-                                <p className="text-sm">
-                                    مبلغ سفارش:{' '}
-                                    {item.data.total_amount.toLocaleString(
-                                        'fa-IR',
+                            تأیید لغو سفارش
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            disabled={processing}
+                            onClick={() => void confirm(false)}
+                        >
+                            رد لغو سفارش
+                        </Button>
+                    </div>
+                </section>
+            ) : (
+                response && (
+                    <>
+                        <p dir="auto" className="mt-4 whitespace-pre-wrap">
+                            {response.message}
+                        </p>
+                        {'blocks' in response &&
+                            response.blocks.map((block, index) => (
+                                <div key={index} className="mt-4 grid gap-3">
+                                    {block.type === 'products' &&
+                                        block.data.map((product) => (
+                                            <Product
+                                                key={product.id}
+                                                product={product}
+                                            />
+                                        ))}
+                                    {block.type === 'order' && (
+                                        <Order order={block.data} />
                                     )}
-                                </p>
-                            )}
-                            {item.data.cancellation_reason && (
-                                <p className="text-sm">
-                                    دلیل لغو: {item.data.cancellation_reason}
-                                </p>
-                            )}
-                            {item.data.refund_notice && (
-                                <p className="text-sm text-ui-secondary">
-                                    {item.data.refund_notice}
-                                </p>
-                            )}
-                            {item.data.type ===
-                            'order_cancellation_confirmation' ? (
-                                <div className="flex flex-wrap gap-2">
-                                    <Button
-                                        variant="danger"
-                                        disabled={request.processing}
-                                        onClick={() =>
-                                            void confirm(
-                                                item.interrupt_id,
-                                                true,
-                                            )
-                                        }
-                                    >
-                                        تأیید لغو سفارش
-                                    </Button>
-                                    <Button
-                                        variant="secondary"
-                                        disabled={request.processing}
-                                        onClick={() =>
-                                            void confirm(
-                                                item.interrupt_id,
-                                                false,
-                                            )
-                                        }
-                                    >
-                                        انصراف
-                                    </Button>
                                 </div>
-                            ) : (
-                                <p role="alert">
-                                    این نوع درخواست تأیید پشتیبانی نمی‌شود.
-                                </p>
-                            )}
-                        </section>
-                    ))}
-                </div>
+                            ))}
+                    </>
+                )
             )}
         </div>
     );

@@ -7,5 +7,6 @@ use App\Modules\CustomerSupport\Module;
 enum RouteEnum: string
 {
     case Ask = Module::ROUTE_PREFIX.'/ask';
+    case ConfirmCancelOrder = Module::ROUTE_PREFIX.'/confirm-cancel-order';
 
 }
