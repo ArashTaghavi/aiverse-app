@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Product, { type SupportProduct } from './Product';
 import Order, { type SupportOrder } from './Order';
+import { ConfirmCancelOrder } from './ConfirmAction/Index';
 
 type QuestionValues = { question: string };
 
@@ -113,31 +114,12 @@ export default function Support() {
                 </p>
             )}
             {pending ? (
-                <section
-                    dir="rtl"
-                    aria-label="تأیید لغو سفارش"
-                    aria-live="polite"
-                    className="mt-4 space-y-4 rounded-xl border border-ui-border p-4"
-                >
-                    <p className="whitespace-pre-wrap">{pending.message}</p>
-                    <div className="flex flex-wrap gap-2">
-                        <Button
-                            variant="danger"
-                            disabled={processing}
-                            loading={confirmationRequest.processing}
-                            onClick={() => void confirm(true)}
-                        >
-                            تأیید لغو سفارش
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            disabled={processing}
-                            onClick={() => void confirm(false)}
-                        >
-                            رد لغو سفارش
-                        </Button>
-                    </div>
-                </section>
+                <ConfirmCancelOrder
+                    pending={pending}
+                    processing={processing}
+                    confirming={confirmationRequest.processing}
+                    onConfirm={confirm}
+                />
             ) : (
                 response && (
                     <>
